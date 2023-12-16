@@ -1,0 +1,8 @@
+./obj/
+*.o
+*.d
+*tmp*
+*test*
+a.out
+Webserv
+Webserv_linux

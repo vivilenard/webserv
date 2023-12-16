@@ -6,5 +6,7 @@
 int main()
 {
 	httpServer serv = httpServer("0.0.0.0", 8080);
+	serv.startServer();
+	serv.startListen();
 	return 0;
 }

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <cstring>
+#include <stdlib.h>
+#include <stdio.h>
 // #include <linux/io.h>
 #include <arpa/inet.h>
 #include <sstream>
@@ -38,16 +41,17 @@ class	httpServer
 		void	startListen();
 		int		startServer();
 		void	closeServer();
+		void	acceptConnection();
 	
 	private:
-		int 				m_socket_fd;
-		struct sockaddr_in 	m_socketAddress;
-		std::string 		m_ip_address;
-		int					m_port;
-		unsigned int 		m_socketAddress_len;
-		//int m_new_socket;
-		// long 				m_incomingMessage;
-		std::string 		m_serverMessage;
+		int 				_socket_fd;
+		struct sockaddr_in 	_socketAddress;
+		std::string 		_ip_address;
+		int					_port;
+		unsigned int 		_socketAddress_len;
+		//int _new_socket;
+		// long 				_incomingMessage;
+		std::string 		_serverMessage;
 
 };
 void exitWithError(const std::string &errorMessage);

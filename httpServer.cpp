@@ -2,25 +2,24 @@
 using namespace std;
 
 httpServer::httpServer(std::string ip_address, int port):
-	m_ip_address(ip_address), m_port(port), m_socketAddress_len(sizeof(m_socketAddress))
+	_socket_fd(), _socketAddress(), _ip_address(ip_address), 
+	_port(port), _socketAddress_len(sizeof(_socketAddress))
 {
-
-	m_socketAddress.sin_family = AF_INET;
-	m_socketAddress.sin_port = htons(m_port);
-	m_socketAddress.sin_addr.s_addr = inet_addr(m_ip_address.c_str());
-    memset(m_socketAddress.sin_zero, '\0', sizeof m_socketAddress.sin_zero);
+	_socketAddress.sin_family = AF_INET;
+	_socketAddress.sin_port = htons(_port);
+	_socketAddress.sin_addr.s_addr = inet_addr(_ip_address.c_str());
 	cout << "TcpServer created" << endl;
 }
 
 int httpServer::startServer()
 {
-	int m_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_socket_fd < 0)
+	_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (_socket_fd < 0)
 	{
 		exitWithError("Cannot create socket");
 		return 1;
 	}
-	if (bind(m_socket_fd,(sockaddr *)&m_socketAddress, m_socketAddress_len) < 0)
+	if (bind(_socket_fd,(sockaddr *)&_socketAddress, _socketAddress_len) < 0)
 	{
 		exitWithError("Cannot connect socket to address");
 		return 1;
@@ -31,17 +30,17 @@ int httpServer::startServer()
 
 void httpServer::startListen()
 {
-
-	if (listen(m_socket_fd, 2) < 0)
+	cout << "File descriptor" << _socket_fd << endl;
+	if (listen(_socket_fd, 2) < 0)
 	{
 		perror("listen");
 		exitWithError("Socket listen failed");
 	}
 	std::ostringstream ss;
 	ss << "\nListening to Address: "
-		<< inet_ntoa(m_socketAddress.sin_addr) //networkbyteorder to ipv4 address
+		<< inet_ntoa(_socketAddress.sin_addr) //networkbyteorder to ipv4 address
 		<< "\n on Port "
-		<< ntohs(m_socketAddress.sin_port) //converts the unsigned short integer netshort from network byte order to host byte order.
+		<< ntohs(_socketAddress.sin_port) //converts the unsigned short integer netshort from network byte order to host byte order.
 		<< "\n\n";
 	log(ss.str());
 }
@@ -53,10 +52,15 @@ httpServer::~httpServer()
 
 void httpServer::closeServer()
 	{
-		close(m_socket_fd);
-		//close(m_new_socket);
+		close(_socket_fd);
+		//close(_new_socket);
 		exit(0);
 	}
+
+void httpServer::acceptConnection()
+{
+	
+}
 
 void log(const std::string &message)
 {

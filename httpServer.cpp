@@ -69,17 +69,25 @@ void httpServer::acceptConnection()
 	
 	cout << "RECIEVED: \n" << buffer << endl;
 
-	std::string content_length;
-	std::string status = "HTTP/1.1 200 OK\r\n";
-	std::string type = "Content-Type: text/html; charset=UTF-8\r\n\r\n";
-	std::string content = "<h1> hii </h1>";
-	std::string connection = "Connection: close\r\n";
-	std::string length = "Content-Length: 14\r\n";
+// const char* forbidden =
+//         "HTTP/1.1 403 Forbidden\n"
+//         "Content-Type: text/html\n"
+//         "Content-Length: 0\n"
+//         "Keep - Alive: timeout=1, max=1\n"
+//         "Accept-Ranges: bytes\n"
+//         "Connection: close\r\n\r\n";
 
-	std::string response = status + length + connection + type + content;
-	std::string r1 = "HTTP/1.1 200 OK\r\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\r\nContent-Length: 11\r\nConnection: Closed\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n<h1>hi</h1>";
-	std::cout << "RESPONSE: \n" << r1 << endl; 
-	write(_new_socket_fd, response.c_str(), sizeof(response));
+// const char* ok =
+//         "HTTP/1.1 200 OK\n"
+//         "Content-Type: text/html\n"
+//         "Content-Length: 0\n"
+//         "Keep - Alive: timeout=1, max=1\n"
+//         "Accept-Ranges: bytes\n"
+//         "Connection: close\r\n\r\n";
+char arr[200]="HTTP/1.1 200 OK\nContent-Type:text/html\nContent-Length: 16\n\n<h1>testing</h1>";
+	std::cout << "RESPONSE: \n" << arr << endl; 
+	write(_new_socket_fd, arr, sizeof(arr));
+	//send(clientSocket, reply, strlen(reply), 0);
 }
 
 void log(const std::string &message)

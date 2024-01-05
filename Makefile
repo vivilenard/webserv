@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
+#    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/01/19 00:03:00 by pharbst          ###   ########.fr        #
+#    Updated: 2024/01/19 12:46:03 by vlenard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,11 +23,19 @@ CC		= c++
 # -MMD and -MP are ussed to create dependecy files
 CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
 
-INC_DIR	= -I./include/ -I./include/socketManager/ -I./include/Interface/
+INC_DIR	= 	-I./include/ \
+			-I./include/socketManager/ \
+			-I./include/Interface/ \
+			# -I./include/config/ \
+			# -I./include/error/ \
+			# -I./include/httpTransfer/ \
 
 # add source files with header with the same name
 SOURCE	=	socketManager.cpp \
-			Interface.cpp
+			Interface.cpp \
+			# Config.cpp \
+			# Error.cpp \
+			# httpTransfer.cpp
 
 HEADER	= $(addprefix $(INC_DIR), $(SOURCE:.cpp=.hpp))
 
@@ -38,6 +46,9 @@ HEADER	+=
 SRCS	=	webserver.cpp \
 			socketManagerTools.cpp \
 			InterfaceTools.cpp \
+			httpTransfer.cpp \
+			Config.cpp \
+			Error.cpp \
 			$(SOURCE)
 
 OBJ_DIR	= ./obj/
@@ -51,7 +62,7 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 
 
 # in case of subdirectories in the src folder add them here
-VPATH := src include src/socketManager src/Interface
+VPATH := src include src/socketManager src/Interface src/config src/error src/httpTransfer
 
 all:
 	@$(MAKE) -s proname_header
@@ -92,7 +103,7 @@ re:
 arch:
 	-docker rm -f webserv
 	docker-compose -f container/Arch/docker-compose.yml build
-	docker-compose -f container/Arch/docker-compose.yml up -d
+	docker-compose -f container/Arch/docker-compose.yml up
 
 ubuntu:
 	-docker rm -f webserv
@@ -108,6 +119,9 @@ alpine:
 	-docker rm -f webserv
 	docker-compose -f ./container/Alpine/docker-compose.yml build
 	docker-compose -f ./container/Alpine/docker-compose.yml up
+
+logs:
+	docker logs webserv
 
 restart_docker:
 	docker restart webserv

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<!-- <form action="http://localhost:8080" method="POST"> -->
+		<!-- onsubmit="runCode(event)" -->
+		<form
+			action="https://formsubmit.co/your@email.com"
+			method="POST"
+		>
+		<h1>Contact Us</h1>
+		<input name="name" placeholder="Name"/>
+		</br>
+		<input name="number" type="tel" placeholder="Number"/>
+		</br>
+		<button type="submit">Submit</button>
+	</form>
+	<script>
+		// wont send data to the backend
+		function submit(e){
+			e.preventDefault();
+		}
+	</script>
+</body>
+</html>
+
+<!-- https://www.youtube.com/watch?v=TCEgdiN0A8s -->

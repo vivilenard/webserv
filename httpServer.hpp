@@ -15,6 +15,32 @@
 #define _OE_SOCKETS
 
 
+
+
+class	httpServer
+{
+	public:
+		httpServer(std::string ip_address, int port);
+		~httpServer();
+		void	startListen();
+		int		startServer();
+		void	closeServer();
+		void	acceptConnection();
+	
+	private:
+		int 				_socket_fd;
+		int 				_new_socket_fd;
+		struct sockaddr_in 	_socketAddress;
+		std::string 		_ip_address;
+		int					_port;
+		unsigned int 		_socketAddress_len;
+		// long 				_incomingMessage;
+		std::string 		_serverMessage;
+
+};
+void exitWithError(const std::string &errorMessage);
+void log(const std::string &message);
+
 //169.245.240.99
 // struct sockaddr
 // {
@@ -32,30 +58,10 @@
 //         struct  in_addr sin_addr;
 //         char    sin_zero[8];
 // };
+//ssize_t read(int fd, void *buf, size_t count);
 
-class	httpServer
-{
-	public:
-		httpServer(std::string ip_address, int port);
-		~httpServer();
-		void	startListen();
-		int		startServer();
-		void	closeServer();
-		void	acceptConnection();
-	
-	private:
-		int 				_socket_fd;
-		struct sockaddr_in 	_socketAddress;
-		std::string 		_ip_address;
-		int					_port;
-		unsigned int 		_socketAddress_len;
-		//int _new_socket;
-		// long 				_incomingMessage;
-		std::string 		_serverMessage;
 
-};
-void exitWithError(const std::string &errorMessage);
-void log(const std::string &message);
+
 
 // char PURPLE=\033[0;95m
 // GREEN=\033[92m

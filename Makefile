@@ -1,5 +1,5 @@
 NAME=webserv
-SRC=webserver.cpp httpServer.cpp
+SRC=main.cpp httpTransfer.cpp Server.cpp Error.cpp
 OBJ=$(SRC:.cpp=.o)
 FLAGS= -Wall -Werror -Wextra -std=c++98
 

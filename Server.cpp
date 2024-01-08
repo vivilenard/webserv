@@ -14,7 +14,11 @@ int Server::startServer()
 {
 
 	//create socket
-	_socket_fd = socket(AF_INET, SOCK_STREAM, 0); 
+	int opt = 1;
+	_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+	if (setsockopt(_socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+    	std::cerr << "Error: cannot set socket opt." << std::endl;
 	if (_socket_fd < 0)
 		return exitWithError("Cannot create socket"), 1;
 
@@ -53,15 +57,6 @@ void Server::acceptConnection()
 	}
 }
 
-void	Server::connectionError()
-{
-	std::ostringstream ss;
-	ss << "Server failed to accept incoming connection from ADDRESS: " 
-	<< inet_ntoa(_socketAddress.sin_addr) << "; PORT: " 
-	<< ntohs(_socketAddress.sin_port);
-	exitWithError(ss.str());
-}
-
 Server::~Server()
 {
 	cout << "TcpServer destructed" << endl;
@@ -71,4 +66,14 @@ void Server::closeServer()
 {
 	for (int i = getdtablesize(); i > 3;) close(--i);
 		exit(0);
+}
+
+//errors
+void	Server::connectionError()
+{
+	std::ostringstream ss;
+	ss << "Server failed to accept incoming connection from ADDRESS: " 
+	<< inet_ntoa(_socketAddress.sin_addr) << "; PORT: " 
+	<< ntohs(_socketAddress.sin_port);
+	exitWithError(ss.str());
 }

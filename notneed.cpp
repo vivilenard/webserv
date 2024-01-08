@@ -37,3 +37,5 @@
 
 
 	//send(clientSocket, reply, strlen(reply), 0);
+
+//lsof -p $$

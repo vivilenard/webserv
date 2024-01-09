@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <sstream>
 #include <errno.h>
+#include <fstream>
 #define _XOPEN_SOURCE_EXTENDED 1
 #define _OE_SOCKETS
 

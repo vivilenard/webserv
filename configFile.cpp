@@ -20,7 +20,7 @@ void ConfigFile::readFile()
 			 std::cout << token << std::endl;
 		 }
 		 else
-			 std::cout << "blait" << std::endl;
+			 std::cout << line << std::endl;
 	 }
 
  }

@@ -1,6 +1,13 @@
 NAME=webserv
-SRC=main.cpp httpTransfer.cpp Server.cpp Error.cpp
+
+SRC = main.cpp \
+		httpTransfer.cpp \
+		Server.cpp \
+		Error.cpp \
+		configFile.cpp \
+
 OBJ=$(SRC:.cpp=.o)
+
 FLAGS= -Wall -Werror -Wextra -std=c++98
 
 all: $(NAME)
@@ -8,7 +15,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@c++ $^ -o $@
 	@printf "${RED}compiled ${DF}\n"
- 
+
 %.o:%.cpp
 	@$(CC) $(FLAGS) -c $<
 

@@ -32,6 +32,15 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 			else
 				std::cout << "invalid format" << std::endl;
 		}
+		else if (token == "location")
+		{
+			std::string root;
+			if (find >> root)
+			{
+				tmpServer._location._root = root;
+				std::cout << root << std::endl;
+			}
+		}
 	 }
 
  }

@@ -9,10 +9,14 @@
 struct configServer
 {
 	std::string _serverName;
-	int			_listen;
 	std::string _include;
-	std::string _index;
-
+	int			_listen;
+	struct Location
+	{
+		std::string _root;
+		std::string _index;
+	};
+	Location _location;
 };
 
 class ConfigFile

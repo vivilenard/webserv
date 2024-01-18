@@ -9,10 +9,9 @@
 struct configServer
 {
 	std::string _serverName;
-	std::string _listen;
+	int			_listen;
 	std::string _include;
 	std::string _index;
-	int port;
 
 };
 

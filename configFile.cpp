@@ -13,18 +13,24 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 	 while (getline(inputFile, line))
 	 {
 		std::string token;
+		std::string serverName;
+		int port = 0;
 		std::istringstream find(line);
 		find >> token;
 		if (token == "listen")
 		{
-			std::cout << "LISTEN FOUND " << std::endl;
-			std::cout << token << std::endl;
-			tmpServer._listen = token;
+			if (find >> port)
+				tmpServer._listen = port;
+			else
+				std::cout << "No port" << std::endl;
 		}
 		else if (token == "server_name")
 		{
-			std::cout << "SERVER NAME " << std::endl;
-			tmpServer._serverName = token;
+			if (find >> serverName)
+				tmpServer._serverName = serverName.substr(0, serverName.length() - 1); // bc each line ends with ";"
+			// ADD A MSG IF THERE IS NOT A SEMICOLON IN RED BIG!!
+			else
+				std::cout << "invalid format" << std::endl;
 		}
 	 }
 

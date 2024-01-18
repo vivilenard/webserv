@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/01/17 14:44:21 by pharbst          ###   ########.fr        #
+#    Updated: 2024/01/19 00:03:00 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,23 +80,46 @@ clean:
 	@$(MAKE) -s std_clean
 	@printf "$(FGreen)$(TICKBOX)$(RESET)\n"
 
-std_clean:
-	@rm -rf $(OBJ_DIR)
-
 fclean:
 	@$(MAKE) -s proname_header
 	@$(MAKE) -s cleanator
+
+re:
+	@$(MAKE) -s proname_header
+	@$(MAKE) -s cleanator
+	@$(MAKE) -s std_all
+
+arch:
+	-docker rm -f webserv
+	docker-compose -f container/Arch/docker-compose.yml build
+	docker-compose -f container/Arch/docker-compose.yml up -d
+
+ubuntu:
+	-docker rm -f webserv
+	docker-compose -f container/Ubuntu/docker-compose.yml build
+	docker-compose -f container/Ubuntu/docker-compose.yml up
+
+debian:
+	-docker rm -f webserv
+	docker-compose -f container/Debian/docker-compose.yml build
+	docker-compose -f container/Debian/docker-compose.yml up
+
+alpine:
+	-docker rm -f webserv
+	docker-compose -f ./container/Alpine/docker-compose.yml build
+	docker-compose -f ./container/Alpine/docker-compose.yml up
+
+restart_docker:
+	docker restart webserv
+
+std_clean:
+	@rm -rf $(OBJ_DIR)
 
 cleanator:
 	@printf "%-28s$(RESET)" "$(FRed)FCleaning $(PRONAME)"
 	@rm -rf $(OBJ_DIR)
 	@rm -f $(PRONAME)
 	@printf "$(FGreen)$(TICKBOX)$(RESET)\n"
-
-re:
-	@$(MAKE) -s proname_header
-	@$(MAKE) -s cleanator
-	@$(MAKE) -s std_all
 
 proname_header:
 	@printf "$(FYellow)╔══════════════════════╗\n\

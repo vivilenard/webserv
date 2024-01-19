@@ -29,5 +29,9 @@ public:
 	std::map<std::string, configServer> readFile(std::string fileName);
 	std::map<std::string, configServer> getConFile();
 	void								setConFile(std::map<std::string, configServer> set);
+	bool								addPort(configServer &server, std::string token,
+											   						std::istringstream &find);
+	bool								addServerName(configServer &server, std::string token,
+													  				std::istringstream &find);
 	~ConfigFile();
 };

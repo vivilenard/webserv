@@ -2,6 +2,47 @@
 
 ConfigFile::ConfigFile() {}
 
+bool	ConfigFile::addPort(configServer &server, std::string token, std::istringstream &find)
+{
+	int port = 0;
+
+	if (token == "listen")
+	{
+		if (find >> port)
+		{
+			server._listen = port;
+			return (true);
+		}
+		else
+		{
+			std::cout << "Invalid port" << std::endl;
+			return (false);
+		}
+	}
+	return (true);
+}
+
+bool	ConfigFile::addServerName(configServer &server, std::string token, std::istringstream &find)
+{
+	std::string serverName;
+
+	if (token == "server_name")
+	{
+		if (find >> serverName)
+		{
+			server._serverName = serverName.substr(0, serverName.length() - 1); // bc each line ends with ";"
+			// ADD A MSG IF THERE IS NOT A SEMICOLON IN RED BIG!!
+			return (true);
+		}
+		else
+		{
+			std::cout << "invalid format" << std::endl;
+			return (false);
+		}
+	}
+	return (true);
+}
+
 std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 {
  std::ifstream inputFile(fileName);
@@ -13,26 +54,13 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 	 while (getline(inputFile, line))
 	 {
 		std::string token;
-		std::string serverName;
-		int port = 0;
 		std::istringstream find(line);
 		find >> token;
-		if (token == "listen")
-		{
-			if (find >> port)
-				tmpServer._listen = port;
-			else
-				std::cout << "No port" << std::endl;
-		}
-		else if (token == "server_name")
-		{
-			if (find >> serverName)
-				tmpServer._serverName = serverName.substr(0, serverName.length() - 1); // bc each line ends with ";"
-			// ADD A MSG IF THERE IS NOT A SEMICOLON IN RED BIG!!
-			else
-				std::cout << "invalid format" << std::endl;
-		}
-		else if (token == "location")
+		if (!addPort(tmpServer, token, find))
+			exit(1);
+		else if (!addServerName(tmpServer, token, find))
+			exit(1);
+		if (token == "location")
 		{
 			std::string root;
 			if (find >> root)

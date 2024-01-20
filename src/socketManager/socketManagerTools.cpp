@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:12:07 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/17 14:45:59 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/01/20 17:23:39 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void							socketManager::socketEpoll(InterfaceFunction interfaceFunction) {
 
 	struct epoll_event interest, ready[MAX_EVENTS];
 	for (std::map<int, t_data>::iterator pair = _sockets.begin(); pair != _sockets.end(); pair++) {
-		interest.events = EPOLLIN;
+		interest.events = EPOLLIN | EPOLLOUT;
 		interest.data.fd = pair->first;
 		if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, pair->first, &interest) == -1) {
 			std::cerr << "Error adding file descriptor to epoll" << std::endl;
@@ -112,19 +112,29 @@ void							socketManager::socketEpoll(InterfaceFunction interfaceFunction) {
 	}
 
 	while (true) {
-		std::cout << "waiting for events" << std::endl;
+		// std::cout << "waiting for events" << std::endl;
 		int numEvents = epoll_wait(_epollfd, ready, MAX_EVENTS, -1);
 		if (numEvents == -1) {
 			std::cerr << "Error in epoll_wait" << std::endl;
 			return ;
 		}
-		std::cout << "event detected" << std::endl;
+		// std::cout << "event detected" << std::endl;
 		for (int i = 0; i < numEvents; ++i) {
 			int fd = ready[i].data.fd;
 			if (_sockets[fd].server)
 				epollAccept(fd);
-			else
-				interfaceFunction(fd, _sockets[fd]);
+			else {
+				t_data data = _sockets[fd];
+				if (ready[i].events & EPOLLIN)
+					data.read = true;
+				else
+					data.read = false;
+				if (ready[i].events & EPOLLOUT)
+					data.write = true;
+				else
+					data.write = false;
+				interfaceFunction(fd, data);
+			}
 		}
 	}
 	close(_epollfd);
@@ -139,21 +149,8 @@ void							socketManager::epollAccept(int fd) {
 			std::cout << "Error accepting connection" << std::endl;
 			continue;
 		}
-		int flags = fcntl(newClient, F_GETFL, 0);
-		if (flags == -1) {
-			// Handle error
-			return;
-		}
-
-		// Clear the O_NONBLOCK flag
-		flags &= ~O_NONBLOCK;
-
-		if (fcntl(newClient, F_SETFL, flags) == -1) {
-			// Handle error
-			return;
-		}
 		struct epoll_event ev;
-		ev.events = EPOLLIN;
+		ev.events = EPOLLIN | EPOLLOUT;
 		ev.data.fd = newClient;
 		if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, newClient, &ev) == -1) {
 			std::cerr << "Error adding file descriptor to epoll" << std::endl;
@@ -189,9 +186,14 @@ void							socketManager::socketKqueue(InterfaceFunction interfaceFunction) {
 			std::cerr << "Error adding file descriptor to kqueue" << std::endl;
 			return ;
 		}
+		EV_SET(&_changes[1], pair->first, EVFILT_WRITE, EV_ADD, 0, 0, NULL);
+		if (kevent(_kq, &_changes[1], 1, NULL, 0, NULL) == -1) {
+			std::cerr << "Error adding write event to kqueue" << std::endl;
+			return;
+		}
 	}
 	while (true) {
-		std::cout << "waiting for events" << std::endl;
+		// std::cout << "waiting for events" << std::endl;
 		printMap();
 		int numEvents = kevent(_kq, NULL, 0, _events, 2, NULL);
 		if (numEvents == -1) {
@@ -203,8 +205,22 @@ void							socketManager::socketKqueue(InterfaceFunction interfaceFunction) {
 			int fd = _events[i].ident;
 			if (_sockets[fd].server)
 				kqueueAccept(fd);
-			else
-				interfaceFunction(fd, _sockets[fd]);
+			else {
+				t_data data = _sockets[fd];
+				if (_events[i].filter == EVFILT_READ) {
+					data.read = true;
+					std::cout << "read event detected" << std::endl;
+				}
+				else
+					data.read = false;
+				if (_events[i].filter == EVFILT_WRITE) {
+					data.write = true;
+					std::cout << "write event detected" << std::endl;
+				}
+				else
+					data.write = false;
+				interfaceFunction(fd, data);
+			}
 		}
 	}
 	close(_kq);
@@ -223,20 +239,12 @@ void						socketManager::kqueueAccept(int fd) {
 			std::cout << "Error accepting connection" << std::endl;
 			continue;
 		}
-		int flags = fcntl(newClient, F_GETFL, 0);
-		if (flags == -1) {
-			// Handle error
-			return;
-		}
-
-		// Clear the O_NONBLOCK flag
-		flags &= ~O_NONBLOCK;
-
-		if (fcntl(newClient, F_SETFL, flags) == -1) {
-			// Handle error
-			return;
-		}
 		EV_SET(&_changes[0], newClient, EVFILT_READ, EV_ADD, 0, 0, NULL);
+		if (kevent(_kq, &_changes[0], 1, NULL, 0, NULL) == -1) {
+			std::cerr << "Error adding file descriptor to kqueue" << std::endl;
+			return ;
+		}
+		EV_SET(&_changes[0], newClient, EVFILT_WRITE, EV_ADD, 0, 0, NULL);
 		if (kevent(_kq, &_changes[0], 1, NULL, 0, NULL) == -1) {
 			std::cerr << "Error adding file descriptor to kqueue" << std::endl;
 			return ;
@@ -269,21 +277,30 @@ void							socketManager::socketSelect(InterfaceFunction interfaceFunction) {
 			maxfd = pair->first;
 	}
 	while (true) {
-		std::cout << "waiting for events" << std::endl;
-		fd_set readyList = _interest;
-		int numEvents = select(maxfd + 1, &readyList, NULL, NULL, NULL);
+		// std::cout << "waiting for events" << std::endl;
+		fd_set readList = _interest;
+		fd_set writeList = _interest;
+		int numEvents = select(maxfd + 1, &readList, &writeList, NULL, NULL);
 		if (numEvents == -1) {
 			std::cerr << "Error in select" << std::endl;
 			return ;
 		}
-		std::cout << "event detected" << std::endl;
+		// std::cout << "event detected" << std::endl;
 		for (std::map<int, t_data>::iterator it = _sockets.begin(); it != _sockets.end(); it++) {
-			if (FD_ISSET(it->first, &readyList)) {
-				if (it->second.server)
+			t_data data = it->second;
+			if (FD_ISSET(it->first, &readList)) {
+				if (it->second.server) {
 					selectAccept(it->first);
-				else
-					interfaceFunction(it->first, it->second);
+					continue;
+				}
+				data.read = true;
 			}
+			if (FD_ISSET(it->first, &writeList)) {
+				if (it->second.server)
+					continue;
+				data.write = true;
+			}
+			interfaceFunction(it->first, data);
 		}
 	}
 }
@@ -295,19 +312,6 @@ void							socketManager::selectAccept(int fd) {
 				break ;
 			std::cout << "Error accepting connection" << std::endl;
 			continue;
-		}
-		int flags = fcntl(newClient, F_GETFL, 0);
-		if (flags == -1) {
-			// Handle error
-			return;
-		}
-
-		// Clear the O_NONBLOCK flag
-		flags &= ~O_NONBLOCK;
-
-		if (fcntl(newClient, F_SETFL, flags) == -1) {
-			// Handle error
-			return;
 		}
 		FD_SET(newClient, &_interest);
 		if (newClient > _maxfd)

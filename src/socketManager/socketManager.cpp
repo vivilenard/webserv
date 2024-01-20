@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:05:28 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/17 14:40:01 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/01/20 16:50:10 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,6 @@ void	socketManager::addSocket(const std::string &interfaceAddress, uint32_t port
 	}
 	// set flags
 	// add socket to map
-	t_data data = {port, protocol, interfaceAddress, true};
+	t_data data = {port, protocol, interfaceAddress, false, false, true};
 	_sockets.insert(std::pair<int, t_data>(fd, data));
 }

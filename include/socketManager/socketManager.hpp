@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:05:15 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/17 14:46:03 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/01/20 16:08:10 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ typedef struct s_data {
 	uint32_t			port;
 	uint32_t			protocol;
 	const std::string	interfaceAddress;
+	bool				read;
+	bool				write;
 	bool				server;
 }	t_data;
 

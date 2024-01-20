@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/13 18:17:17 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/01/20 16:52:31 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Interface {
 		static bool						writeToSocket(int sock, std::string &response);
 
 		static std::map<std::string, protocolFunction>	_protocolMap;
+		static std::map<int, std::string>				_outputBuffer;
 };
 
 #endif

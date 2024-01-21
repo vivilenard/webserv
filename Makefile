@@ -6,7 +6,7 @@
 #    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/01/19 12:46:03 by vlenard          ###   ########.fr        #
+#    Updated: 2024/01/23 15:32:17 by vlenard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,8 @@ SRCS	=	webserver.cpp \
 			httpTransfer.cpp \
 			Config.cpp \
 			Error.cpp \
+			Request.cpp \
+			Response.cpp \
 			$(SOURCE)
 
 OBJ_DIR	= ./obj/
@@ -99,6 +101,9 @@ re:
 	@$(MAKE) -s proname_header
 	@$(MAKE) -s cleanator
 	@$(MAKE) -s std_all
+
+run: re
+	./$(PRONAME)
 
 arch:
 	-docker rm -f webserv

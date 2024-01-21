@@ -1,8 +1,10 @@
 #include "../../include/config/Config.hpp"
 // #include "Config.hpp"
 
-Config::Config()
+Config::Config(): _rootPath("/home/vivien/Desktop/webserv/www")
 {
+	cout << "CONFIG CLASS CREATED" << endl;
+	_defaultPath = _rootPath + "/index.html";
 	_mimeTypes = parseMime();
 }
 

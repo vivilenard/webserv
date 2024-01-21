@@ -5,6 +5,9 @@
 #include "../error/Error.hpp"
 #include "config/Config.hpp"
 
+#include <fstream>
+#include <fcntl.h>
+
 class httpTransfer
 {
     private:
@@ -15,13 +18,22 @@ class httpTransfer
 		std::string  			 _prePath;
         std::string              _path;
         std::string              _httpVersion;
+		int						_contentLength;
         // std::string              readRequest();
-        void                parseHeader();
+        void                    parseHeader();
+        std::string             parseHeaderValue(std::string s);
+        std::string             parseBody();
+        int	                    findDoubleNewline(std::string & s);
+        std::string             findKeyByValue(std::map<string, string>map, string value);
+        int                     createFile(std::string & path, std::string & content, std::string & fileType);
 
 		static Config		_config;
     public:
         httpTransfer(const std::string & request);
-    	std::string				exchange();
+    	std::string	createResponse();
+        std::string getRequest();
+        std::string postRequest();
+        std::string delRequest();
 };
 
 #endif

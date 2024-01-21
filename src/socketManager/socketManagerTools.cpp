@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   socketManagerTools.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:12:07 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/20 17:23:39 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/01/22 17:05:20 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ void							socketManager::socketKqueue(InterfaceFunction interfaceFunction) {
 	}
 	while (true) {
 		// std::cout << "waiting for events" << std::endl;
-		printMap();
+		//printMap();
 		int numEvents = kevent(_kq, NULL, 0, _events, 2, NULL);
 		if (numEvents == -1) {
 			std::cerr << "Error in kevent" << std::endl;
@@ -209,13 +209,13 @@ void							socketManager::socketKqueue(InterfaceFunction interfaceFunction) {
 				t_data data = _sockets[fd];
 				if (_events[i].filter == EVFILT_READ) {
 					data.read = true;
-					std::cout << "read event detected" << std::endl;
+					//std::cout << "read event detected" << std::endl;
 				}
 				else
 					data.read = false;
 				if (_events[i].filter == EVFILT_WRITE) {
 					data.write = true;
-					std::cout << "write event detected" << std::endl;
+					//std::cout << "write event detected" << std::endl;
 				}
 				else
 					data.write = false;

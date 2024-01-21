@@ -8,9 +8,9 @@ bool	ConfigFile::addPort(configServer &server, std::string token, std::istringst
 
 	if (token == "listen")
 	{
+		addAddress(server, find);
 		if (find >> port)
 		{
-			std::cout << token << std::endl;
 			server._listen = port;
 			return (true);
 		}

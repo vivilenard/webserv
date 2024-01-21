@@ -1,5 +1,5 @@
 #include "Server.hpp"
-#include "configFile.hpp"
+#include "parse/configFile.hpp"
 //int socket(int domain, int type, int protocol);
 // 'IPv4' defined by 'AF_INET', 'SOCK_STREAM' for bidirectional TCP traffic, '0'=default protocol for type
 // multiplexing

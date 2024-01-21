@@ -10,6 +10,7 @@ bool	ConfigFile::addPort(configServer &server, std::string token, std::istringst
 	{
 		if (find >> port)
 		{
+			std::cout << token << std::endl;
 			server._listen = port;
 			return (true);
 		}
@@ -22,6 +23,23 @@ bool	ConfigFile::addPort(configServer &server, std::string token, std::istringst
 	return (true);
 }
 
+bool	ConfigFile::addLocation(configServer &server, std::string token, std::istringstream &find)
+{
+	if (token == "location")
+	{
+		std::string root;
+		if (find >> root)
+		{
+			server._location._root = root;
+			std::cout << root << std::endl;
+			return (true);
+		}
+		else
+			return(false);
+	}
+	return(true);
+}
+
 bool	ConfigFile::addServerName(configServer &server, std::string token, std::istringstream &find)
 {
 	std::string serverName;
@@ -30,7 +48,7 @@ bool	ConfigFile::addServerName(configServer &server, std::string token, std::ist
 	{
 		if (find >> serverName)
 		{
-			server._serverName = serverName.substr(0, serverName.length() - 1); // bc each line ends with ";"
+			server._serverName = serverName; // bc each line ends with ";"
 			// ADD A MSG IF THERE IS NOT A SEMICOLON IN RED BIG!!
 			return (true);
 		}
@@ -60,15 +78,6 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 			exit(1);
 		else if (!addServerName(tmpServer, token, find))
 			exit(1);
-		if (token == "location")
-		{
-			std::string root;
-			if (find >> root)
-			{
-				tmpServer._location._root = root;
-				std::cout << root << std::endl;
-			}
-		}
 	 }
 
  }

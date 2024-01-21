@@ -1,23 +1,24 @@
 NAME=webserv
 
 SRC = main.cpp \
-		httpTransfer.cpp \
-		Server.cpp \
-		Error.cpp \
-		configFile.cpp \
+      httpTransfer.cpp \
+      Server.cpp \
+      Error.cpp \
+      parse/configFile.cpp \
+      parse/configUtil.cpp \
 
-OBJ=$(SRC:.cpp=.o)
+OBJ = $(SRC:.cpp=.o)
 
-FLAGS= -Wall -Werror -Wextra -std=c++98
+CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@c++ $^ -o $@
+	@c++ $(LDFLAGS) $^ -o $@
 	@printf "${RED}compiled ${DF}\n"
 
-%.o:%.cpp
-	@$(CC) $(FLAGS) -c $<
+%.o: %.cpp
+	@c++ $(CXXFLAGS) -c $< -o $@
 
 clean:
 	@rm -f $(OBJ)
@@ -28,7 +29,6 @@ fclean: clean
 
 re: fclean all
 
-
 #colors
 PURPLE=\033[0;95m
 GREEN=\033[92m
@@ -37,4 +37,6 @@ BLUE=\033[94m
 WHITE=\033[0m
 RED=\033[91m
 YELLOW=\033[33m
-DF=\033[39m #DEFAULT
+DF=
+
+.PHONY: all clean fclean re

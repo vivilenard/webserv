@@ -35,6 +35,8 @@ public:
 	bool								addServerName(configServer &server, std::string token,
 													  				std::istringstream &find);
 	bool								addLocation(configServer &server, std::string token,
-	bood																std::istringstream &find);
+	bool																std::istringstream &find);
+	void								addAddress(configServer &server, std::string token,
+												   std::istringstream &find);
 	~ConfigFile();
 };

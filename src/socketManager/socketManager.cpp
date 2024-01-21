@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:05:28 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/20 16:50:10 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/01/22 15:50:34 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,8 @@ void	socketManager::addSocket(const std::string &interfaceAddress, uint32_t port
 		return ;
 	}
 	// set socketopt to reuse address and nonblocking with error check
-	{
-		int flags = fcntl(fd, F_GETFL, 0);
-		if (flags == -1) {
-			std::cout << "Socketopt getting failed" << std::endl;
-			return ;
-		}
-		if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
-			std::cout << "Socketopt setting failed" << std::endl;
-			return ;
-		}
-		int opt = 1;
-		if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
-			std::cout << "Socketopt setting failed" << std::endl;
-			return ;
-		}
-	}
+	if (setSocketNonBlocking(fd))
+		return ;
 	// bind socket with error check
 	if (bindSocket(fd, interfaceAddress, port, ipVersion))
 		return ;

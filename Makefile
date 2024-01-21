@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
+#    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/01/19 12:46:03 by vlenard          ###   ########.fr        #
+#    Updated: 2024/01/22 15:47:07 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,10 @@ HEADER	+=
 # add source files without header with the same name and the file with the main function has to be the first in the list
 SRCS	=	webserver.cpp \
 			socketManagerTools.cpp \
+			socketManagerUtils.cpp \
+			socketEpoll.cpp \
+			socketKqueue.cpp \
+			socketSelect.cpp \
 			InterfaceTools.cpp \
 			httpTransfer.cpp \
 			Config.cpp \

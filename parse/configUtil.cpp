@@ -51,6 +51,21 @@ bool	checkAddress(std::string address)
 	return (true);
 }
 
+bool	insertAddress(configServer &server, std::string address)
+{
+	if (!checkAddress(address))
+		return (false);
+	else
+		server._address = address;
+	return (true);
+}
+
+bool addPort(configServer &server, std::string address)
+{
+	int port = std::strtol(address.c_str(), &endptr, 10);
+	server._listen = std::strtol(address.c_str(), &endptr, 10);
+}
+
 void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
 {
 	std::string tmp;
@@ -60,13 +75,11 @@ void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
 	{
 		std::istringstream iss(tmp);
 		getline(iss,address, ':');
-		std::cout << address << std::endl;
-		server._address = address;
-		if (!checkAddress(address))
-			return ;
+		if (!insertAddress(server, address))
+			return (false);
 		getline(iss,address, ':');
-		server._listen = std::strtol(address.c_str(), &endptr, 10);
-		std::cout << server._listen << std::endl;
+		addPort(server, address);
+
 	}
 	else
 		std::cerr << "invalid format" << std::endl;

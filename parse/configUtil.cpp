@@ -60,25 +60,26 @@ bool	insertAddress(configServer &server, std::string address)
 	return (true);
 }
 
-bool addPort(configServer &server, std::string address)
+bool addPorti(configServer &server, std::string address)
 {
+	char* endptr;
 	int port = std::strtol(address.c_str(), &endptr, 10);
-	server._listen = std::strtol(address.c_str(), &endptr, 10);
+	server._listen = port;
+	return (true);
 }
 
 void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
 {
 	std::string tmp;
 	std::string address;
-	char* endptr;
 	if (find >> tmp)
 	{
 		std::istringstream iss(tmp);
 		getline(iss,address, ':');
 		if (!insertAddress(server, address))
-			return (false);
+			return ;
 		getline(iss,address, ':');
-		addPort(server, address);
+		addPorti(server, address);
 
 	}
 	else

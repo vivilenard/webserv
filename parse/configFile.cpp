@@ -61,6 +61,7 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 		find >> token;
 		addServerName(tmpServer, token, find);
 		addListen(tmpServer, token, find);
+		addRoot(tmpServer, token, find);
 		if (tmpServer.validFormat == false)
 			exit(1);
 	 }

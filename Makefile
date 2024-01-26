@@ -6,6 +6,7 @@ SRC = main.cpp \
       Error.cpp \
       parse/configFile.cpp \
       parse/configUtil.cpp \
+      parse/root.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 

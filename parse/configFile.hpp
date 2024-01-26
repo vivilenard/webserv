@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <map>
+#include <sys/stat.h>
 
 const int MAX_PORT = 65535;
 
@@ -15,6 +16,7 @@ struct configServer
 	std::string _include;
 	int			_listen;
 	std::string _address;
+	std::string _root;
 	bool	validFormat;
 	struct Location
 	{
@@ -41,5 +43,7 @@ public:
 	bool								addLocation(configServer &server, std::string token,
 																	std::istringstream &find);
 	void								addAddress(configServer &server, std::istringstream &find);
+	void								addRoot(configServer &server, std::string token,
+																		std::istringstream &find);
 	~ConfigFile();
 };

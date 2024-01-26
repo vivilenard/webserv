@@ -51,21 +51,40 @@ bool	checkAddress(std::string address)
 	return (true);
 }
 
-bool	insertAddress(configServer &server, std::string address)
+void	insertAddress(configServer &server, std::string address)
 {
 	if (!checkAddress(address))
-		return (false);
+		server.validFormat = false;
 	else
 		server._address = address;
+}
+
+bool checkPortValue(int port)
+{
+	if (port >= 0 && port <= MAX_PORT)
+		std::cout << "port in range" << std::endl;
+	else
+	{
+		std::cout << "port not in range" << std::endl;
+		return (false);
+	}
 	return (true);
 }
 
-bool addPorti(configServer &server, std::string address)
+void	addPort(configServer &server, std::string address)
 {
 	char* endptr;
 	int port = std::strtol(address.c_str(), &endptr, 10);
-	server._listen = port;
-	return (true);
+	if (*endptr)
+	{
+		std::cout << "Please add a valid port" << std::endl;
+		server.validFormat = false;
+		return;
+	}
+	if (checkPortValue(port))
+		server._listen = port;
+	else
+		server.validFormat = false;
 }
 
 void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
@@ -76,12 +95,17 @@ void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
 	{
 		std::istringstream iss(tmp);
 		getline(iss,address, ':');
-		if (!insertAddress(server, address))
+		insertAddress(server, address);
+		if (server.validFormat == false)
 			return ;
 		getline(iss,address, ':');
-		addPorti(server, address);
-
+		addPort(server,address);
+		if (server.validFormat == false)
+			return ;
 	}
 	else
+	{
 		std::cerr << "invalid format" << std::endl;
+		server.validFormat = false;
+	}
 }

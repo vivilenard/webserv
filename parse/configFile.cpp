@@ -2,25 +2,11 @@
 
 ConfigFile::ConfigFile() {}
 
-bool	ConfigFile::addPort(configServer &server, std::string token, std::istringstream &find)
+void	ConfigFile::addListen(configServer &server, std::string token, std::istringstream &find)
 {
-	int port = 0;
 
 	if (token == "listen")
-	{
 		addAddress(server, find);
-		if (find >> port)
-		{
-			server._listen = port;
-			return (true);
-		}
-		else
-		{
-			std::cout << "Invalid port" << std::endl;
-			return (false);
-		}
-	}
-	return (true);
 }
 
 bool	ConfigFile::addLocation(configServer &server, std::string token, std::istringstream &find)
@@ -40,7 +26,7 @@ bool	ConfigFile::addLocation(configServer &server, std::string token, std::istri
 	return(true);
 }
 
-bool	ConfigFile::addServerName(configServer &server, std::string token, std::istringstream &find)
+void	ConfigFile::addServerName(configServer &server, std::string token, std::istringstream &find)
 {
 	std::string serverName;
 
@@ -50,15 +36,14 @@ bool	ConfigFile::addServerName(configServer &server, std::string token, std::ist
 		{
 			server._serverName = serverName; // bc each line ends with ";"
 			// ADD A MSG IF THERE IS NOT A SEMICOLON IN RED BIG!!
-			return (true);
 		}
 		else
 		{
 			std::cout << "invalid format" << std::endl;
-			return (false);
+			server.validFormat = false;
 		}
 	}
-	return (true);
+	server.validFormat = true;
 }
 
 std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
@@ -74,9 +59,9 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 		std::string token;
 		std::istringstream find(line);
 		find >> token;
-		if (!addPort(tmpServer, token, find))
-			exit(1);
-		else if (!addServerName(tmpServer, token, find))
+		addServerName(tmpServer, token, find);
+		addListen(tmpServer, token, find);
+		if (tmpServer.validFormat == false)
 			exit(1);
 	 }
 

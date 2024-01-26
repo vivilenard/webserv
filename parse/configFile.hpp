@@ -7,12 +7,15 @@
 #include <cstdlib>
 #include <map>
 
+const int MAX_PORT = 65535;
+
 struct configServer
 {
 	std::string _serverName;
 	std::string _include;
 	int			_listen;
 	std::string _address;
+	bool	validFormat;
 	struct Location
 	{
 		std::string _root;
@@ -31,9 +34,9 @@ public:
 	std::map<std::string, configServer> readFile(std::string fileName);
 	std::map<std::string, configServer> getConFile();
 	void								setConFile(std::map<std::string, configServer> set);
-	bool								addPort(configServer &server, std::string token,
+	void								addListen(configServer &server, std::string token,
 											   						std::istringstream &find);
-	bool								addServerName(configServer &server, std::string token,
+	void								addServerName(configServer &server, std::string token,
 													  				std::istringstream &find);
 	bool								addLocation(configServer &server, std::string token,
 																	std::istringstream &find);

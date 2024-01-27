@@ -8,9 +8,7 @@ bool checkRoot(std::string &root)
 		std::cerr << "Invalid root ---> " << root << " <---" << std::endl;
 		return (false);
 	}
-	std::cout << "Root stored" << std::endl;
-	return (info.st_mode & S_IFDIR) !=0;
-
+	return (true);
 }
 
 void ConfigFile::addRoot(configServer &server, std::string token, std::istringstream &find)
@@ -21,10 +19,16 @@ void ConfigFile::addRoot(configServer &server, std::string token, std::istringst
 		if (find >> root)
 		{
 			if (checkRoot(root))
+			{
+				std::cout << root << std::endl;
 				server._root = root;
+				std::cout << "Root stored" << std::endl;
+				std::cout << server._root << std::endl;
+			}
 			else
 				server.validFormat = false;
 		}
 
+		std::cout <<  "SERVER ROOT ---> " << server._root << std::endl;
 	}
 }

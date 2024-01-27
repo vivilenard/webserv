@@ -46,6 +46,25 @@ void	ConfigFile::addServerName(configServer &server, std::string token, std::ist
 	server.validFormat = true;
 }
 
+void	ConfigFile::addIndex(configServer &server, std::string token, std::istringstream &find)
+{
+	std::string index;
+	if (token == "index")
+	{
+		std::cout << "Hello" << std::endl;
+		if (find >> index)
+		{
+			server._index = index;
+			std::cout << "Index stored as " << server._index << std::endl;
+		}
+		else
+		{
+			server.validFormat = false;
+			std::cout << "Invalid index exiting ..." << std::endl;
+		}
+	}
+}
+
 std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 {
  std::ifstream inputFile(fileName);
@@ -56,20 +75,25 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 	 std::string line;
 	 while (getline(inputFile, line))
 	 {
-		std::string token;
+	 	std::string token;
 		std::istringstream find(line);
 		find >> token;
 		addServerName(tmpServer, token, find);
 		addListen(tmpServer, token, find);
 		addRoot(tmpServer, token, find);
-		if (tmpServer.validFormat == false)
-			exit(1);
+		addIndex(tmpServer, token, find);
+		if (token == "location")
+			break ;
 	 }
 
  }
  else
 	 std::cout << "wrong format" << std::endl;
  configTmp[tmpServer._serverName] = tmpServer;
+ if (tmpServer.validFormat == true)
+	 std::cout << "Server Status --->  [ONLINE] " << tmpServer.validFormat << std::endl;
+ else
+	 std::cout << "Server Status --->  [OFFLINE] " << tmpServer.validFormat << std::endl;
  return (configTmp);
 }
 

@@ -18,6 +18,7 @@ struct configServer
 	std::string _address;
 	std::string _root;
 	bool	validFormat;
+	std::string _index;
 	struct Location
 	{
 		std::string _root;
@@ -45,5 +46,7 @@ public:
 	void								addAddress(configServer &server, std::istringstream &find);
 	void								addRoot(configServer &server, std::string token,
 																		std::istringstream &find);
+	void								addIndex(configServer &server, std::string token,
+												 std::istringstream &find);
 	~ConfigFile();
 };

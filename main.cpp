@@ -15,6 +15,8 @@ int main()
 	std::map<std::string, configServer> out;
 	out = test.getConFile();
 	std::cout << "THIS FROM OUT " << out["example.com"]._serverName << std::endl;
+	std::cout << "THIS FROM OUT " << out["example.com"]._root << std::endl;
+	std::cout << "THIS FROM OUT " << out["example.com"]._locations["/post_body"]._name << std::endl;
 
 /*	Server serv = Server("0.0.0.0", 8080);
 	serv.startServer();

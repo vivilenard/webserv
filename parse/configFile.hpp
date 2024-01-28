@@ -21,10 +21,10 @@ struct configServer
 	std::string _index;
 	struct Location
 	{
-		std::string _root;
+		std::string _name;
 		std::string _index;
 	};
-	Location _location;
+	std::map<std::string, Location> _locations;
 };
 
 class ConfigFile
@@ -41,7 +41,7 @@ public:
 											   						std::istringstream &find);
 	void								addServerName(configServer &server, std::string token,
 													  				std::istringstream &find);
-	bool								addLocation(configServer &server, std::string token,
+	void								addLocation(configServer &server, std::string token,
 																	std::istringstream &find);
 	void								addAddress(configServer &server, std::istringstream &find);
 	void								addRoot(configServer &server, std::string token,

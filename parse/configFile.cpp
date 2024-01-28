@@ -9,21 +9,20 @@ void	ConfigFile::addListen(configServer &server, std::string token, std::istring
 		addAddress(server, find);
 }
 
-bool	ConfigFile::addLocation(configServer &server, std::string token, std::istringstream &find)
+void	ConfigFile::addLocation(configServer &server, std::string token, std::istringstream &find)
 {
 	if (token == "location")
 	{
-		std::string root;
-		if (find >> root)
+		std::string dir;
+		std::string nameLocation;
+		if (find >> dir)
 		{
-			server._location._root = root;
-			std::cout << root << std::endl;
-			return (true);
+			server._locations[dir]._name = dir;
+			std::cout << "Location's Names [" << server._locations[dir]._name << "]" << std::endl;
 		}
 		else
-			return(false);
+			server.validFormat = false;
 	}
-	return(true);
 }
 
 void	ConfigFile::addServerName(configServer &server, std::string token, std::istringstream &find)
@@ -82,8 +81,7 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 		addListen(tmpServer, token, find);
 		addRoot(tmpServer, token, find);
 		addIndex(tmpServer, token, find);
-		if (token == "location")
-			break ;
+		addLocation(tmpServer, token, find);
 	 }
 
  }

@@ -9,22 +9,6 @@ void	ConfigFile::addListen(configServer &server, std::string token, std::istring
 		addAddress(server, find);
 }
 
-void	ConfigFile::addLocation(configServer &server, std::string token, std::istringstream &find)
-{
-	if (token == "location")
-	{
-		std::string dir;
-		std::string nameLocation;
-		if (find >> dir)
-		{
-			server._locations[dir]._name = dir;
-			std::cout << "Location's Names [" << server._locations[dir]._name << "]" << std::endl;
-		}
-		else
-			server.validFormat = false;
-	}
-}
-
 void	ConfigFile::addServerName(configServer &server, std::string token, std::istringstream &find)
 {
 	std::string serverName;
@@ -50,7 +34,6 @@ void	ConfigFile::addIndex(configServer &server, std::string token, std::istrings
 	std::string index;
 	if (token == "index")
 	{
-		std::cout << "Hello" << std::endl;
 		if (find >> index)
 		{
 			server._index = index;
@@ -81,7 +64,19 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 		addListen(tmpServer, token, find);
 		addRoot(tmpServer, token, find);
 		addIndex(tmpServer, token, find);
-		addLocation(tmpServer, token, find);
+		if (token == "location")
+		{
+			std::string dir = addLocation(tmpServer, token, find);
+			std::cout << "DIR --> " <<  dir << std::endl;
+			std::string line2 = line;
+			while (std::getline(inputFile, line2))
+			{
+				setMethod(tmpServer, dir, line2);
+				std::cout << "[" << line << "]" << std::endl;
+				if (line2 == "}")
+					break ;
+			}
+		}
 	 }
 
  }

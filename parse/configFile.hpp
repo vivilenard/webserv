@@ -23,6 +23,10 @@ struct configServer
 	{
 		std::string _name;
 		std::string _index;
+		bool		_post;
+		bool		_get;
+		bool		_put;
+
 	};
 	std::map<std::string, Location> _locations;
 };
@@ -41,12 +45,14 @@ public:
 											   						std::istringstream &find);
 	void								addServerName(configServer &server, std::string token,
 													  				std::istringstream &find);
-	void								addLocation(configServer &server, std::string token,
-																	std::istringstream &find);
 	void								addAddress(configServer &server, std::istringstream &find);
 	void								addRoot(configServer &server, std::string token,
 																		std::istringstream &find);
 	void								addIndex(configServer &server, std::string token,
 												 std::istringstream &find);
+	std::string							addLocation(configServer &server, std::string token,
+													   				std::istringstream &find);
+	void								setMethod(configServer &server, std::string dir,
+												  std::string rule);
 	~ConfigFile();
 };

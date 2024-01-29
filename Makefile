@@ -7,6 +7,7 @@ SRC = main.cpp \
       parse/configFile.cpp \
       parse/configUtil.cpp \
       parse/root.cpp \
+      parse/location.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 

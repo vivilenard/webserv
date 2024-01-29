@@ -16,7 +16,9 @@ int main()
 	out = test.getConFile();
 	std::cout << "THIS FROM OUT " << out["example.com"]._serverName << std::endl;
 	std::cout << "THIS FROM OUT " << out["example.com"]._root << std::endl;
-	std::cout << "THIS FROM OUT " << out["example.com"]._locations["/post_body"]._name << std::endl;
+	std::cout << "THIS FROM OUT " << out["example.com"]._locations["/put_test"]._name << std::endl;
+	std::cout << "THIS FROM OUT " << out["example.com"]._locations["/put_test"]._put << std::endl;
+	std::cout << "THIS FROM OUT " << out["example.com"]._locations["/put_test"]._post << std::endl;
 
 /*	Server serv = Server("0.0.0.0", 8080);
 	serv.startServer();

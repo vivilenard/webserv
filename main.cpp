@@ -24,6 +24,9 @@ int main()
 	std::cout << "THIS FROM POST_BODY POST " << out["example.com"]._locations["/post_body"]._post << std::endl;
 	std::cout << "THIS FROM POST_BODY POST " << out["example.com"]._locations["/post_body"]._get << std::endl;
 	std::cout << "THIS FROM POST_BODY POST " << out["example.com"]._locations["/post_body"]._put << std::endl;
+	std::cout << "THIS FROM DIRECTORY " << out["example.com"]._locations["/directory"]._post << std::endl;
+	std::cout << "THIS FROM DIRECTORY " << out["example.com"]._locations["/directory"]._get << std::endl;
+	std::cout << "THIS FROM DIRECTORY " << out["example.com"]._locations["/directory"]._put << std::endl;
 
 /*	Server serv = Server("0.0.0.0", 8080);
 	serv.startServer();

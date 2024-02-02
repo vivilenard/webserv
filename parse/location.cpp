@@ -18,7 +18,7 @@ void	ConfigFile::setMethod(configServer &server, std::string dir,
 
 }
 
-std::string	ConfigFile::addLocation(configServer &server, std::string token, std::istringstream &find)
+std::string	ConfigFile::addNameLocation(configServer &server, std::string token, std::istringstream &find)
 {
 	if (token == "location")
 	{
@@ -35,4 +35,27 @@ std::string	ConfigFile::addLocation(configServer &server, std::string token, std
 		}
 	}
 	return ("");
+}
+
+void	ConfigFile::setLocation(configServer &server, std::ifstream &inputFile,
+										std::string token, std::string &line, std::istringstream &find)
+{
+	if (token == "location")
+	{
+		std::string dir = addNameLocation(server, token, find);
+		std::cout << "DIR-->" << dir << std::endl;
+		std::string line2 = line;
+		while (std::getline(inputFile, line2))
+		{
+			std::string token1;
+			std::istringstream find1(line2);
+			find1 >> token1;
+			setMethod(server, dir, line2);
+			if (token1 == "}")
+			{
+				line += line2;
+				break ;
+			}
+		}
+	}
 }

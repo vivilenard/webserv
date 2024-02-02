@@ -64,24 +64,7 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 		addListen(tmpServer, token, find);
 		addRoot(tmpServer, token, find);
 		addIndex(tmpServer, token, find);
-		if (token == "location")
-		{
-			std::string dir = addLocation(tmpServer, token, find);
-			std::cout << "DIR-->" << dir << std::endl;
-			std::string line2 = line;
-			while (std::getline(inputFile, line2))
-			{
-				std::string token1;
-				std::istringstream find1(line2);
-				find1 >> token1;
-				setMethod(tmpServer, dir, line2);
-				if (token1 == "}")
-				{
-					line += line2;
-					break ;
-				}
-			}
-		}
+		setLocation(tmpServer,inputFile, token,line, find);
 	 }
 
  }

@@ -50,9 +50,11 @@ public:
 																		std::istringstream &find);
 	void								addIndex(configServer &server, std::string token,
 												 std::istringstream &find);
-	std::string							addLocation(configServer &server, std::string token,
+	std::string							addNameLocation(configServer &server, std::string token,
 													   				std::istringstream &find);
 	void								setMethod(configServer &server, std::string dir,
 												  std::string rule);
+	void								setLocation(configServer &server, std::ifstream &inputFile,
+													std::string token, std::string &line, std::istringstream &find);
 	~ConfigFile();
 };

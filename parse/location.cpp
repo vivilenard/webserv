@@ -8,7 +8,6 @@ void	ConfigFile::setMethod(configServer &server, std::string dir,
 	std::istringstream ruleStream(rule);
 	ruleStream >> divider;
 	ruleStream >> method;
-	std::cout << "RULE " << method << std::endl;
 	if (method == "PUT")
 		server._locations[dir]._put = true;
 	else if (method == "GET")
@@ -43,7 +42,6 @@ void	ConfigFile::setLocation(configServer &server, std::ifstream &inputFile,
 	if (token == "location")
 	{
 		std::string dir = addNameLocation(server, token, find);
-		std::cout << "DIR-->" << dir << std::endl;
 		std::string line2 = line;
 		while (std::getline(inputFile, line2))
 		{

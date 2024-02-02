@@ -2,6 +2,14 @@
 
 ConfigFile::ConfigFile() {}
 
+void	serverStatus(configServer &server)
+{
+	if (server.validFormat == true)
+		std::cout << "Server Status [ONLINE] " << server.validFormat << std::endl;
+	else
+		std::cout << "Server Status [OFFLINE] " << server.validFormat << std::endl;
+}
+
 void	ConfigFile::addListen(configServer &server, std::string token, std::istringstream &find)
 {
 
@@ -69,13 +77,10 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 
  }
  else
-	 std::cout << "wrong format" << std::endl;
- configTmp[tmpServer._serverName] = tmpServer;
- if (tmpServer.validFormat == true)
-	 std::cout << "Server Status --->  [ONLINE] " << tmpServer.validFormat << std::endl;
- else
-	 std::cout << "Server Status --->  [OFFLINE] " << tmpServer.validFormat << std::endl;
- return (configTmp);
+ 	std::cout << "wrong format" << std::endl;
+ 	serverStatus(tmpServer);
+ 	configTmp[tmpServer._serverName] = tmpServer;
+ 	return (configTmp);
 }
 
 void	ConfigFile::setConFile(std::map<std::string, configServer> set)

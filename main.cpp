@@ -14,19 +14,6 @@ int main()
 	test.setConFile(set);
 	std::map<std::string, configServer> out;
 	out = test.getConFile();
-	std::cout << "THIS FROM OUT " << out["example.com"]._serverName << std::endl;
-	std::cout << "THIS FROM OUT " << out["example.com"]._root << std::endl;
-	std::cout << "THIS FROM OUT " << out["example.com"]._locations["/put_test"]._name << std::endl;
-	std::cout << "LOCATION PUT_TEST PUT " << out["example.com"]._locations["/put_test"]._put << std::endl;
-	std::cout << "THIS FROM PUT_TEST POST " << out["example.com"]._locations["/put_test"]._post << std::endl;
-	std::cout << "LOCATION PUT_TEST GET " << out["example.com"]._locations["/put_test"]._get << std::endl;
-	/*std::cout << "THIS FROM PUT_TEST POST " << out["example.com"]._locations["/put_test"]._post << std::endl;*/
-	std::cout << "THIS FROM POST_BODY POST " << out["example.com"]._locations["/post_body"]._post << std::endl;
-	std::cout << "THIS FROM POST_BODY POST " << out["example.com"]._locations["/post_body"]._get << std::endl;
-	std::cout << "THIS FROM POST_BODY POST " << out["example.com"]._locations["/post_body"]._put << std::endl;
-	std::cout << "THIS FROM DIRECTORY " << out["example.com"]._locations["/directory"]._post << std::endl;
-	std::cout << "THIS FROM DIRECTORY " << out["example.com"]._locations["/directory"]._get << std::endl;
-	std::cout << "THIS FROM DIRECTORY " << out["example.com"]._locations["/directory"]._put << std::endl;
 
 /*	Server serv = Server("0.0.0.0", 8080);
 	serv.startServer();

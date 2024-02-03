@@ -5,6 +5,7 @@ Config Response::_config = Config();
 Response::Response(Request & request):
 	_request(request), _status("418 I'm a teapot"), _httpVersion("HTTP/1.1")
 {
+	cout << "created Response" << endl;
 	if (request.getMethod() == "GET")
 		processGet();
 	else if (request.getMethod() == "POST")
@@ -51,7 +52,8 @@ void Response::formResponse(const string & status)
 {
 	ostringstream os;
 	os << "<h1> " << status << " </h1>\n";
-
+	// if (statusInfo.empty() == 0)
+		// os << "<h3> " << statusInfo << " </h3>\n";
 	string body = os.str();
 	os.str("");
 
@@ -71,15 +73,16 @@ void Response::formResponse(const string & status)
 void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
+	_status = "201 Created";
 	string path = addRootPath(_request.getPath());
 	string contentType = _request.getHeaders()["Content-Type"];
 	string body = _request.getBody();
 	string mimeType = findKeyByValue(_config._mimeTypes, contentType);
-
-	if (createFile(path, body) == 0)
-		cerr << "Post: Failed to create file" << endl;
-	else
-		_status = "201 Created";
+	cout << "MIME:" << mimeType << endl;
+	if (mimeType == "form-urlencoded")
+		_request.parseQuery(_request.getBody());
+	else if (createFile(path, body) == 0)
+		cerr << "failed to create file" << endl;
 	formResponse(_status);
 }
 
@@ -90,6 +93,7 @@ int	Response::createFile(std::string & path, std::string & content)
 	if (_request.getPath() == "/")
 	{
 		_status = "400 Bad Request";
+		_statusInfo = "Please include a valid path";
 		return false;
 	}
 	if (access(path.c_str(), W_OK) > 0)

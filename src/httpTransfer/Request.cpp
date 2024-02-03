@@ -21,9 +21,14 @@ void	Request::parseMainHeader()
 		|| !getline(istream, _httpVersion, ' '))
 		cerr << "Error: Wrong Header" << endl;
 
-	// if (_path[0] == '/')
-	// 	_path = _path.substr(1);
 	_httpVersion = _httpVersion.substr(0, _httpVersion.find_first_of("\n"));
+	size_t pos = _path.find_first_of('?');
+	if (pos != string::npos)
+	{
+		parseQuery(_path.substr(pos + 1));
+		_path.erase(pos);
+		cout << "path: " << _path << endl ;
+	}
 }
 
 void	Request::parseHeaders()
@@ -60,7 +65,27 @@ void Request::parseBody()
 	// cout << "POS BODY: " << pos_body << endl;
 }
 
-int	Request::findDoubleNewline(std::string & s)
+void Request::parseQuery(const string & queryString)
+{
+	if (queryString.empty())
+		return ;
+	cout << queryString << endl;
+	istringstream queryStream(queryString);
+	string queryPair;
+	while (getline(queryStream, queryPair, '&'))
+	{
+		size_t a = queryPair.find_first_of('=');
+		if (a == string::npos || a == string::npos - 1)
+			return ;
+		_query[queryPair.substr(0, a)] = queryPair.substr(a + 1);
+	}
+	Query::iterator it;
+	for (it = _query.begin(); it != _query.end(); it++)
+		cout << it->first << " and " << it->second << endl;
+
+}
+
+int Request::findDoubleNewline(std::string &s)
 {
 	int pos = s.find("\n\n");
 	if (pos > 0)

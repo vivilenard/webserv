@@ -11,6 +11,7 @@ class Response
 	static Config 	_config;
 	Request			_request;
 	string			_status;
+	string			_statusInfo;
 	string			_httpVersion;
 	string			_newPath;
 	string			_contentType;

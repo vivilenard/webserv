@@ -6,6 +6,8 @@ Response::Response(Request & request):
 	_request(request), _status("418 I'm a teapot"), _httpVersion("HTTP/1.1")
 {
 	cout << "created Response" << endl;
+	if (request.getSizeBound() == false)
+		{ formResponse("400 Bad Request"); return; }
 	if (request.getMethod() == "GET")
 		processGet();
 	else if (request.getMethod() == "POST")
@@ -26,10 +28,13 @@ void	Response::processGet()
 	string	path = addRootPath(_request.getPath());
 	if (path == _config.getRootPath() + "/")
 		path = path + "index.html";
-	// path = "/home/vivien/Desktop/webserv/www/index.html";
+	cout << "path: " << path << endl;
 	string	fileContent = readFile(path);
 	if (fileContent.empty())
+	{
+		cerr << "file has no content" << endl;
 		_status = "404 Not Found";
+	}
 	string	contentType = getContentType(path);
 	if (contentType.empty())
 		_status = "415 Unsupported Media Type";
@@ -54,6 +59,7 @@ void Response::formResponse(const string & status)
 	os << "<h1> " << status << " </h1>\n";
 	// if (statusInfo.empty() == 0)
 		// os << "<h3> " << statusInfo << " </h3>\n";
+	// os.str("");
 	string body = os.str();
 	os.str("");
 
@@ -89,7 +95,7 @@ void Response::processPost()
 int	Response::createFile(std::string & path, std::string & content)
 {
 	fstream file;
-	// cout << "PATH:" << path << "!" << endl;
+	cout << "PATH:" << path << "!" << endl;
 	if (_request.getPath() == "/")
 	{
 		_status = "400 Bad Request";
@@ -98,11 +104,12 @@ int	Response::createFile(std::string & path, std::string & content)
 	}
 	if (access(path.c_str(), W_OK) > 0)
 		cout << "file already exists and has writing rights, its going to be overwritten" << endl;
-	cout << "TRY TO OPEN: " << path << endl;
+	cout << "TRY TO ACCESS: " << path << endl;
 	file.open(path.c_str(), ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())
 	{
-		_status = "418 I'm a teapot";
+		_status = "400 Bad Request";
+		_statusInfo = "Please include a valid path";
 		return false;
 	}
 	file << content;
@@ -131,6 +138,7 @@ string	Response::readFile(const string & path)
 	file.open(path.c_str());
 	if (!file)
 		{
+			cerr << "File does not open, probably no access rights" << endl;
 			return "";
 		}
 	os << file.rdbuf();

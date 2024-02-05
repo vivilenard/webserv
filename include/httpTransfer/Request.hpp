@@ -11,6 +11,7 @@
 
 #define Headers map<string, string>
 #define Query map<string, string>
+#define MAX_BODY_SIZE 50000
 
 class Request
 {
@@ -28,8 +29,9 @@ class Request
 	Query			_query;
 	void			parseMainHeader();
 	void			parseHeaders();
-	void			parseBody();
+	int				parseBody();
 	int				findDoubleNewline(std::string & s);
+	bool			_sizeInRange;
 	// string			parseHeader(string s);
 
 
@@ -40,6 +42,7 @@ class Request
 
 		const string & 	getMethod()	{ return _method; }
 		const string & 	getPath()	{ return _path; }
+		const bool   &	getSizeBound(){ return _sizeInRange; }
 		Headers & 		getHeaders(){ return _headers; }
 		const string & 	getBody()	{ return _body; }
 		void			parseQuery(const string & path);

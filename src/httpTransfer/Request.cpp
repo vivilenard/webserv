@@ -2,11 +2,13 @@
 
 // Config Request::_config = Config();
 
-Request::Request(const string & request): _request(request)
+Request::Request(const string & request): _request(request), _sizeInRange(true)
 {
 	// cout << "------------REQUEST------------" << endl;
 	// cout << request << endl;
 	// cout << "-------------------------------" << endl;
+	if (request.length() > MAX_BODY_SIZE + 500)
+		_sizeInRange = false;
 	parseMainHeader();
 	parseHeaders();
 	parseBody();
@@ -51,18 +53,21 @@ void	Request::parseHeaders()
 }
 
 
-void Request::parseBody()
+int Request::parseBody()
 {
+	//PROBLEM: BUFFER ONLY 42185 BYTES
 	int pos_body = findDoubleNewline(_request);
 	if (pos_body < 0)
 		cerr << "No Body in Post request!" << endl;
 	istringstream is(_headers["Content-Length"]);
 	int contentLength;
 	is >> contentLength;
-	_body = _request.substr(pos_body, contentLength +10000);
-	// _body.erase(0, pos_body);
-	// cout << "CONTLEN: " << contentLength << endl;
-	// cout << "POS BODY: " << pos_body << endl;
+	cout << "body pos: " << pos_body << endl;
+	cout << "contentLength: " << contentLength << endl;
+	_body = _request.substr(pos_body, contentLength);
+	cout << "BODY SIZE: " << _body.length() << endl;
+	cout << "REQUEST SIZE: " << _request.length() << endl;
+	return 1;
 }
 
 void Request::parseQuery(const string & queryString)
@@ -87,14 +92,14 @@ void Request::parseQuery(const string & queryString)
 
 int Request::findDoubleNewline(std::string &s)
 {
-	int pos = s.find("\n\n");
+	int pos = s.find("\r\n\r\n");
 	if (pos > 0)
-		pos += 2;
+		pos += 4;
 	else
 	{
-		pos = s.find("\r\n\r\n");
+		pos = s.find("\n\n");
 		if (pos > 0)
-			pos += 4;
+			pos += 2;
 		else
 			return -1;
 	}
@@ -116,12 +121,12 @@ ostream & operator<<(ostream & os, const Request & r)
 		cout << it->first << ":" << it->second << endl;
 	cout << "------------------------------------------" << endl;
 
-	cout << "///////////////BODY/////////////" << endl;
-	if (r._body.length() > 0)
-		cout << r._body << endl;
-	else
-		cout << "NO CONTENT" << endl;
-	cout << "////////////////////////////////" << endl;
+	// cout << "///////////////BODY/////////////" << endl;
+	// if (r._body.length() > 0)
+	// 	cout << r._body << endl;
+	// else
+	// 	cout << "NO CONTENT" << endl;
+	// cout << "////////////////////////////////" << endl;
 	return os;
 }
 

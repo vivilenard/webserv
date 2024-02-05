@@ -13,6 +13,7 @@ std::string testHttp(const std::string &request/* , Config & config */) {
         return "";
     } else {
 		Request		httpRequest(request);
+		// cout << request << endl;
 		cout << httpRequest << endl;
 		Response	httpResponse(httpRequest);
 		return httpResponse.getResponse();

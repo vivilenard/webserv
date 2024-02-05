@@ -1,7 +1,7 @@
 #include "../../include/config/Config.hpp"
 // #include "Config.hpp"
 
-Config::Config(): _rootPath("/home/vivien/Desktop/webserv/www")
+Config::Config(): _rootPath("/Users/vlenard/coding/webserv/www")
 {
 	cout << "CONFIG CLASS CREATED" << endl;
 	_defaultPath = _rootPath + "/index.html";

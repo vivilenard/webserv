@@ -46,7 +46,6 @@ HEADER	+=
 SRCS	=	webserver.cpp \
 			socketManagerTools.cpp \
 			InterfaceTools.cpp \
-			httpTransfer.cpp \
 			Config.cpp \
 			Error.cpp \
 			Request.cpp \

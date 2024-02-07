@@ -29,7 +29,7 @@ void	Request::parseMainHeader()
 	{
 		parseQuery(_path.substr(pos + 1));
 		_path.erase(pos);
-		cout << "path: " << _path << endl ;
+		// cout << "path: " << _path << endl ;
 	}
 }
 
@@ -55,18 +55,13 @@ void	Request::parseHeaders()
 
 int Request::parseBody()
 {
-	//PROBLEM: BUFFER ONLY 42185 BYTES
 	int pos_body = findDoubleNewline(_request);
 	if (pos_body < 0)
 		cerr << "No Body in Post request!" << endl;
 	istringstream is(_headers["Content-Length"]);
 	int contentLength;
 	is >> contentLength;
-	cout << "body pos: " << pos_body << endl;
-	cout << "contentLength: " << contentLength << endl;
 	_body = _request.substr(pos_body, contentLength);
-	cout << "BODY SIZE: " << _body.length() << endl;
-	cout << "REQUEST SIZE: " << _request.length() << endl;
 	return 1;
 }
 
@@ -129,31 +124,3 @@ ostream & operator<<(ostream & os, const Request & r)
 	// cout << "////////////////////////////////" << endl;
 	return os;
 }
-
-// void Request::printHeaders()
-// {
-// 	cout << "----------------PARSEHEADERS:---------------" << endl;
-// 	Headers::iterator it;
-// 	for (it = _headers.begin(); it != _headers.end(); it++)
-// 		cout << it->first << ":" << it->second << endl;
-// 	cout << "------------------------------------------" << endl;
-// }
-
-// string	Request::parseHeader(string s)
-// {
-// 	size_t pos_type = _request.find(s);
-// 	//cout << "POS TYPE"<< pos_type << endl;
-// 	if (pos_type == string::npos)
-// 	{
-// 		cerr << "No Content-Type found" << endl;
-// 		return "";
-// 	}
-// 	std::string typeLine = _request.substr(pos_type, _request.find('\n', pos_type));
-// 	typeLine = typeLine.substr(typeLine.find_first_of(':') + 1);
-// 	typeLine = typeLine.substr(typeLine.find_first_not_of(' '));
-// 	int pos = typeLine.find_first_of('\n');
-// 	if ((int)typeLine.find_first_of('\r') < pos)
-// 		pos = typeLine.find_first_of('\r');
-// 	std::string contentType = typeLine.substr(0, pos);
-// 	return contentType;
-// }

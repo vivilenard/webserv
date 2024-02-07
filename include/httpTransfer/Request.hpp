@@ -50,5 +50,8 @@ class Request
 
 };
 
+#define BLUECOLOR "\033[1;96m"
+#define MAGCOLOR "\033[1;95m"
+#define NORM "\033[0m"
 
 #endif

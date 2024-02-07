@@ -27,8 +27,12 @@ void	Response::processGet()
 	ostringstream os;
 	string	path = addRootPath(_request.getPath());
 	if (path == _config.getRootPath() + "/")
-		path = path + "index.html";
+		path = path + "index.html";			//change to defaultFile
 	cout << "path: " << path << endl;
+	if (isCgi(path))
+	{
+		return ;
+	}
 	string	fileContent = readFile(path);
 	if (fileContent.empty())
 	{
@@ -65,22 +69,30 @@ void Response::formResponse(const string & status)
 
 	// ostringstream os;
 	os << _httpVersion << " " << status << "\r\n";
-	os << "Content-Type:" 		<< "text/html" << "\r\n";
-	os << "Content-Length: " 	<< body.length() << "\r\n";
-	os << "\r\n";
-	os << body;
+	if (status != "100 Continue")
+	{
+		os << "Content-Type:" 		<< "text/html" << "\r\n";
+		os << "Content-Length: " 	<< body.length() << "\r\n";
+		os << "\r\n";
+		os << body;
+	}
 	_response = os.str();
-	cout << "_________________RESPONSE________________" << endl;
-	cout << _response << endl;
-	cout << "_________________________________________" << endl;
-
 }
 
 void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
-	_status = "201 Created";
 	string path = addRootPath(_request.getPath());
+	if (isCgi(path))
+	{
+		return ;
+	}
+	if (isMultipart())
+	{
+		formResponse("100 Continue");
+		return;
+	}
+	_status = "201 Created";
 	string contentType = _request.getHeaders()["Content-Type"];
 	string body = _request.getBody();
 	string mimeType = findKeyByValue(_config._mimeTypes, contentType);
@@ -95,7 +107,7 @@ void Response::processPost()
 int	Response::createFile(std::string & path, std::string & content)
 {
 	fstream file;
-	cout << "PATH:" << path << "!" << endl;
+	// cout << "PATH:" << path << "!" << endl;
 	if (_request.getPath() == "/")
 	{
 		_status = "400 Bad Request";
@@ -104,7 +116,7 @@ int	Response::createFile(std::string & path, std::string & content)
 	}
 	if (access(path.c_str(), W_OK) > 0)
 		cout << "file already exists and has writing rights, its going to be overwritten" << endl;
-	cout << "TRY TO ACCESS: " << path << endl;
+	// cout << "TRY TO ACCESS: " << path << endl;
 	file.open(path.c_str(), ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())
 	{
@@ -128,7 +140,12 @@ void Response::processDelete()
 	formResponse(_status);
 }
 
-
+bool	Response::isMultipart()
+{
+	if (_request.getHeaders()["Content-Type"].find("boundary=") != string::npos)
+		return true;
+	return false;
+}
 string	Response::readFile(const string & path)
 {
 	ifstream		file;
@@ -150,8 +167,6 @@ string	Response::readFile(const string & path)
 
 string	Response::addRootPath(const string & path)
 {
-	// string path = _request.getPath();
-	//add prefix
 	return (_config.getRootPath() + path);
 
 }
@@ -172,7 +187,6 @@ std::string	Response::findKeyByValue(std::map<string, string>m, string value)
 	map<string, string>::iterator it;
 	for (it = m.begin(); it != m.end(); it++)
 	{
-		// cout << it->second << "," << contentType << it->second.compare(contentType) << endl;
 		if (it->second.compare(value) == 0)
 		{
 			cout << it->first << "," << it->second << endl;
@@ -181,4 +195,9 @@ std::string	Response::findKeyByValue(std::map<string, string>m, string value)
 		}
 	}
 	return fileType;
+}
+
+bool	Response::isCgi(const string & path)
+{
+	return false;
 }

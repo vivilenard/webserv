@@ -1,7 +1,6 @@
 #include "socketManager.hpp"
 #include "Interface.hpp"
 #include "../include/config/Config.hpp"
-#include "../include/httpTransfer/httpTransfer.hpp"
 #include "../include/httpTransfer/Request.hpp"
 #include "../include/httpTransfer/Response.hpp"
 
@@ -12,13 +11,15 @@ std::string testHttp(const std::string &request/* , Config & config */) {
         std::cout << "request is empty" << std::endl;
         return "";
     } else {
+		cout << MAGCOLOR << "-------httpTransfer----->>" << NORM << endl;
 		Request		httpRequest(request);
 		// cout << request << endl;
-		cout << httpRequest << endl;
+		// cout << httpRequest << endl;
 		Response	httpResponse(httpRequest);
-		return httpResponse.getResponse();
-		// httpTransfer transfer(request);
-		// return transfer.createResponse();
+		std::string response = httpResponse.getResponse();
+		cout << BLUECOLOR << "RESPONSE:\n" << response << NORM <<endl;
+		cout << MAGCOLOR << "<<------------------------" << NORM << endl;
+		return response;
     }
 }
 

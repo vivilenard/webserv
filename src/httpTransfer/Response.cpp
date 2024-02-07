@@ -65,10 +65,13 @@ void Response::formResponse(const string & status)
 
 	// ostringstream os;
 	os << _httpVersion << " " << status << "\r\n";
-	os << "Content-Type:" 		<< "text/html" << "\r\n";
-	os << "Content-Length: " 	<< body.length() << "\r\n";
-	os << "\r\n";
-	os << body;
+	if (status != "100 Continue")
+	{
+		os << "Content-Type:" 		<< "text/html" << "\r\n";
+		os << "Content-Length: " 	<< body.length() << "\r\n";
+		os << "\r\n";
+		os << body;
+	}
 	_response = os.str();
 	cout << "_________________RESPONSE________________" << endl;
 	cout << _response << endl;
@@ -79,6 +82,12 @@ void Response::formResponse(const string & status)
 void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
+	//IMPRO:
+	if (isMultipart())
+	{
+		formResponse("100 Continue");
+		return;
+	}
 	_status = "201 Created";
 	string path = addRootPath(_request.getPath());
 	string contentType = _request.getHeaders()["Content-Type"];
@@ -128,7 +137,12 @@ void Response::processDelete()
 	formResponse(_status);
 }
 
-
+bool	Response::isMultipart()
+{
+	if (_request.getHeaders()["Content-Type"].find("boundary=") != string::npos)
+		return true;
+	return false;
+}
 string	Response::readFile(const string & path)
 {
 	ifstream		file;

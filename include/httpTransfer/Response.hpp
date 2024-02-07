@@ -27,6 +27,7 @@ class Response
 	int			createFile(std::string & path, std::string & cont);
 	std::string	findKeyByValue(std::map<string, string>m, string value);
 	void		formResponse(const string & status);
+	bool		isMultipart();
 
 	public:
 		Response(Request & request);

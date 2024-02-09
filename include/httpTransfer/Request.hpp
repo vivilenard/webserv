@@ -18,7 +18,7 @@ class Request
 	// static	Config	_config;
 	string			_request;
 	string			_method;
-	string			_path;
+	string			_URI;
 	// string			_prefixPath;
 	string			_httpVersion;
 	string			_contentLength;
@@ -41,7 +41,7 @@ class Request
 		// void printHeaders();
 
 		const string & 	getMethod()	{ return _method; }
-		const string & 	getPath()	{ return _path; }
+		const string & 	getURI()	{ return _URI; }
 		const bool   &	getSizeBound(){ return _sizeInRange; }
 		Headers & 		getHeaders(){ return _headers; }
 		const string & 	getBody()	{ return _body; }

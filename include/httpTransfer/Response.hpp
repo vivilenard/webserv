@@ -3,37 +3,41 @@
 
 #include "Request.hpp"
 #include "config/Config.hpp"
+#include "Status.hpp"
+#include <map>
+
 
 
 class Response
 {
+	Request			_request;
 	string			_response;
 	static Config 	_config;
-	Request			_request;
-	string			_status;
+	static StatusCode _statusCode;
+	int				_status;
 	string			_statusInfo;
 	string			_httpVersion;
-	string			_newPath;
-	string			_contentType;
-	string			_contentLenght;
+	string			_URI;
 	string			_responseBody;
+	string			_fileContent;
+	string			_fileContentType;
 
-	void		processGet();
-	void		processPost();
-	void		processDelete();
-	string		readFile(const string & path);
-	string		addRootPath(const string & path);
-	string		getContentType(const string & path);
-	int			createFile(std::string & path, std::string & cont);
-	std::string	findKeyByValue(std::map<string, string>m, string value);
-	void		formResponse(const string & status);
-	bool		isMultipart();
-	bool		isCgi(const string & path);
+	void			processGet();
+	void			processPost();
+	void			processDelete();
+	bool			readFile(const string & path);
+	string			addRootPath(const string & path);
+	int				addDefaultFile(string & path);
+	string			getContentType(const string & path);
+	int				createFile(std::string & path, const std::string & cont);
+	std::string		findKeyByValue(std::map<string, string>m, string value);
+	void			formResponse(const int & status, const string & statusInfo);
+	const string	createErrorBody(const int & status, const string & statusInfo);
+	bool			isMultipart();
+	bool			isCgi(const string & path);
 
 	public:
 		Response(Request & request);
-	// static Config 	_config;
-
 		const string getResponse() const { return _response ; };
 };
 

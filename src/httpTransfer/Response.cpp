@@ -73,16 +73,11 @@ void Response::formResponse(const string & status)
 		os << body;
 	}
 	_response = os.str();
-	cout << "_________________RESPONSE________________" << endl;
-	cout << _response << endl;
-	cout << "_________________________________________" << endl;
-
 }
 
 void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
-	//IMPRO:
 	if (isMultipart())
 	{
 		formResponse("100 Continue");
@@ -104,7 +99,7 @@ void Response::processPost()
 int	Response::createFile(std::string & path, std::string & content)
 {
 	fstream file;
-	cout << "PATH:" << path << "!" << endl;
+	// cout << "PATH:" << path << "!" << endl;
 	if (_request.getPath() == "/")
 	{
 		_status = "400 Bad Request";
@@ -113,7 +108,7 @@ int	Response::createFile(std::string & path, std::string & content)
 	}
 	if (access(path.c_str(), W_OK) > 0)
 		cout << "file already exists and has writing rights, its going to be overwritten" << endl;
-	cout << "TRY TO ACCESS: " << path << endl;
+	// cout << "TRY TO ACCESS: " << path << endl;
 	file.open(path.c_str(), ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())
 	{
@@ -164,8 +159,6 @@ string	Response::readFile(const string & path)
 
 string	Response::addRootPath(const string & path)
 {
-	// string path = _request.getPath();
-	//add prefix
 	return (_config.getRootPath() + path);
 
 }
@@ -186,7 +179,6 @@ std::string	Response::findKeyByValue(std::map<string, string>m, string value)
 	map<string, string>::iterator it;
 	for (it = m.begin(); it != m.end(); it++)
 	{
-		// cout << it->second << "," << contentType << it->second.compare(contentType) << endl;
 		if (it->second.compare(value) == 0)
 		{
 			cout << it->first << "," << it->second << endl;

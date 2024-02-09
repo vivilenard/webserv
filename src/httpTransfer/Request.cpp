@@ -19,17 +19,17 @@ void	Request::parseMainHeader()
 	// cout << "parse Header" << endl;
 	istringstream istream(_request);
 	if (!getline(istream, _method, ' ')
-		|| !getline(istream, _path, ' ')
+		|| !getline(istream, _URI, ' ')
 		|| !getline(istream, _httpVersion, ' '))
 		cerr << "Error: Wrong Header" << endl;
 
 	_httpVersion = _httpVersion.substr(0, _httpVersion.find_first_of("\n"));
-	size_t pos = _path.find_first_of('?');
+	size_t pos = _URI.find_first_of('?');
 	if (pos != string::npos)
 	{
-		parseQuery(_path.substr(pos + 1));
-		_path.erase(pos);
-		// cout << "path: " << _path << endl ;
+		parseQuery(_URI.substr(pos + 1));
+		_URI.erase(pos);
+		// cout << "path: " << _URI << endl ;
 	}
 }
 
@@ -106,7 +106,7 @@ ostream & operator<<(ostream & os, const Request & r)
 	cout << "############################" << endl;
 	// cout << "Request: " << r._request << endl;
 	cout << "Method: " << r._method << endl;
-	cout << "Path: " << r._path << endl;
+	cout << "Path: " << r._URI << endl;
 	cout << "httpVersion: " << r._httpVersion << endl;
 	cout << "##################################" << endl;
 

@@ -50,6 +50,11 @@ SRCS	=	webserver.cpp \
 			Error.cpp \
 			Request.cpp \
 			Response.cpp \
+			Status.cpp \
+			Delete.cpp \
+			Get.cpp \
+			Post.cpp \
+			Cgi.cpp \
 			$(SOURCE)
 
 OBJ_DIR	= ./obj/

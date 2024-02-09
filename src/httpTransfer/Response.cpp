@@ -27,8 +27,12 @@ void	Response::processGet()
 	ostringstream os;
 	string	path = addRootPath(_request.getPath());
 	if (path == _config.getRootPath() + "/")
-		path = path + "index.html";
+		path = path + "index.html";			//change to defaultFile
 	cout << "path: " << path << endl;
+	if (isCgi(path))
+	{
+		return ;
+	}
 	string	fileContent = readFile(path);
 	if (fileContent.empty())
 	{
@@ -78,13 +82,17 @@ void Response::formResponse(const string & status)
 void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
+	string path = addRootPath(_request.getPath());
+	if (isCgi(path))
+	{
+		return ;
+	}
 	if (isMultipart())
 	{
 		formResponse("100 Continue");
 		return;
 	}
 	_status = "201 Created";
-	string path = addRootPath(_request.getPath());
 	string contentType = _request.getHeaders()["Content-Type"];
 	string body = _request.getBody();
 	string mimeType = findKeyByValue(_config._mimeTypes, contentType);
@@ -187,4 +195,9 @@ std::string	Response::findKeyByValue(std::map<string, string>m, string value)
 		}
 	}
 	return fileType;
+}
+
+bool	Response::isCgi(const string & path)
+{
+	return false;
 }

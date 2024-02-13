@@ -38,6 +38,7 @@ private:
 	std::map<std::string, configServer> _configMap;
 public:
 	ConfigFile();
+	void	runByDefault();
 	std::map<std::string, configServer> readFile(std::string fileName);
 	std::map<std::string, configServer> getConFile();
 	void								setConFile(std::map<std::string, configServer> set);

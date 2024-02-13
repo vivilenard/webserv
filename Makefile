@@ -8,6 +8,7 @@ SRC = main.cpp \
       parse/configUtil.cpp \
       parse/root.cpp \
       parse/location.cpp \
+      defaultConf/defaultConf.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 

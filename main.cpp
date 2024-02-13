@@ -6,14 +6,27 @@
 
 
 
-int main()
+int main(int argc, char **argv)
 {
-	ConfigFile test;
-	std::map<std::string, configServer> set;
-	set = test.readFile("example.conf");
-	test.setConFile(set);
-	std::map<std::string, configServer> out;
-	out = test.getConFile();
+	if (argc == 2)
+	{
+		ConfigFile test;
+		std::map<std::string, configServer> set;
+		std::string file = argv[2];
+		set = test.readFile("example.conf");
+		test.setConFile(set);
+		std::map<std::string, configServer> out;
+		out = test.getConFile();
+	}
+	else if (argc == 1)
+	{
+		ConfigFile test;
+		test.runByDefault();
+		std::map<std::string, configServer> out;
+		out = test.getConFile();
+		std::cout << "server name " << out["default"]._serverName << std::endl;
+		std::cout << "location name " << out["default"]._locations["default"]._name << std::endl;
+	}
 /*	Server serv = Server("0.0.0.0", 8080);
 	serv.startServer();
 	serv.startListen();

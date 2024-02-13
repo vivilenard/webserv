@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   InterfaceTools.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:02:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/15 16:57:47 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/01/23 09:51:49 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	Interface::readFromSocket(int sock, std::string &request) {
 		}
 		request.append(buffer, n);
 	}
-	request.append(buffer, n);
+	// request.append(buffer, n);
 	return (false);
 }
 
@@ -41,7 +41,7 @@ bool	Interface::passRequest(std::string &request, std::string &response) {
 			return (false);
 		}
 	}
-	std::cout << "request: " << request << std::endl;
+	//std::cout << "request: " << request << std::endl;
 	std::cout << "unknown protocol" << std::endl;
 	return (true);
 }

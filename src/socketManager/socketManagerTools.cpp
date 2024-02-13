@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   socketManagerTools.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:12:07 by pharbst           #+#    #+#             */
 /*   Updated: 2024/01/22 15:46:11 by pharbst          ###   ########.fr       */

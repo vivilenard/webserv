@@ -50,9 +50,15 @@ SRCS	=	webserver.cpp \
 			socketKqueue.cpp \
 			socketSelect.cpp \
 			InterfaceTools.cpp \
-			httpTransfer.cpp \
 			Config.cpp \
 			Error.cpp \
+			Request.cpp \
+			Response.cpp \
+			Status.cpp \
+			Delete.cpp \
+			Get.cpp \
+			Post.cpp \
+			Cgi.cpp \
 			$(SOURCE)
 
 OBJ_DIR	= ./obj/
@@ -103,6 +109,9 @@ re:
 	@$(MAKE) -s proname_header
 	@$(MAKE) -s cleanator
 	@$(MAKE) -s std_all
+
+run: re
+	./$(PRONAME)
 
 arch:
 	-docker rm -f webserv

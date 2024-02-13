@@ -14,7 +14,6 @@ int main()
 	test.setConFile(set);
 	std::map<std::string, configServer> out;
 	out = test.getConFile();
-
 /*	Server serv = Server("0.0.0.0", 8080);
 	serv.startServer();
 	serv.startListen();

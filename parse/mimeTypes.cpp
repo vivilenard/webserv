@@ -1,21 +1,19 @@
-#include "../../include/config/Config.hpp"
+// #include "./Config.hpp"
+#include "./configFile.hpp"
 // #include "Config.hpp"
 
-Config::Config()
+MAP ConfigFile::parseMime()
 {
-	_mimeTypes = parseMime();
-}
-
-map<string, string> Config::parseMime()
-{
-	if (DEBUG) cout << "PARSE MIME" << endl;
-	map<string, string> map;
+	MAP map;
 	string _whitespace = " \t\n\r\f\v";
 	ifstream file;
-	file.open("config/mime.types");
+	file.open("./config/mime.types");
 	if (!file)
-		exitWithError("mime type file not found");
-	if (DEBUG) cout << "bp1" << endl;
+	{
+		// server.validFormat = false;
+		return (cout << "mime type file not found" << endl, map);
+	}
+	// cout << "READ" << endl;
 	string line;
 	while (getline(file, line))
 	{
@@ -30,13 +28,12 @@ map<string, string> Config::parseMime()
 		}
 		createKeypairs(map, s1, s2);
 	}
-	if (DEBUG) cout << "bp4" << endl;
+	// _mimeTypes = map;
 	file.close();
 	return map;
 }
 
-
-void Config::createKeypairs(map<string, string> & map, string s1, string s2)
+void ConfigFile::createKeypairs(map<string, string> & map, string s1, string s2)
 {
 	if (!s1[0] || !s2[0])
 		return ;
@@ -56,4 +53,12 @@ void Config::createKeypairs(map<string, string> & map, string s1, string s2)
 		if (isspace(s[i]))
 			i++;
 	}
+}
+
+void	printMimes(MAP mime)
+{
+	cout << "MIME TYPES: "<< endl;
+	MAP::iterator it = mime.begin();
+	for(; it != mime.end(); it++)
+		cout << it->first << ": " << it->second << endl;
 }

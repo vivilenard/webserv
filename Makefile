@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
+#    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/01/22 15:47:07 by pharbst          ###   ########.fr        #
+#    Updated: 2024/02/29 16:29:24 by vlenard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ CC		= c++
 # -MMD and -MP are ussed to create dependecy files
 CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
 
+# add include directories here
 INC_DIR	= 	-I./include/ \
 			-I./include/socketManager/ \
 			-I./include/Interface/ \
@@ -50,9 +51,20 @@ SRCS	=	webserver.cpp \
 			socketKqueue.cpp \
 			socketSelect.cpp \
 			InterfaceTools.cpp \
-			httpTransfer.cpp \
-			Config.cpp \
-			Error.cpp \
+			mimeTypes.cpp \
+			Request.cpp \
+			Response.cpp \
+			Status.cpp \
+			Delete.cpp \
+			Get.cpp \
+			Post.cpp \
+			Cgi.cpp \
+			configFile.cpp \
+			configUtil.cpp \
+			location.cpp \
+			read.cpp \
+			root.cpp \
+			defaultConf.cpp \
 			$(SOURCE)
 
 OBJ_DIR	= ./obj/
@@ -66,7 +78,8 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 
 
 # in case of subdirectories in the src folder add them here
-VPATH := src include src/socketManager src/Interface src/config src/error src/httpTransfer
+VPATH := src include src/socketManager src/Interface src/config src/error src/httpTransfer \
+		parse defaultConf
 
 all:
 	@$(MAKE) -s proname_header
@@ -103,6 +116,9 @@ re:
 	@$(MAKE) -s proname_header
 	@$(MAKE) -s cleanator
 	@$(MAKE) -s std_all
+
+run: re
+	./$(PRONAME)
 
 arch:
 	-docker rm -f webserv

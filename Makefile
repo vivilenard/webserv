@@ -12,7 +12,9 @@ SRC = main.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98
+CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address
+LDFLAGS = -fsanitize=address
+LDLIBS = -lasan
 
 all: $(NAME)
 

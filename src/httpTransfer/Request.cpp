@@ -35,6 +35,7 @@ void	Request::parseMainHeader()
 
 void	Request::parseHeaders()
 {
+	prepareMultipart();
 	istringstream istream(_request);
 	string line;
 	getline(istream, line, '\n');
@@ -52,6 +53,21 @@ void	Request::parseHeaders()
 	}
 }
 
+bool Request::prepareMultipart()
+{
+	//cut Boundarys
+	// size_t start; size_t end;
+	istringstream istream(_request);
+	string boundary;
+	getline(istream, boundary, '\n');
+	if (!(boundary.find("----") != string::npos && boundary.find("HTTP/") == string::npos))
+		return false;
+	// start = _request.find_first_of("\r\n") + 2;
+	// end = _request.find_last_of(boundary);
+	// _request = _request.substr(start, end);
+	cout << COL << "THIS IS BODY" << _request << NORM <<endl;
+	return true;
+}
 
 int Request::parseBody()
 {

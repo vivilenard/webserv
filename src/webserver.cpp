@@ -13,7 +13,7 @@ std::string testHttp(const std::string &request/* , Config & config */) {
     } else {
 		cout << MAGCOLOR << "-------httpTransfer----->>" << NORM << endl;
 		Request		httpRequest(request);
-		// cout << request << endl;
+		cout << GREEN << request << NORM << endl;
 		// cout << httpRequest << endl;
 		Response	httpResponse(httpRequest);
 		std::string response = httpResponse.getResponse();

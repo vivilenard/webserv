@@ -34,7 +34,9 @@ class Response
 	void			formResponse(const int & status, const string & statusInfo);
 	const string	createErrorBody(const int & status, const string & statusInfo);
 	bool			isMultipart();
+	bool			handleMultipart();
 	bool			isCgi(const string & path);
+
 
 	public:
 		Response(Request & request);

@@ -13,6 +13,7 @@
 #define Query map<string, string>
 #define MAX_BODY_SIZE 50000
 
+
 class Request
 {
 	// static	Config	_config;
@@ -27,11 +28,14 @@ class Request
 	string			_body;
 	Headers			_headers;
 	Query			_query;
+	bool			_sizeInRange;
+	static string 	_MultipartBody;
+	string			_boundary;
 	void			parseMainHeader();
 	void			parseHeaders();
 	int				parseBody();
 	int				findDoubleNewline(std::string & s);
-	bool			_sizeInRange;
+	bool			prepareMultipart();
 	// string			parseHeader(string s);
 
 
@@ -51,6 +55,8 @@ class Request
 };
 
 #define BLUECOLOR "\033[1;96m"
+#define COL "\033[1;91m"
+#define GREEN "\033[1;92m"
 #define MAGCOLOR "\033[1;95m"
 #define NORM "\033[0m"
 

@@ -7,9 +7,12 @@ void Response::processPost()
 	cout << "-----------------IN POST--------------------" << endl;
 	if (isCgi(_URI))
 		return ;
-	if (isMultipart()){
+	if (isMultipart())
+	{
+		handleMultipart();
 		formResponse(100, _statusInfo);
-		return; }
+		return;
+	}
 	_status = 201;
 	string contentType = _request.getHeaders()["Content-Type"];
 	string mimeType = findKeyByValue(_config._mimeTypes, contentType);
@@ -18,6 +21,12 @@ void Response::processPost()
 	else if (!createFile(_URI, _request.getBody()))
 		{_status = 400; _statusInfo = "Please include a valid path";}
 	formResponse(_status, _statusInfo);
+}
+
+bool	Response::handleMultipart()
+{
+	
+	return true;
 }
 
 int	Response::createFile(std::string & path, const std::string & content)

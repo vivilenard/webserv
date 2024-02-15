@@ -6,7 +6,7 @@
 #include "Status.hpp"
 #include <map>
 
-
+#define STATUSCODE _statusCode.getStati()
 
 class Response
 {
@@ -22,6 +22,7 @@ class Response
 	string			_fileContent;
 	string			_fileContentType;
 
+	bool			invalidRequest();
 	void			processGet();
 	void			processPost();
 	void			processDelete();
@@ -33,8 +34,12 @@ class Response
 	std::string		findKeyByValue(std::map<string, string>m, string value);
 	void			formResponse(const int & status, const string & statusInfo);
 	const string	createErrorBody(const int & status, const string & statusInfo);
-	bool			isMultipart();
+	int				isMultipart();
 	bool			isCgi(const string & path);
+	int				handleMultipart();
+	bool			incorrectMimeType(const string & contentType);
+	bool			noFilename();
+
 
 	public:
 		Response(Request & request);

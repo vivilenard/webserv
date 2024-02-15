@@ -6,11 +6,12 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 20:31:39 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/22 15:53:13 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/02/13 15:25:32 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "socketManager.hpp"
+#include <cstdio>
 
 bool	socketManager::setSocketNonBlocking(int fd) {
 	if (fd < 0)

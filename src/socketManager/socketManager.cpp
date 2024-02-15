@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:05:28 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/22 15:50:34 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/02/13 15:45:55 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 std::map<int, t_data>		socketManager::_sockets;
 
 void	socketManager::start(InterfaceFunction interfaceFunction) {
+	std::cout << "SocketManager started" << std::endl;
 	SEPOLL(interfaceFunction);
 }
 

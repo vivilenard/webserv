@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Interface.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:01:41 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/22 17:08:25 by vlenard          ###   ########.fr       */
+/*   Updated: 2024/02/16 14:10:44 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Interface.hpp"
 
-std::map<std::string, protocolFunction>	Interface::_protocolMap;
+std::map<uint32_t, protocolFunction>	Interface::_protocolMap;
 std::map<int, std::string>				Interface::_outputBuffer;
 
 void	Interface::interface(int sock, t_data sockData) {
@@ -25,7 +25,7 @@ void	Interface::interface(int sock, t_data sockData) {
 			socketManager::removeSocket(sock);
 			return ;	// remove client
 		}
-		if (passRequest(request, response)) {
+		if (passRequest(request, response, sockData.port)) {
 			std::cout << "passRequest failed" << std::endl;
 			socketManager::removeSocket(sock);
 			return ;	// remove client
@@ -46,6 +46,6 @@ void	Interface::interface(int sock, t_data sockData) {
 	}
 }
 
-void	Interface::addProtocol(std::string protocol, protocolFunction function) {
-	_protocolMap.insert(std::pair<std::string, protocolFunction>(protocol, function));
+void	Interface::addProtocol(uint32_t port, protocolFunction function) {
+	_protocolMap.insert(std::pair<uint32_t, protocolFunction>(port, function));
 }

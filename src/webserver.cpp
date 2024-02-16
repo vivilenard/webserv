@@ -26,16 +26,17 @@ std::string testHttp(const std::string &request/* , Config & config */) {
 
 int main()
 {
+	uint32_t port = 80;
 	// int numWorker = 4;
 	// parsing here
 	// add application map to interface before forking the workers
 	// applicationInterface::addApplication(80, /*&http::application*/);
 	//Config config;
 	protocolFunction testFunction = &testHttp;
-	Interface::addProtocol("HTTP/1.1", testFunction);
+	Interface::addProtocol(port, testFunction);
 	// add sockets
 	{
-		socketManager::addSocket("0.0.0.0", 80, IPV4, TCP);
+		socketManager::addSocket("0.0.0.0", port, IPV4, TCP);
 	}
 	InterfaceFunction interfaceFunction = &Interface::interface;
 	socketManager::start(interfaceFunction);

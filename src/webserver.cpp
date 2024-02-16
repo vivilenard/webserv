@@ -14,7 +14,7 @@ std::string testHttp(const std::string &request/* , Config & config */) {
 		cout << MAGCOLOR << "-------httpTransfer----->>" << NORM << endl;
 		Request		httpRequest(request);
 		cout << GREEN << request << NORM << endl;
-		// cout << httpRequest << endl;
+		cout << RED << httpRequest << NORM << endl;
 		Response	httpResponse(httpRequest);
 		std::string response = httpResponse.getResponse();
 		cout << BLUECOLOR << "RESPONSE:\n" << response << NORM <<endl;

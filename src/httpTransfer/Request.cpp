@@ -1,6 +1,6 @@
 #include "../../include/httpTransfer/Request.hpp"
 
-// Config Request::_config = Config();
+string Request::boundary = "bound";
 
 Request::Request(const string & request): _request(request), _sizeInRange(true)
 {
@@ -10,18 +10,30 @@ Request::Request(const string & request): _request(request), _sizeInRange(true)
 	if (request.length() > MAX_BODY_SIZE + 500)
 		_sizeInRange = false;
 	parseMainHeader();
-	parseHeaders();
-	parseBody();
+	if (_standardRequest)
+	{
+		parseHeaders();
+		parseBody();
+	}
+	handleMultipart();
+	cout << "standardRequest: " << _standardRequest << endl;
+	cout << "Boundary: " << boundary << "$" << endl;
 }
 
 void	Request::parseMainHeader()
 {
 	// cout << "parse Header" << endl;
 	istringstream istream(_request);
-	if (!getline(istream, _method, ' ')
-		|| !getline(istream, _URI, ' ')
-		|| !getline(istream, _httpVersion, ' '))
-		cerr << "Error: Wrong Header" << endl;
+	getline(istream, _method, ' ');
+	getline(istream, _URI, ' ');
+	getline(istream, _httpVersion, ' ');
+	if (_httpVersion.find("HTTP/") != string::npos)
+	{
+		_standardRequest = true;
+		boundary = "";
+	}
+	else
+	{ _standardRequest = false; return; }
 
 	_httpVersion = _httpVersion.substr(0, _httpVersion.find_first_of("\n"));
 	size_t pos = _URI.find_first_of('?');
@@ -35,12 +47,13 @@ void	Request::parseMainHeader()
 
 void	Request::parseHeaders()
 {
-	prepareMultipart();
+	handleMultipart();
 	istringstream istream(_request);
 	string line;
 	getline(istream, line, '\n');
 	while (getline(istream, line))
 	{
+		// parsePair(p);
 		line.erase(std::remove(line.begin(), line.end(), ' '), line.end());
 		line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
 		if (line.empty()) break;
@@ -51,22 +64,57 @@ void	Request::parseHeaders()
 		_headers.insert(p);
 		iistream.str("");
 	}
+	if (ContainsMultipartHeader())
+		setBoundary();
 }
 
-bool Request::prepareMultipart()
+bool	Request::ContainsMultipartHeader()
 {
-	//cut Boundarys
-	// size_t start; size_t end;
+	if (_headers["Content-Type"].find("boundary=") != string::npos)
+		return true;
+	return false;
+}
+
+bool	Request::isMultipartChunk()
+{
+	string preBoundary = "--";
+	string expectedBoundary = preBoundary.append(boundary);
 	istringstream istream(_request);
-	string boundary;
-	getline(istream, boundary, '\n');
-	if (!(boundary.find("----") != string::npos && boundary.find("HTTP/") == string::npos))
-		return false;
-	// start = _request.find_first_of("\r\n") + 2;
-	// end = _request.find_last_of(boundary);
-	// _request = _request.substr(start, end);
-	cout << COL << "THIS IS BODY" << _request << NORM <<endl;
+	string firstLine;
+	getline(istream, firstLine, '\r');
+	cout << expectedBoundary << endl;
+	if (firstLine == expectedBoundary)
+	{
+		cout << "its a correct boundaryyyyyyy" << endl;
+		return true;
+	}
+	return false;
+}
+
+bool	Request::setBoundary()
+{
+	cout << "Boundary at:" << _headers["Content-Type"].find("boundary=") << endl;
+	boundary = _headers["Content-Type"].substr(_headers["Content-Type"].find("boundary="));
 	return true;
+}
+
+bool	Request::handleMultipart()
+{
+	if (Request::boundary.empty())
+		return false;
+	return true;
+	string chunk;
+	if (_standardRequest)
+		chunk = _body;
+	else if (isMultipartChunk())
+		chunk = _request;
+	//remove first line
+
+	//read Headers
+
+	//read Body >> static body
+
+	//if last line is boundary: remove and set multipart as finished
 }
 
 int Request::parseBody()
@@ -132,11 +180,11 @@ ostream & operator<<(ostream & os, const Request & r)
 		cout << it->first << ":" << it->second << endl;
 	cout << "------------------------------------------" << endl;
 
-	// cout << "///////////////BODY/////////////" << endl;
-	// if (r._body.length() > 0)
-	// 	cout << r._body << endl;
-	// else
-	// 	cout << "NO CONTENT" << endl;
-	// cout << "////////////////////////////////" << endl;
+	cout << "///////////////BODY/////////////" << endl;
+	if (r._body.length() > 0)
+		cout << r._body << endl;
+	else
+		cout << "NO CONTENT" << endl;
+	cout << "////////////////////////////////" << endl;
 	return os;
 }

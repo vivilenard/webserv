@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/02/16 18:07:09 by pharbst          ###   ########.fr        #
+#    Updated: 2024/02/16 18:15:45 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ CC		= c++
 # -MMD and -MP are ussed to create dependecy files
 CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
 
+# add include directories here
 INC_DIR	= 	-I./include/ \
 			-I./include/socketManager/ \
 			-I./include/Interface/ \

@@ -12,6 +12,7 @@
 #define Headers map<string, string>
 #define Query map<string, string>
 #define MAX_BODY_SIZE 50000
+#define PAIR pair<string, string>
 
 // static string Request::_boundary = "";
 
@@ -32,13 +33,15 @@ class Request
 	Query			_query;
 	bool			_sizeInRange;
 	void			parseMainHeader();
-	void			parseHeaders();
-	int				parseBody();
+	void			parseHeaders(Headers & headers);
+	int				parseBody(string & body);
 	int				findDoubleNewline(std::string & s);
 	bool			isMultipartChunk();
 	bool			ContainsMultipartHeader();
 	bool			handleMultipart();
 	bool			setBoundary();
+	PAIR 			parsePair(string line);
+	void			identifyRequest();
 	// string			parseHeader(string s);
 
 

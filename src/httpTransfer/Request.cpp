@@ -12,8 +12,8 @@ Request::Request(const string & request): _request(request), _sizeInRange(true)
 	parseMainHeader();
 	if (_standardRequest)
 	{
-		parseHeaders();
-		parseBody();
+		parseHeaders(_headers);
+		parseBody(_body);
 	}
 	handleMultipart();
 	cout << "standardRequest: " << _standardRequest << endl;
@@ -27,14 +27,6 @@ void	Request::parseMainHeader()
 	getline(istream, _method, ' ');
 	getline(istream, _URI, ' ');
 	getline(istream, _httpVersion, ' ');
-	if (_httpVersion.find("HTTP/") != string::npos)
-	{
-		_standardRequest = true;
-		boundary = "";
-	}
-	else
-	{ _standardRequest = false; return; }
-
 	_httpVersion = _httpVersion.substr(0, _httpVersion.find_first_of("\n"));
 	size_t pos = _URI.find_first_of('?');
 	if (pos != string::npos)
@@ -43,30 +35,38 @@ void	Request::parseMainHeader()
 		_URI.erase(pos);
 		// cout << "path: " << _URI << endl ;
 	}
+	identifyRequest();
 }
 
-void	Request::parseHeaders()
+
+void Request::identifyRequest()
 {
-	handleMultipart();
+	if (_httpVersion.find("HTTP/") != string::npos)
+	{
+		_standardRequest = true;
+		boundary = "";
+		return ;
+	}
+	_standardRequest = false;
+}
+
+void	Request::parseHeaders(Headers & headers)
+{
+	PAIR p;
 	istringstream istream(_request);
 	string line;
 	getline(istream, line, '\n');
 	while (getline(istream, line))
 	{
-		// parsePair(p);
-		line.erase(std::remove(line.begin(), line.end(), ' '), line.end());
-		line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
-		if (line.empty()) break;
-		istringstream iistream(line);
-		pair<string, string> p;
-		getline(iistream, p.first, ':');
-		getline(iistream, p.second);
-		_headers.insert(p);
-		iistream.str("");
+		p = parsePair(line);
+		if (!p.first.empty())
+			headers[p.first] = p.second;
 	}
 	if (ContainsMultipartHeader())
 		setBoundary();
 }
+
+
 
 bool	Request::ContainsMultipartHeader()
 {
@@ -95,29 +95,39 @@ bool	Request::setBoundary()
 {
 	cout << "Boundary at:" << _headers["Content-Type"].find("boundary=") << endl;
 	boundary = _headers["Content-Type"].substr(_headers["Content-Type"].find("boundary="));
+	boundary = boundary.substr(boundary.find_first_of('=') + 1);
 	return true;
 }
 
 bool	Request::handleMultipart()
 {
+	cout << "HANDLE MULTIPART" << endl;
+	Headers headers;
 	if (Request::boundary.empty())
 		return false;
-	return true;
 	string chunk;
 	if (_standardRequest)
 		chunk = _body;
 	else if (isMultipartChunk())
 		chunk = _request;
 	//remove first line
-
+	istringstream s(chunk);
+	string line;
+	getline(s, line, '\n');
+	line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+	if (("--" + line) != boundary)
+		return (cout << "boundary not equal" << endl, false);
+	getline(s, line, '\n'); //should be empty line
 	//read Headers
-
+	parseHeaders(_headers); //adds headers to existing ones
+	getline(s, line, '\n'); //should be empty line
 	//read Body >> static body
 
 	//if last line is boundary: remove and set multipart as finished
+	return true;
 }
 
-int Request::parseBody()
+int Request::parseBody(string & body)
 {
 	int pos_body = findDoubleNewline(_request);
 	if (pos_body < 0)
@@ -125,7 +135,7 @@ int Request::parseBody()
 	istringstream is(_headers["Content-Length"]);
 	int contentLength;
 	is >> contentLength;
-	_body = _request.substr(pos_body, contentLength);
+	body = _request.substr(pos_body, contentLength);
 	return 1;
 }
 
@@ -147,6 +157,21 @@ void Request::parseQuery(const string & queryString)
 	for (it = _query.begin(); it != _query.end(); it++)
 		cout << it->first << " and " << it->second << endl;
 
+}
+
+PAIR Request::parsePair(string line)
+{
+	PAIR p;
+
+	line.erase(std::remove(line.begin(), line.end(), ' '), line.end());
+	line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+	if (line.empty())
+		return (p);
+	istringstream iistream(line);
+	getline(iistream, p.first, ':');
+	getline(iistream, p.second);
+	// iistream.str("");
+	return p;
 }
 
 int Request::findDoubleNewline(std::string &s)

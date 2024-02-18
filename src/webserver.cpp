@@ -3,6 +3,7 @@
 #include "../include/config/Config.hpp"
 #include "../include/httpTransfer/Request.hpp"
 #include "../include/httpTransfer/Response.hpp"
+#include "../parse/configFile.hpp"
 
 
 std::string testHttp(const std::string &request/* , Config & config */) {
@@ -33,7 +34,7 @@ int main()
 	Interface::addProtocol("HTTP/1.1", testFunction);
 	// add sockets
 	{
-		socketManager::addSocket("0.0.0.0", 80, IPV4, TCP);
+		socketManager::addSocket("0.0.0.0", 8888, IPV4, TCP);
 	}
 	InterfaceFunction interfaceFunction = &Interface::interface;
 	socketManager::start(interfaceFunction);

@@ -11,8 +11,9 @@ void Response::processPost()
 	{
 		handleMultipart();
 		formResponse(100, _statusInfo);
-		return;
+		return ;
 	}
+	//do multipart with MultipartName, body etc!
 	_status = 201;
 	string contentType = _request.getHeaders()["Content-Type"];
 	string mimeType = findKeyByValue(_config._mimeTypes, contentType);
@@ -42,7 +43,7 @@ int	Response::createFile(std::string & path, const std::string & content)
 
 bool	Response::isMultipart()
 {
-	if (_request.getHeaders()["Content-Type"].find("boundary=") != string::npos)
+	if (!_request.boundary.empty())
 		return true;
 	return false;
 }

@@ -1,19 +1,24 @@
 #include "../../include/httpTransfer/Request.hpp"
 
 string Request::boundary = "bound";
+string Request::MultipartBody = "";
+int	Request::McontentLength = 0;
+string Request::MultipartContentType = "text/plain";
+string Request::MultipartName = "file.txt";
 
 Request::Request(const string & request): _request(request), _sizeInRange(true)
 {
 	// cout << "------------REQUEST------------" << endl;
 	// cout << request << endl;
 	// cout << "-------------------------------" << endl;
+	cout << "LENGTH: " << request.length() << endl;
 	if (request.length() > MAX_BODY_SIZE + 500)
 		_sizeInRange = false;
 	parseMainHeader();
 	if (_standardRequest)
 	{
 		parseHeaders(_headers);
-		parseBody(_body);
+		parseBody(_body, atoi(_headers["Content-Length"].c_str()));
 	}
 	handleMultipart();
 	cout << "standardRequest: " << _standardRequest << endl;
@@ -56,17 +61,20 @@ void	Request::parseHeaders(Headers & headers)
 	istringstream istream(_request);
 	string line;
 	getline(istream, line, '\n');
-	while (getline(istream, line))
+	while (getline(istream, line, '\n'))
 	{
+		if (line == "\r")
+			break;
 		p = parsePair(line);
 		if (!p.first.empty())
 			headers[p.first] = p.second;
 	}
 	if (ContainsMultipartHeader())
+	{
 		setBoundary();
+		McontentLength = atoi(headers["Content-Length"].c_str());
+	}
 }
-
-
 
 bool	Request::ContainsMultipartHeader()
 {
@@ -77,17 +85,12 @@ bool	Request::ContainsMultipartHeader()
 
 bool	Request::isMultipartChunk()
 {
-	string preBoundary = "--";
-	string expectedBoundary = preBoundary.append(boundary);
 	istringstream istream(_request);
 	string firstLine;
 	getline(istream, firstLine, '\r');
-	cout << expectedBoundary << endl;
-	if (firstLine == expectedBoundary)
-	{
-		cout << "its a correct boundaryyyyyyy" << endl;
+
+	if (boundaryCheck("--", firstLine))
 		return true;
-	}
 	return false;
 }
 
@@ -99,43 +102,107 @@ bool	Request::setBoundary()
 	return true;
 }
 
+bool	Request::boundaryCheck(const string preBoundary, const string bound)
+{
+	// cout << "BOUND CHECK:" << endl;
+	string expectedBoundary = preBoundary + this->boundary;
+	cout << expectedBoundary << endl;
+	if (bound == expectedBoundary)
+	{
+		cout << "its a correct boundaryyyyyyy" << endl;
+		return true;
+	}
+	return false;
+}
+
 bool	Request::handleMultipart()
 {
 	cout << "HANDLE MULTIPART" << endl;
 	Headers headers;
 	if (Request::boundary.empty())
 		return false;
-	string chunk;
 	if (_standardRequest)
-		chunk = _body;
+		parseMultipart(_body); //shoult look if there is sth before boundary
 	else if (isMultipartChunk())
-		chunk = _request;
-	//remove first line
-	istringstream s(chunk);
-	string line;
-	getline(s, line, '\n');
-	line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
-	if (("--" + line) != boundary)
-		return (cout << "boundary not equal" << endl, false);
-	getline(s, line, '\n'); //should be empty line
-	//read Headers
-	parseHeaders(_headers); //adds headers to existing ones
-	getline(s, line, '\n'); //should be empty line
-	//read Body >> static body
+		parseMultipart(_request);
 
-	//if last line is boundary: remove and set multipart as finished
 	return true;
 }
 
-int Request::parseBody(string & body)
+bool	Request::parseMultipart(const string & chunk)
+{
+	//remove first line
+	istringstream s(chunk);
+	string body;
+	string line;
+	getline(s, line, '\n');
+	line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+	if (!boundaryCheck("--", line))
+		return (cout << "boundary not equal" << endl, false);
+	parseHeaders(_headers); //adds headers to existing ones
+	setFilename();
+	getline(s, line, '\n'); //should be empty line
+	parseBody(body, McontentLength - findDoubleNewline(_request));
+	MultipartBody.append(body);
+	//if last line is boundary: remove and set multipart as finished
+	if (MultipartBody.find(setBoundaryTogether(boundary, "end")))
+	{
+		cout << RED << "FOUND END BOUND" << NORM << endl;
+		MultipartBody.erase(MultipartBody.find(setBoundaryTogether(boundary, "end")));
+		_body = MultipartBody;
+		_contentType = MultipartContentType;
+		_method = "POST";
+		_standardRequest = true;
+		clearMultipartData();
+	}
+	return true;
+}
+
+void Request::setFilename()
+{
+	cout << GREEN << "SETFILENAME" << NORM << endl;
+	if (_headers["Content-Disposition"].empty())
+		return ;
+	istringstream is(_headers["Content-Disposition"]);
+	string s;
+	string FindHeader = "filename=";
+	while (getline(is, s, ';'))
+	{
+		cout << s << endl;
+		if (s.find(FindHeader) != string::npos)
+		{
+			s.erase(0, FindHeader.size());
+			s.erase(std::remove(s.begin(), s.end(), '"'), s.end());
+			MultipartName = s;
+			break ;
+		}
+	}
+}
+
+void	Request::clearMultipartData()
+{
+	MultipartBody = "";
+	McontentLength = 0;
+	boundary = "";
+	MultipartContentType = "text/plain";
+	MultipartName = "file.txt";
+}
+
+const string Request::setBoundaryTogether(const string & bound, const string & type)
+{
+	string b = "--";
+	b.append(bound);
+
+	if (!type.empty() && type == "end")
+		b.append("--");
+	return b;
+}
+int Request::parseBody(string & body, const int & length)
 {
 	int pos_body = findDoubleNewline(_request);
 	if (pos_body < 0)
 		cerr << "No Body in Post request!" << endl;
-	istringstream is(_headers["Content-Length"]);
-	int contentLength;
-	is >> contentLength;
-	body = _request.substr(pos_body, contentLength);
+	body = _request.substr(pos_body, length);
 	return 1;
 }
 
@@ -192,12 +259,15 @@ int Request::findDoubleNewline(std::string &s)
 
 ostream & operator<<(ostream & os, const Request & r)
 {
-	cout << "############################" << endl;
 	// cout << "Request: " << r._request << endl;
-	cout << "Method: " << r._method << endl;
-	cout << "Path: " << r._URI << endl;
-	cout << "httpVersion: " << r._httpVersion << endl;
-	cout << "##################################" << endl;
+	if (r._standardRequest)
+	{
+		cout << "############################" << endl;
+		cout << "Method: " << r._method << endl;
+		cout << "Path: " << r._URI << endl;
+		cout << "httpVersion: " << r._httpVersion << endl;
+		cout << "##################################" << endl;
+	}
 
 	cout << "----------------HEADERS:---------------" << endl;
 	map<string, string>::const_iterator it;
@@ -208,6 +278,10 @@ ostream & operator<<(ostream & os, const Request & r)
 	cout << "///////////////BODY/////////////" << endl;
 	if (r._body.length() > 0)
 		cout << r._body << endl;
+	// else if (r.MultipartBody.length() > 0 && !r._standardRequest)
+	// {
+	// 	cout << r.MultipartBody << endl;
+	// }
 	else
 		cout << "NO CONTENT" << endl;
 	cout << "////////////////////////////////" << endl;

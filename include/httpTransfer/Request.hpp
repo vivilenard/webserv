@@ -34,20 +34,25 @@ class Request
 	bool			_sizeInRange;
 	void			parseMainHeader();
 	void			parseHeaders(Headers & headers);
-	int				parseBody(string & body);
+	int				parseBody(string & body, const int & length);
 	int				findDoubleNewline(std::string & s);
+	PAIR 			parsePair(string line);
+	void			identifyRequest();
 	bool			isMultipartChunk();
 	bool			ContainsMultipartHeader();
 	bool			handleMultipart();
+	bool			parseMultipart(const string & s);
 	bool			setBoundary();
-	PAIR 			parsePair(string line);
-	void			identifyRequest();
-	// string			parseHeader(string s);
-
+	bool			boundaryCheck(const string preBoundary, const string bound);
+	const string	setBoundaryTogether(const string & bound, const string & type);
+	void			clearMultipartData();
+	void			setFilename();
 
 	public:
-		static stringstream 	MultipartBody;
+		static string			MultipartName;
+		static string			MultipartBody;
 		static string			MultipartContentType;
+		static int				McontentLength;
 		static string			boundary; //if boundary is cleared, body is ready to be used.
 											//and treated as normal post.
 		Request(const string & request);

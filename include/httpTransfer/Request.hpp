@@ -14,28 +14,25 @@
 #define MAX_BODY_SIZE 50000
 #define PAIR pair<string, string>
 
-// static string Request::_boundary = "";
-
 class Request
 {
-	// static	Config	_config;
 	bool			_standardRequest;
 	string			_request;
 	string			_method;
 	string			_URI;
-	// string			_prefixPath;
 	string			_httpVersion;
 	string			_contentLength;
 	string			_contentType;
 	string			_date;
 	string			_body;
+	string			_filename;
 	Headers			_headers;
 	Query			_query;
 	bool			_sizeInRange;
 	void			parseMainHeader();
 	void			parseHeaders(Headers & headers);
-	int				parseBody(string & body, const int & length);
-	int				findDoubleNewline(std::string & s);
+	int				parseBody(string & body, const string & chunk, const int & length);
+	int				findDoubleNewline(const std::string & s);
 	PAIR 			parsePair(string line);
 	void			identifyRequest();
 	bool			isMultipartChunk();
@@ -43,12 +40,13 @@ class Request
 	bool			handleMultipart();
 	bool			parseMultipart(const string & s);
 	bool			setBoundary();
-	bool			boundaryCheck(const string preBoundary, const string bound);
+	bool			ApproveMultipart(const string preBoundary, const string bound);
 	const string	setBoundaryTogether(const string & bound, const string & type);
 	void			clearMultipartData();
 	void			setFilename();
 
 	public:
+		static bool				MultipartApproved;
 		static string			MultipartName;
 		static string			MultipartBody;
 		static string			MultipartContentType;
@@ -57,10 +55,10 @@ class Request
 											//and treated as normal post.
 		Request(const string & request);
 		friend ostream & operator<<(ostream & os, const Request & r);
-		// void printHeaders();
 
 		const string & 	getMethod()	{ return _method; }
 		const string & 	getURI()	{ return _URI; }
+		const string & 	getFilename()	{ return _filename; }
 		const bool   &	getSizeBound(){ return _sizeInRange; }
 		Headers & 		getHeaders(){ return _headers; }
 		const string & 	getBody()	{ return _body; }
@@ -69,11 +67,11 @@ class Request
 
 };
 
-#define BLUECOLOR "\033[1;96m"
-#define COL "\033[1;91m"
-#define RED "\033[1;93m"
+#define RED "\033[1;91m"
 #define GREEN "\033[1;92m"
-#define MAGCOLOR "\033[1;95m"
+#define ORANGE "\033[1;93m"
+#define MAG "\033[1;95m"
+#define BLUE "\033[1;96m"
 #define NORM "\033[0m"
 
 #endif

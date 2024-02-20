@@ -11,15 +11,16 @@ std::string testHttp(const std::string &request/* , Config & config */) {
         std::cout << "request is empty" << std::endl;
         return "";
     } else {
-		cout << MAGCOLOR << "-------httpTransfer----->>" << NORM << endl;
-		Request		httpRequest(request);
+		cout << MAG << "-------request----->>" << NORM << endl;
 		cout << GREEN << request << NORM << endl;
 		cout << GREEN << "------------" << NORM << endl;
-		cout << RED << httpRequest << NORM << endl;
+		Request		httpRequest(request);
+		// cout << RED << httpRequest << NORM << endl;
+		cout << MAG << "-------response: --------" << endl;
 		Response	httpResponse(httpRequest);
 		std::string response = httpResponse.getResponse();
-		cout << BLUECOLOR << "RESPONSE:\n" << response << NORM <<endl;
-		cout << MAGCOLOR << "<<------------------------" << NORM << endl;
+		cout << BLUE << "RESPONSE:\n" << response << NORM <<endl;
+		cout << MAG << "<<------------------------" << NORM << endl;
 		return response;
     }
 }

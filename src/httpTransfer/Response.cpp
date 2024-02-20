@@ -8,6 +8,7 @@ StatusCode Response::_statusCode = StatusCode();
 Response::Response(Request & request):
 	_request(request), _status(500), _statusInfo(), _httpVersion("HTTP/1.1")
 {
+	cout << "response class created" << endl;
 	_URI = addRootPath(_request.getURI());
 	if (request.getSizeBound() == false)
 		{ formResponse(400, "Request message is too large"); return; }

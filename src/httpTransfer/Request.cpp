@@ -1,12 +1,13 @@
 #include "../../include/httpTransfer/Request.hpp"
 
-string Request::boundary = "bound";
-string Request::MultipartBody = "";
-int	Request::McontentLength = 0;
-string Request::MultipartContentType = "text/plain";
-string Request::MultipartName = "file.txt";
+bool	Request::MultipartApproved = false;
+string	Request::boundary = "bound";
+string	Request::MultipartBody = "";
+int		Request::McontentLength = 0;
+string	Request::MultipartContentType = "text/plain";
+string	Request::MultipartName = "file.txt";
 
-Request::Request(const string & request): _request(request), _sizeInRange(true)
+Request::Request(const string & request): _request(request), _filename(""), _sizeInRange(true)
 {
 	// cout << "------------REQUEST------------" << endl;
 	// cout << request << endl;
@@ -18,7 +19,7 @@ Request::Request(const string & request): _request(request), _sizeInRange(true)
 	if (_standardRequest)
 	{
 		parseHeaders(_headers);
-		parseBody(_body, atoi(_headers["Content-Length"].c_str()));
+		parseBody(_body, _request, atoi(_headers["Content-Length"].c_str()));
 	}
 	handleMultipart();
 	cout << "standardRequest: " << _standardRequest << endl;
@@ -49,7 +50,7 @@ void Request::identifyRequest()
 	if (_httpVersion.find("HTTP/") != string::npos)
 	{
 		_standardRequest = true;
-		boundary = "";
+		clearMultipartData();
 		return ;
 	}
 	_standardRequest = false;
@@ -88,8 +89,7 @@ bool	Request::isMultipartChunk()
 	istringstream istream(_request);
 	string firstLine;
 	getline(istream, firstLine, '\r');
-
-	if (boundaryCheck("--", firstLine))
+	if (ApproveMultipart("--", firstLine))
 		return true;
 	return false;
 }
@@ -102,7 +102,7 @@ bool	Request::setBoundary()
 	return true;
 }
 
-bool	Request::boundaryCheck(const string preBoundary, const string bound)
+bool	Request::ApproveMultipart(const string preBoundary, const string bound)
 {
 	// cout << "BOUND CHECK:" << endl;
 	string expectedBoundary = preBoundary + this->boundary;
@@ -110,6 +110,7 @@ bool	Request::boundaryCheck(const string preBoundary, const string bound)
 	if (bound == expectedBoundary)
 	{
 		cout << "its a correct boundaryyyyyyy" << endl;
+		MultipartApproved = true;
 		return true;
 	}
 	return false;
@@ -117,44 +118,58 @@ bool	Request::boundaryCheck(const string preBoundary, const string bound)
 
 bool	Request::handleMultipart()
 {
-	cout << "HANDLE MULTIPART" << endl;
+	cout << MAG << "HANDLE MULTIPART" << NORM << endl;
 	Headers headers;
 	if (Request::boundary.empty())
+	{
+		cout << "no boundary" << endl;
 		return false;
+	}
 	if (_standardRequest)
 		parseMultipart(_body); //shoult look if there is sth before boundary
-	else if (isMultipartChunk())
+	else// if (isMultipartChunk())
 		parseMultipart(_request);
-
+	
 	return true;
 }
 
 bool	Request::parseMultipart(const string & chunk)
 {
+	cout << MAG << "parse Multipart" << NORM << endl;
+	cout << MAG << chunk << NORM << endl;
 	//remove first line
 	istringstream s(chunk);
 	string body;
 	string line;
 	getline(s, line, '\n');
 	line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
-	if (!boundaryCheck("--", line))
-		return (cout << "boundary not equal" << endl, false);
-	parseHeaders(_headers); //adds headers to existing ones
-	setFilename();
-	getline(s, line, '\n'); //should be empty line
-	parseBody(body, McontentLength - findDoubleNewline(_request));
+	if (!MultipartApproved)
+	{
+		if (!ApproveMultipart("--", line))
+			return (cout << "boundary not equal" << endl, false);
+		parseHeaders(_headers); //adds headers to existing ones
+		setFilename();
+		cout << "filename: " << MultipartName <<endl;
+		getline(s, line, '\n'); //should be empty line
+		parseBody(body, chunk, McontentLength - findDoubleNewline(_request));
+	}
+	else
+		body = chunk;
 	MultipartBody.append(body);
 	//if last line is boundary: remove and set multipart as finished
-	if (MultipartBody.find(setBoundaryTogether(boundary, "end")))
+	if (MultipartBody.find(setBoundaryTogether(boundary, "end")) != string::npos)
 	{
 		cout << RED << "FOUND END BOUND" << NORM << endl;
 		MultipartBody.erase(MultipartBody.find(setBoundaryTogether(boundary, "end")));
 		_body = MultipartBody;
+		_filename = MultipartName;
 		_contentType = MultipartContentType;
 		_method = "POST";
 		_standardRequest = true;
 		clearMultipartData();
 	}
+	cout << ORANGE << "MultipartBody: " << NORM << endl;
+	cout << ORANGE << MultipartBody << NORM << endl;
 	return true;
 }
 
@@ -181,6 +196,7 @@ void Request::setFilename()
 
 void	Request::clearMultipartData()
 {
+	MultipartApproved = false;
 	MultipartBody = "";
 	McontentLength = 0;
 	boundary = "";
@@ -197,12 +213,12 @@ const string Request::setBoundaryTogether(const string & bound, const string & t
 		b.append("--");
 	return b;
 }
-int Request::parseBody(string & body, const int & length)
+int Request::parseBody(string & body, const string & chunk, const int & length)
 {
-	int pos_body = findDoubleNewline(_request);
+	int pos_body = findDoubleNewline(chunk);
 	if (pos_body < 0)
 		cerr << "No Body in Post request!" << endl;
-	body = _request.substr(pos_body, length);
+	body = chunk.substr(pos_body, length);
 	return 1;
 }
 
@@ -241,7 +257,7 @@ PAIR Request::parsePair(string line)
 	return p;
 }
 
-int Request::findDoubleNewline(std::string &s)
+int Request::findDoubleNewline(const std::string &s)
 {
 	int pos = s.find("\r\n\r\n");
 	if (pos > 0)

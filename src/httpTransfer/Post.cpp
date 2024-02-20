@@ -5,11 +5,11 @@
 void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
+	cout << ORANGE << "URI: " << _URI << endl;
 	if (isCgi(_URI))
 		return ;
 	if (isMultipart())
 	{
-		handleMultipart();
 		formResponse(100, _statusInfo);
 		return ;
 	}
@@ -24,16 +24,14 @@ void Response::processPost()
 	formResponse(_status, _statusInfo);
 }
 
-bool	Response::handleMultipart()
-{
-	
-	return true;
-}
-
 int	Response::createFile(std::string & path, const std::string & content)
 {
 	fstream file;
-	file.open(path.c_str(), ios::trunc | ios::binary | ios::out);
+	string filepath = path;
+	if (!_request.getFilename().empty())
+		filepath = _config.getRootPath() + "/upload" + "/" + _request.getFilename();
+	cout << GREEN << filepath << NORM << endl;
+	file.open(filepath, ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())
 		return false;
 	file << content;

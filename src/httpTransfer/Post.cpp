@@ -5,7 +5,7 @@
 void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
-	cout << ORANGE << "URI: " << _URI << endl;
+	cout << NORM << "URI: " << _URI << endl;
 	if (isCgi(_URI))
 		return ;
 	if (isMultipart())
@@ -30,7 +30,7 @@ int	Response::createFile(std::string & path, const std::string & content)
 	string filepath = path;
 	if (!_request.getFilename().empty())
 		filepath = _config.getRootPath() + "/upload" + "/" + _request.getFilename();
-	cout << GREEN << filepath << NORM << endl;
+	// cout << GREEN << filepath << NORM << endl;
 	file.open(filepath, ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())
 		return false;
@@ -54,7 +54,6 @@ std::string	Response::findKeyByValue(std::map<string, string>m, string value)
 	{
 		if (it->second.compare(value) == 0)
 		{
-			cout << it->first << "," << it->second << endl;
 			fileType = it->first;
 			break;
 		}

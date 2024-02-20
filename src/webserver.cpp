@@ -12,11 +12,7 @@ std::string testHttp(const std::string &request/* , Config & config */) {
         return "";
     } else {
 		cout << MAG << "-------request----->>" << NORM << endl;
-		cout << GREEN << request << NORM << endl;
-		cout << GREEN << "------------" << NORM << endl;
 		Request		httpRequest(request);
-		// cout << RED << httpRequest << NORM << endl;
-		cout << MAG << "-------response: --------" << endl;
 		Response	httpResponse(httpRequest);
 		std::string response = httpResponse.getResponse();
 		cout << BLUE << "RESPONSE:\n" << response << NORM <<endl;

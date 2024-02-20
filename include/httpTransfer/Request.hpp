@@ -11,7 +11,7 @@
 
 #define Headers map<string, string>
 #define Query map<string, string>
-#define MAX_BODY_SIZE 50000
+#define MAX_BODY_SIZE 90000
 #define PAIR pair<string, string>
 
 class Request
@@ -29,6 +29,7 @@ class Request
 	Headers			_headers;
 	Query			_query;
 	bool			_sizeInRange;
+
 	void			parseMainHeader();
 	void			parseHeaders(Headers & headers);
 	int				parseBody(string & body, const string & chunk, const int & length);
@@ -44,6 +45,7 @@ class Request
 	const string	setBoundaryTogether(const string & bound, const string & type);
 	void			clearMultipartData();
 	void			setFilename();
+	void			packTogether();
 
 	public:
 		static bool				MultipartApproved;

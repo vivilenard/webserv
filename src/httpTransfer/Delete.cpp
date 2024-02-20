@@ -6,7 +6,7 @@ void Response::processDelete()
 {
 	cout << "DELETE REQUEST" << endl;
 	if (std::remove(_URI.c_str()) == 0)
-		_status = 200;
+		_status = 204;
 	else 
 		_status = 404;
 	formResponse(_status, "");

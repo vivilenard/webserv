@@ -22,6 +22,7 @@ class Response
 	string			_fileContent;
 	string			_fileContentType;
 
+	bool			invalidRequest();
 	void			processGet();
 	void			processPost();
 	void			processDelete();
@@ -34,7 +35,6 @@ class Response
 	void			formResponse(const int & status, const string & statusInfo);
 	const string	createErrorBody(const int & status, const string & statusInfo);
 	bool			isMultipart();
-	bool			handleMultipart();
 	bool			isCgi(const string & path);
 
 

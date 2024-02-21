@@ -36,6 +36,7 @@ class Response
 	const string	createErrorBody(const int & status, const string & statusInfo);
 	bool			isMultipart();
 	bool			isCgi(const string & path);
+	int				handleMultipart();
 
 
 	public:

@@ -21,20 +21,22 @@ Response::Response(Request & request):
 		processGet();
 	else 
 		formResponse(501, _statusInfo);
+	// cout << BLUE << _status << " " << _statusInfo << NORM << endl;
 }
 
 bool Response::invalidRequest()
 {
-	if (_request.getSizeBound() == false)
-		{
-			formResponse(400, "Request message is too large");
-			return true;
-		}
+	if (_request.getSizeInRange() == false)
+	{
+		formResponse(400, "Request size is too large");
+		return true;
+	}
 	return false;
 }
 
 void Response::formResponse(const int & status, const string & statusInfo)
 {
+	_status = status;
 	string body;
 	if (status == 200)
 		body = _fileContent;
@@ -51,6 +53,7 @@ void Response::formResponse(const int & status, const string & statusInfo)
 		os << body;
 	}
 	_response = os.str();
+	cout << ORANGE << _status << NORM << endl;
 }
 
 const string Response::createErrorBody(const int & status, const string & statusInfo)
@@ -58,7 +61,7 @@ const string Response::createErrorBody(const int & status, const string & status
 	ostringstream body_os;
 	_fileContentType = "text/html";
 
-	body_os << "<h1> " << STATUSCODE[status] << " </h1>\n";
+	body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
 	if (!statusInfo.empty())
 		body_os << "<h3> " << statusInfo << "</h3>";
 	return body_os.str();

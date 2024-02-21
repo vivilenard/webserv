@@ -26,10 +26,10 @@ bool	Response::readFile(const string & path)
 
 	file.open(path.c_str());
 	if (!file)
-		{
-			cerr << "File does not open, probably no access rights" << endl;
-			return false;
-		}
+	{
+		cerr << "File does not open, probably no access rights" << endl;
+		return false;
+	}
 	os << file.rdbuf();
 	_fileContent = os.str();
 

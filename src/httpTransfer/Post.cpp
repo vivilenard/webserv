@@ -6,25 +6,34 @@ void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
 	cout << NORM << "URI: " << _URI << endl;
+	// cout << _request.getBody().length() << endl;
 	if (isCgi(_URI))
 		return ;
 	if (isMultipart())
-	{
-		formResponse(100, _statusInfo);
-		return ;
-	}
-	//do multipart with MultipartName, body etc!
+		{ handleMultipart(); return ; }
 	_status = 201;
 	string contentType = _request.getHeaders()["Content-Type"];
 	string mimeType = findKeyByValue(_config._mimeTypes, contentType);
 	// cout << "BODY:" << endl;
 	// cout << RED << _request.getBody() << NORM << endl;
-	cout << _URI << endl;
 	if (mimeType == "form-urlencoded")
 		_request.parseQuery(_request.getBody());
 	else if (!createFile(_URI, _request.getBody()))
-		{_status = 400; _statusInfo = "Please include a valid path";}
+		{ _status = 400; _statusInfo = "Please include a valid path"; }
 	formResponse(_status, _statusInfo);
+}
+
+int Response::handleMultipart()
+{
+	formResponse(100, _statusInfo);
+	if (Request::MultipartApproved == -1)
+	{
+		cout << "Multipart not Approved" << endl;
+		formResponse(400, "Incorrect Boundary");
+		Request::MultipartApproved = 0;
+		return -1;
+	}
+	return 1;
 }
 
 int	Response::createFile(std::string & path, const std::string & content)
@@ -46,7 +55,10 @@ int	Response::createFile(std::string & path, const std::string & content)
 bool	Response::isMultipart()
 {
 	if (!_request.boundary.empty())
+	{
+		cout << "isMultipart" << endl;
 		return true;
+	}
 	return false;
 }
 

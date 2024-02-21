@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<script language="JScript">
+		<!-- Hide
+		function setName()
+		{
+			let filename = document.getElementById("enterFilename").value;
+			if (filename)
+				document.getElementById("filename").setAttribute("name", filename);
+		}
+        -->
+	</script>
+	<a href="../index.html">HOME</a>
+	<h1>Upload a file</h1>
+	<form method="POST" enctype="multipart/form-data" action="/upload">
+		<input type="file" name="default" id="filename">
+		<input type="text" id="enterFilename">
+		<input type="submit" value="Upload">
+	</form> 
+</body>
+</html>

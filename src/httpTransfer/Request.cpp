@@ -165,15 +165,26 @@ void Request::setFilename()
 		return ;
 	istringstream is(_headers["Content-Disposition"]);
 	string s;
-	string FindHeader = "filename=";
+	Headers attributes;
+	getline(is, s, ';');
 	while (getline(is, s, ';'))
 	{
-		if (s.find(FindHeader) != string::npos)
+		cout<<s<<endl;
+		PAIR p;
+		if (s.find('='))
 		{
-			s.erase(0, FindHeader.size());
-			s.erase(std::remove(s.begin(), s.end(), '"'), s.end());
-			MultipartName = s;
-			break ;
+			p.first = s.substr(0, s.find('='));
+			p.second = s.substr(s.find('=') + 1);
+			p.second.erase(remove(p.second.begin(), p.second.end(), '"'), p.second.end());
+			attributes[p.first] = p.second;
+		}
+		if (attributes.find("filename") != attributes.end())
+		{
+			if (!attributes["filename"].empty())
+			{
+				MultipartName = attributes["filename"];
+				return;
+			}
 		}
 	}
 }

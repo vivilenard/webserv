@@ -6,7 +6,7 @@
 #include "Status.hpp"
 #include <map>
 
-
+#define STATUSCODE _statusCode.getStati()
 
 class Response
 {

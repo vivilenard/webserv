@@ -1,8 +1,5 @@
 #include "../../include/httpTransfer/Response.hpp"
 
-#define STATUSCODE _statusCode.getStati()
-
-
 void	Response::processGet()
 {
 	_status = 200;
@@ -13,7 +10,7 @@ void	Response::processGet()
 	if (!readFile(_URI))
 	{
 		_status = 404;
-		_statusInfo = "file has no content";
+		_statusInfo = "Not Found";
 	}
 	_fileContentType = getContentType(_URI);
 	if (_fileContentType.empty())

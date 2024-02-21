@@ -17,6 +17,9 @@ void Response::processPost()
 	_status = 201;
 	string contentType = _request.getHeaders()["Content-Type"];
 	string mimeType = findKeyByValue(_config._mimeTypes, contentType);
+	// cout << "BODY:" << endl;
+	// cout << RED << _request.getBody() << NORM << endl;
+	cout << _URI << endl;
 	if (mimeType == "form-urlencoded")
 		_request.parseQuery(_request.getBody());
 	else if (!createFile(_URI, _request.getBody()))
@@ -28,10 +31,11 @@ int	Response::createFile(std::string & path, const std::string & content)
 {
 	fstream file;
 	string filepath = path;
+	//config filepath for upload
 	if (!_request.getFilename().empty())
 		filepath = _config.getRootPath() + "/upload" + "/" + _request.getFilename();
-	// cout << GREEN << filepath << NORM << endl;
-	file.open(filepath, ios::trunc | ios::binary | ios::out);
+	cout << GREEN << filepath << NORM << endl;
+	file.open(filepath.c_str(), ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())
 		return false;
 	file << content;

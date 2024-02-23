@@ -6,6 +6,18 @@ void	Response::processGet()
 	_status = 200;
 	ostringstream os;
 	addDefaultFile(_URI);
+	if (!readFile(_URI))
+	{
+		_status = 404;
+		_statusInfo = "file has no content";
+		cout << "READ FILE DOESNT WORK" << endl;
+	}
+	if (isCgi(_URI))
+	{
+		formResponse(_status, "");
+		return ;
+	}
+	cout << "read file worked" << endl;
 	_fileContentType = getContentType(_URI);
 	if (listDirectory(this->_URI))
 		{ formResponse(200, ""); return ; }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
+#    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/02/29 16:29:24 by vlenard          ###   ########.fr        #
+#    Updated: 2024/01/22 15:47:07 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,12 @@ endif
 CC		= c++
 
 # -MMD and -MP are ussed to create dependecy files
-CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
+CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 -pedantic $(INC_DIR)
 
-# add include directories here
 INC_DIR	= 	-I./include/ \
 			-I./include/socketManager/ \
 			-I./include/Interface/ \
+			-I./parse/ \
 			# -I./include/config/ \
 			# -I./include/error/ \
 			# -I./include/httpTransfer/ \
@@ -51,7 +51,6 @@ SRCS	=	webserver.cpp \
 			socketKqueue.cpp \
 			socketSelect.cpp \
 			InterfaceTools.cpp \
-			mimeTypes.cpp \
 			Request.cpp \
 			Response.cpp \
 			Status.cpp \
@@ -59,10 +58,11 @@ SRCS	=	webserver.cpp \
 			Get.cpp \
 			Post.cpp \
 			Cgi.cpp \
+			read.cpp \
 			configFile.cpp \
 			configUtil.cpp \
 			location.cpp \
-			read.cpp \
+			mimeTypes.cpp \
 			root.cpp \
 			defaultConf.cpp \
 			$(SOURCE)
@@ -78,35 +78,34 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 
 
 # in case of subdirectories in the src folder add them here
-VPATH := src include src/socketManager src/Interface src/config src/error src/httpTransfer \
-		parse defaultConf
+VPATH := src include src/socketManager src/Interface src/config src/error src/httpTransfer parse defaultConf
 
 all:
 	@$(MAKE) -s proname_header
 	@$(MAKE) -s std_all
 
 std_all:
-	@printf "%s$(RESET)\n" "$(FPurple)Compiling $(PRONAME)"
+	@echo "%s$(RESET)\n" "$(FPurple)Compiling $(PRONAME)"
 	@-include $(OBJS:.o=.d)
 	@$(MAKE) -s $(PRONAME)
-	@printf "$(SETCURUP)$(CLEARLINE)$(SETCURUP)$(CLEARLINE)\r$(FPurple)%-21s$(FGreen)$(TICKBOX)$(RESET)\n" "Compiling $(PRONAME)"
+	@echo "$(SETCURUP)$(CLEARLINE)$(SETCURUP)$(CLEARLINE)\r$(FPurple)%-21s$(FGreen)$(TICKBOX)$(RESET)\n" "Compiling $(PRONAME)"
 
 $(PRONAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(PRONAME)
 
 $(OBJ_DIR)%.o: %.cpp
 ifeq ($(shell test -d $(OBJ_DIR) || echo $$?), 1)
-	printf "$(CLEARLINE)\r$(Yellow)creting obj dir$(RESET)"
+	echo "$(CLEARLINE)\r$(Yellow)creting obj dir$(RESET)"
 	@mkdir -p $(OBJ_DIR)
 endif
-	@printf "$(CLEARLINE)\r%-28s$(RESET)" "$(Yellow)Compiling $< ..."
+	@echo "$(CLEARLINE)\r%-28s$(RESET)" "$(Yellow)Compiling $< ..."
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@$(MAKE) -s proname_header
-	@printf "%-28s$(RESET)" "$(FRed)Cleaning $(PRONAME)"
+	@echo "%-28s$(RESET)" "$(FRed)Cleaning $(PRONAME)"
 	@$(MAKE) -s std_clean
-	@printf "$(FGreen)$(TICKBOX)$(RESET)\n"
+	@echo "$(FGreen)$(TICKBOX)$(RESET)\n"
 
 fclean:
 	@$(MAKE) -s proname_header
@@ -150,13 +149,13 @@ std_clean:
 	@rm -rf $(OBJ_DIR)
 
 cleanator:
-	@printf "%-28s$(RESET)" "$(FRed)FCleaning $(PRONAME)"
+	@echo "%-28s$(RESET)" "$(FRed)FCleaning $(PRONAME)"
 	@rm -rf $(OBJ_DIR)
 	@rm -f $(PRONAME)
-	@printf "$(FGreen)$(TICKBOX)$(RESET)\n"
+	@echo "$(FGreen)$(TICKBOX)$(RESET)\n"
 
 proname_header:
-	@printf "$(FYellow)╔══════════════════════╗\n\
+	@echo "$(FYellow)╔══════════════════════╗\n\
 $(FYellow)║$(FRed)          (    (      $(FYellow)║$(RESET)\n\
 $(FYellow)║$(FRed)     (    )\\ ) )\\ )   $(FYellow)║$(RESET)\n\
 $(FYellow)║$(FRed)     )\\  (()/((()/(   $(FYellow)║$(RESET)\n\

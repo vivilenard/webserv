@@ -57,7 +57,7 @@ void	ConfigFile::addIndex(configServer &server, std::string token, std::istrings
 
 std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
 {
- std::ifstream inputFile(fileName);
+ std::ifstream inputFile(fileName.c_str());
  configServer tmpServer;
  std::map<std::string, configServer> configTmp;
 
@@ -67,28 +67,27 @@ if (_mimeTypes.empty())
 // printMimes(this->_mimeTypes);
 tmpServer._mimeTypes = this->_mimeTypes;
 if (inputFile.is_open())
- {
-	 std::string line;
-	 while (getline(inputFile, line))
-		{
-			std::string token;
-			std::istringstream find(line);
-			find >> token;
-			addServerName(tmpServer, token, find);
-			addListen(tmpServer, token, find);
-			if (!tmpServer.validFormat )
-				break ;
-			addRoot(tmpServer, token, find);
-			addIndex(tmpServer, token, find);
-			setLocation(tmpServer,inputFile, token,line, find);
-	 	}
-
- }
+{
+	std::string line;
+	while (getline(inputFile, line))
+	{
+		std::string token;
+		std::istringstream find(line);
+		find >> token;
+		addServerName(tmpServer, token, find);
+		addListen(tmpServer, token, find);
+		if (!tmpServer.validFormat )
+			break ;
+		addRoot(tmpServer, token, find);
+		addIndex(tmpServer, token, find);
+		setLocation(tmpServer,inputFile, token,line, find);
+	}
+}
  else
  	std::cout << "wrong format" << std::endl;
- 	serverStatus(tmpServer);
- 	configTmp[tmpServer._serverName] = tmpServer;
- 	return (configTmp);
+serverStatus(tmpServer);
+configTmp[tmpServer._serverName] = tmpServer;
+return (configTmp);
 }
 
 void	ConfigFile::setConFile(std::map<std::string, configServer> set)

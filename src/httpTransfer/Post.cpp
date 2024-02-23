@@ -9,12 +9,12 @@ void Response::processPost()
 	cout << "filename: " << _request.getFilename() << endl;
 	// cout << _request.getBody().length() << endl;
 	if (isCgi(_URI))
-		return;
-	if (isMultipart())
-		{ handleMultipart(); return; }
-	// cout << "test" <<endl;
-	if (noFilename())
-		return (formResponse(400, "Please include a file with a name"));
+	{
+		return ;
+	}
+	if (isMultipart()){
+		formResponse(100, _statusInfo);
+		return; }
 	_status = 201;
 	string contentType = findKeyByValue(_configfile._mimeTypes, _request.getHeaders()["Content-Type"]);
 	if (contentType == "form-urlencoded")

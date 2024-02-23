@@ -7,7 +7,7 @@ StatusCode Response::_statusCode = StatusCode();
 Response::Response(Request & request, configServer & configfile): _configfile(configfile),
 	_request(request), _status(500), _statusInfo(), _httpVersion("HTTP/1.1")
 {
-	// cout << GREEN << _request.getURI() << NORM << endl;
+	cout << "in Response " << endl;
 	_URI = addRootPath(_request.getURI());
 	cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
@@ -66,7 +66,12 @@ void Response::formResponse(const int & status, const string & statusInfo)
 	_status = status;
 	_statusInfo = statusInfo;
 	string body;
-	if (status == 200)
+
+	if (_cgiScript.empty() == false)
+	{
+		body = _cgiScript;
+	}
+	else if (status == 200)
 		body = _fileContent;
 	else if(status != 200)
 		body = createErrorBody(status, statusInfo);

@@ -9,15 +9,19 @@
 
 #define Headers map<string, string>
 #define Query map<string, string>
-#define MAX_BODY_SIZE 1000000
+#define EnvCgi	map<string, string>
+
+#define MAX_BODY_SIZE 50000
 #define PAIR pair<string, string>
 
 class Request
 {
+	// static	Config	_config;
 	bool			_standardRequest;
-	string			_request;
-	string			_method;
-	string			_URI;
+	string			_request; // to add in cgi
+	string			_method;	// to add in cgi
+	string			_URI; // to add in cgi
+	// string			_prefixPath;
 	string			_httpVersion;
 	string			_contentLength;
 	string			_contentType;
@@ -26,12 +30,15 @@ class Request
 	string			_filename;
 	Headers			_headers;
 	Query			_query;
-	bool			_sizeInRange;
-
+	EnvCgi				_envCgi;
 	void			parseMainHeader();
+	void			parseHeaders();
+	int				parseBody();
+	bool			_sizeInRange;
+	// string			parseHeader(string s);
+
 	void			parseHeaders(Headers & headers);
 	int				parseBody(string & body, const string & chunk, const int & length);
-	int				findDoubleNewline(const std::string & s);
 	PAIR 			parsePair(string line);
 	void			identifyRequest();
 	bool			isMultipartChunk();
@@ -48,6 +55,7 @@ class Request
 	void			parseContentAttributes(Headers & attributes, const string & s);
 
 	public:
+		int				findDoubleNewline(const std::string & s);
 		static int				MultipartApproved;
 		static string			MultipartName;
 		static string			MultipartBody;
@@ -65,8 +73,9 @@ class Request
 		Headers & 		getHeaders(){ return _headers; }
 		const string & 	getBody()	{ return _body; }
 		void			parseQuery(const string & path);
-
-
+		const Query &	getQuery(){ return _query;}
+		void 			buildCgiEnv(void);
+		int				executeCgi(std::string &cgiScript);
 };
 
 #define RED "\033[1;91m"

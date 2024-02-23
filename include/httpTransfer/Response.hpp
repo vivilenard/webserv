@@ -21,6 +21,7 @@ class Response
 	string			_responseBody;
 	string			_fileContent;
 	string			_fileContentType;
+	string			_cgiScript;
 
 	void			processGet();
 	void			processPost();
@@ -41,5 +42,5 @@ class Response
 		const string getResponse() const { return _response ; };
 };
 
-
+int executeCgi(std::string &cgiScript);
 #endif

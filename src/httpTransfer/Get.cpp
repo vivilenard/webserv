@@ -8,13 +8,14 @@ void	Response::processGet()
 	_status = 200;
 	ostringstream os;
 	addDefaultFile(_URI);
-	if (isCgi(_URI))
-		return ;
 	if (!readFile(_URI))
 	{
 		_status = 404;
 		_statusInfo = "file has no content";
+		cout << "READ FILE DOESNT WORK" << endl;
 	}
+	isCgi(_URI);
+	cout << "read file worked" << endl;
 	_fileContentType = getContentType(_URI);
 	if (_fileContentType.empty())
 		_status = 415;

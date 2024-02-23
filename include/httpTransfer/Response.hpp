@@ -34,9 +34,11 @@ class Response
 	std::string		findKeyByValue(std::map<string, string>m, string value);
 	void			formResponse(const int & status, const string & statusInfo);
 	const string	createErrorBody(const int & status, const string & statusInfo);
-	bool			isMultipart();
+	int				isMultipart();
 	bool			isCgi(const string & path);
 	int				handleMultipart();
+	bool			incorrectMimeType(const string & contentType);
+	bool			noFilename();
 
 
 	public:

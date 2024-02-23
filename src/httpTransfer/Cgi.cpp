@@ -6,6 +6,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sstream>
 
 #include <iostream>
 #include <unistd.h>
@@ -90,7 +91,17 @@ bool	Response::isCgi(const string & path)
 		cout << "------------------------------------------" << endl;
 		executeCgi(this->_cgiScript);
 		cout << "------------------------------------------" << endl;
+
+		// _fileContentType = text/html
+		//_cgiScript == html 
+		_fileContentType = "text/html";
+		int pos_nl = _request.findDoubleNewline(_cgiScript);
+		cout << "NL: " << pos_nl << endl;
+		_cgiScript = _cgiScript.substr(pos_nl);
+
+		std::cout << "CGI:" << endl;
 		std::cout << this->_cgiScript;
+		_status = 200;
 		return true;
 	}
 	return false;

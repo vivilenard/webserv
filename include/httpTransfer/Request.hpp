@@ -30,12 +30,12 @@ class Request
 	void			parseMainHeader();
 	void			parseHeaders();
 	int				parseBody();
-	int				findDoubleNewline(std::string & s);
 	bool			_sizeInRange;
 	// string			parseHeader(string s);
 
 
 	public:
+		int				findDoubleNewline(std::string & s);
 		Request(const string & request);
 		friend ostream & operator<<(ostream & os, const Request & r);
 		// void printHeaders();

@@ -14,7 +14,11 @@ void	Response::processGet()
 		_statusInfo = "file has no content";
 		cout << "READ FILE DOESNT WORK" << endl;
 	}
-	isCgi(_URI);
+	if (isCgi(_URI))
+	{
+		formResponse(_status, "");
+		return ;
+	}
 	cout << "read file worked" << endl;
 	_fileContentType = getContentType(_URI);
 	if (_fileContentType.empty())

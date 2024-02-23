@@ -26,7 +26,12 @@ Response::Response(Request & request):
 void Response::formResponse(const int & status, const string & statusInfo)
 {
 	string body;
-	if (status == 200)
+
+	if (_cgiScript.empty() == false)
+	{
+		body = _cgiScript;
+	}
+	else if (status == 200)
 		body = _fileContent;
 	else if(status != 200)
 		body = createErrorBody(status, statusInfo);

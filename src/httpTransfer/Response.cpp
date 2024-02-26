@@ -21,7 +21,7 @@ Response::Response(Request & request):
 		processGet();
 	else 
 		formResponse(501, _statusInfo);
-	// cout << BLUE << _status << " " << _statusInfo << NORM << endl;
+	cout << BLUE << STATUSCODE[_status] << " " << _statusInfo << NORM << endl;
 }
 
 bool Response::invalidRequest()
@@ -37,6 +37,7 @@ bool Response::invalidRequest()
 void Response::formResponse(const int & status, const string & statusInfo)
 {
 	_status = status;
+	_statusInfo = statusInfo;
 	string body;
 	if (status == 200)
 		body = _fileContent;
@@ -53,7 +54,7 @@ void Response::formResponse(const int & status, const string & statusInfo)
 		os << body;
 	}
 	_response = os.str();
-	cout << ORANGE << _status << NORM << endl;
+	// cout << ORANGE << _status << NORM << endl;
 }
 
 const string Response::createErrorBody(const int & status, const string & statusInfo)

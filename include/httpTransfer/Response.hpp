@@ -4,7 +4,11 @@
 #include "Request.hpp"
 #include "config/Config.hpp"
 #include "Status.hpp"
+
 #include <map>
+#include <sys/types.h>
+#include <dirent.h>
+#include <vector>
 
 #define STATUSCODE _statusCode.getStati()
 
@@ -39,6 +43,7 @@ class Response
 	int				handleMultipart();
 	bool			incorrectMimeType(const string & contentType);
 	bool			noFilename();
+	bool			listDirectory(const string & endpoint);
 
 
 	public:

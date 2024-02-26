@@ -1,12 +1,15 @@
 #include "../../include/httpTransfer/Response.hpp"
+#include "../../include/httpTransfer/Request.hpp"
 
 void	Response::processGet()
 {
 	_status = 200;
 	ostringstream os;
-	addDefaultFile(_URI);
+	if (listDirectory(this->_URI))
+		{ formResponse(200, ""); return ; }
+	// addDefaultFile(_URI);
 	if (isCgi(_URI))
-		return ;
+		{ return ; }
 	if (!readFile(_URI))
 	{
 		_status = 404;
@@ -16,6 +19,26 @@ void	Response::processGet()
 	if (_fileContentType.empty())
 		_status = 415;
 	formResponse(_status, "");
+}
+
+bool	Response::listDirectory(const string & endpoint)
+{
+	cout << RED << "DIRECTORY LISTING" << NORM << endl;
+	vector<string> v;
+	DIR* dirp = opendir(endpoint.c_str());
+	if (!dirp)
+	{
+		cout << "its not a directory" << endl;
+		return false;
+	}
+	struct dirent * dp;
+	while ((dp = readdir(dirp)) != NULL) {
+		v.push_back(dp->d_name);
+		cout << ORANGE << dp->d_name << NORM << endl;
+	}
+	closedir(dirp);
+
+	return true;
 }
 
 bool	Response::readFile(const string & path)

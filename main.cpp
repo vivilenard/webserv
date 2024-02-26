@@ -4,16 +4,6 @@
 // 'IPv4' defined by 'AF_INET', 'SOCK_STREAM' for bidirectional TCP traffic, '0'=default protocol for type
 // multiplexing
 
-std::string stringConvert(char *input)
-{
-	std::stringstream format;
-	format << input;
-	std::string convert = format.str();
-	if (!convert.empty())
-		return (convert);
-	else
-		return ("");
-}
 
 
 int main(int argc, char **argv)

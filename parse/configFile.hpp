@@ -8,6 +8,8 @@
 #include <map>
 #include <sys/stat.h>
 
+#define CONFIG std::map<std::string, configServer>
+
 const int MAX_PORT = 65535;
 
 struct configServer
@@ -19,7 +21,7 @@ struct configServer
 	std::string _root;
 	bool	validFormat;
 	std::string _index;
-	struct Location
+	struct Location //_locations[namelocation].whateverinside
 	{
 		std::string _name;
 		std::string _index;
@@ -59,3 +61,6 @@ public:
 													std::string token, std::string &line, std::istringstream &find);
 	~ConfigFile();
 };
+
+std::string stringConvert(char *input);
+bool readConfig(int argc, char **argv, std::map<std::string, configServer> & config);

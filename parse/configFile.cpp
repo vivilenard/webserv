@@ -64,16 +64,18 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
  {
 	 std::string line;
 	 while (getline(inputFile, line))
-	 {
-	 	std::string token;
-		std::istringstream find(line);
-		find >> token;
-		addServerName(tmpServer, token, find);
-		addListen(tmpServer, token, find);
-		addRoot(tmpServer, token, find);
-		addIndex(tmpServer, token, find);
-		setLocation(tmpServer,inputFile, token,line, find);
-	 }
+		{
+			std::string token;
+			std::istringstream find(line);
+			find >> token;
+			addServerName(tmpServer, token, find);
+			addListen(tmpServer, token, find);
+			if (!tmpServer.validFormat )
+				break ;
+			addRoot(tmpServer, token, find);
+			addIndex(tmpServer, token, find);
+			setLocation(tmpServer,inputFile, token,line, find);
+	 	}
 
  }
  else

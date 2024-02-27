@@ -60,5 +60,4 @@ class Response
 		string	getFileCreationTime(char *path);
 };
 
-
 #endif

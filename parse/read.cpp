@@ -20,6 +20,8 @@ bool readConfig(int argc, char **argv, std::map<std::string, configServer> & con
 		std::string file = stringConvert(argv[1]);
 		std::cout << file << std::endl;
 		set = test.readFile(file);
+		if (set.empty())
+			return false;
 		test.setConFile(set);
 		// std::map<std::string, configServer> out;
 		config = test.getConFile();

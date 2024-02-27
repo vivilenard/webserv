@@ -19,7 +19,7 @@ struct configServer
 	int			_listen;
 	std::string _address;
 	std::string _root;
-	bool	validFormat;
+	bool		validFormat;
 	std::string _index;
 	struct Location //_locations[namelocation].whateverinside
 	{

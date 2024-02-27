@@ -8,7 +8,9 @@ StatusCode Response::_statusCode = StatusCode();
 Response::Response(Request & request):
 	_request(request), _status(500), _statusInfo(), _httpVersion("HTTP/1.1")
 {
+	// cout << GREEN << _request.getURI() << NORM << endl;
 	_URI = addRootPath(_request.getURI());
+	// cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
 		return ;
 	if (request.getMethod() == "GET")

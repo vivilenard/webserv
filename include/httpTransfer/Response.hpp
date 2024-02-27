@@ -9,6 +9,12 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <vector>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstring>
 
 #define STATUSCODE _statusCode.getStati()
 
@@ -44,11 +50,14 @@ class Response
 	bool			incorrectMimeType(const string & contentType);
 	bool			noFilename();
 	bool			listDirectory(const string & endpoint);
+	string			currentDir();
 
 
 	public:
 		Response(Request & request);
-		const string getResponse() const { return _response ; };
+		const	string getResponse() const { return _response ; };
+		bool	beginsWithDot(const string & s);
+		string	getFileCreationTime(char *path);
 };
 
 

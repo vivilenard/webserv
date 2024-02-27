@@ -21,24 +21,14 @@ void	Response::processGet()
 	formResponse(_status, "");
 }
 
-bool	Response::listDirectory(const string & endpoint)
-{
-	cout << RED << "DIRECTORY LISTING" << NORM << endl;
-	vector<string> v;
-	DIR* dirp = opendir(endpoint.c_str());
-	if (!dirp)
-	{
-		cout << "its not a directory" << endl;
-		return false;
-	}
-	struct dirent * dp;
-	while ((dp = readdir(dirp)) != NULL) {
-		v.push_back(dp->d_name);
-		cout << ORANGE << dp->d_name << NORM << endl;
-	}
-	closedir(dirp);
 
-	return true;
+bool	Response::beginsWithDot(const string & s)
+{
+	// if (s == "..") //exception
+	// 	return false;
+	if (s[0] == '.')
+		return true;
+	return false;
 }
 
 bool	Response::readFile(const string & path)
@@ -68,4 +58,41 @@ string Response::getContentType(const string & path)
 	string mime = path.substr(j + 1);
 	string contentType = _config._mimeTypes[mime];
 	return contentType;
+}
+
+bool	Response::listDirectory(const string & endpoint)
+{
+	// cout << RED << "DIRECTORY LISTING" << NORM << endl;
+	vector<string> v; ostringstream os;
+	DIR* dirp = opendir(endpoint.c_str()); struct dirent * dp;
+	if (!dirp)
+		{ return (cout << "its not a directory" << endl, false); }
+	os << "<h1> Index of " << currentDir() << "</h1><br>" << endl;
+	while ((dp = readdir(dirp)) != NULL) {
+		// v.push_back(dp->d_name);
+		if (beginsWithDot(dp->d_name)) continue ;
+		string newPath = currentDir().append(dp->d_name);
+		os << "<a href=" << "\"" << newPath << "\">" << dp->d_name // << getFileCreationTime((char *)newPath.c_str())
+			<< "</a>" << endl;
+		os << "<br>" << endl;
+	}
+	closedir(dirp);
+	_fileContent = os.str();
+	return true;
+}
+
+string Response::currentDir()
+{
+	string curDir = "/";
+	if (_request.getURI() == "/")
+		return curDir;
+	curDir = _request.getURI() + "/";
+	return curDir;
+}
+
+string Response::getFileCreationTime(char *path) {
+	struct stat attr;
+	stat(path, &attr);
+	printf("Last modified time: %s", ctime(&attr.st_mtime));
+	return ctime(&attr.st_mtime);
 }

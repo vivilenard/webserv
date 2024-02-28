@@ -8,8 +8,8 @@ void	ConfigFile::setMethod(configServer &server, std::string dir,
 	std::istringstream ruleStream(rule);
 	ruleStream >> divider;
 	ruleStream >> method;
-	if (method == "PUT")
-		server._locations[dir]._put = true;
+	if (method == "DELETE")
+		server._locations[dir]._delete = true;
 	else if (method == "GET")
 		server._locations[dir]._get = true;
 	else if (method == "POST")

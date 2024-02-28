@@ -12,16 +12,19 @@ void Response::processPost()
 		return;
 	if (isMultipart())
 		{ handleMultipart(); return; }
+	// cout << "test" <<endl;
 	if (noFilename())
 		return (formResponse(400, "Please include a file with a name"));
 	_status = 201;
 	string contentType = findKeyByValue(_config._mimeTypes, _request.getHeaders()["Content-Type"]);
 	if (contentType == "form-urlencoded")
 		{_request.parseQuery(_request.getBody()); return; }
+	// cout << "test" <<endl;
 	if (incorrectMimeType(_request.getHeaders()["Content-Type"]))
 		{ formResponse(400, "Incorrect Mimetype"); return; }
 	else if (!createFile(_URI, _request.getBody()))
 		{ _status = 400; _statusInfo = "Please include a valid path"; }
+	// cout << "test" <<endl;
 	formResponse(_status, _statusInfo);
 }
 
@@ -70,7 +73,7 @@ int	Response::createFile(std::string & path, const std::string & content)
 	string filepath = path;
 	//config filepath for upload
 	if (!_request.getFilename().empty())
-		filepath = _config.getRootPath() + "/upload" + "/" + _request.getFilename();
+		filepath = _configfile._root + "/upload" + "/" + _request.getFilename();
 	cout << GREEN << filepath << NORM << endl;
 	file.open(filepath.c_str(), ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())

@@ -5,19 +5,16 @@ void	Response::processGet()
 {
 	_status = 200;
 	ostringstream os;
+	_fileContentType = getContentType(_URI);
 	if (listDirectory(this->_URI))
 		{ formResponse(200, ""); return ; }
 	// addDefaultFile(_URI);
 	if (isCgi(_URI))
 		{ return ; }
 	if (!readFile(_URI))
-	{
-		_status = 404;
-		_statusInfo = "Not Found";
-	}
-	_fileContentType = getContentType(_URI);
+		{ formResponse(404, ""); return ; }
 	if (_fileContentType.empty())
-		_status = 415;
+		{ formResponse(415, ""); return ; }
 	formResponse(_status, "");
 }
 
@@ -66,7 +63,7 @@ bool	Response::listDirectory(const string & endpoint)
 	vector<string> v; ostringstream os;
 	DIR* dirp = opendir(endpoint.c_str()); struct dirent * dp;
 	if (!dirp)
-		{ return (cout << "its not a directory" << endl, false); }
+		{ return false; }
 	os << "<h1> Index of " << currentDir() << "</h1><br>" << endl;
 	while ((dp = readdir(dirp)) != NULL) {
 		// v.push_back(dp->d_name);

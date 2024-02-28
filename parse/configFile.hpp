@@ -9,8 +9,10 @@
 #include <sys/stat.h>
 
 #define CONFIG std::map<std::string, configServer>
+#define LOCATION std::map<std::string, configServer::Location>
 
 const int MAX_PORT = 65535;
+
 
 struct configServer
 {
@@ -27,7 +29,7 @@ struct configServer
 		std::string _index;
 		bool		_post;
 		bool		_get;
-		bool		_put;
+		bool		_delete;
 
 	};
 	std::map<std::string, Location> _locations;

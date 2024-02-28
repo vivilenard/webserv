@@ -4,6 +4,7 @@
 #include "Request.hpp"
 #include "config/Config.hpp"
 #include "Status.hpp"
+#include "../../parse/configFile.hpp"
 
 #include <map>
 #include <sys/types.h>
@@ -16,10 +17,13 @@
 #include <sys/types.h>
 #include <cstring>
 
+struct configServer;
+
 #define STATUSCODE _statusCode.getStati()
 
 class Response
 {
+	configServer	_configfile;
 	Request			_request;
 	string			_response;
 	static Config 	_config;
@@ -36,6 +40,7 @@ class Response
 	void			processGet();
 	void			processPost();
 	void			processDelete();
+	bool 			methodAllowed();
 	bool			readFile(const string & path);
 	string			addRootPath(const string & path);
 	int				addDefaultFile(string & path);
@@ -54,7 +59,7 @@ class Response
 
 
 	public:
-		Response(Request & request);
+		Response(Request & request, configServer & configfile);
 		const	string getResponse() const { return _response ; };
 		bool	beginsWithDot(const string & s);
 		string	getFileCreationTime(char *path);

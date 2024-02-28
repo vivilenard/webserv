@@ -5,6 +5,8 @@
 #include "../include/httpTransfer/Response.hpp"
 #include "../parse/configFile.hpp"
 
+CONFIG config;
+configServer configfile;
 
 std::string testHttp(const std::string &request/* , Config & config */) {
     // std::cout << "testHttp called" << std::endl;
@@ -12,10 +14,11 @@ std::string testHttp(const std::string &request/* , Config & config */) {
         std::cout << "request is empty" << std::endl;
         return "";
     } else {
+		cout << configfile._root << endl;
 		cout << MAG << "-------request----->>" << NORM << endl;
 		Request		httpRequest(request);
 		// cout << httpRequest << endl;
-		Response	httpResponse(httpRequest);
+		Response	httpResponse(httpRequest, configfile);
 		std::string response = httpResponse.getResponse();
 		// cout << BLUE << "RESPONSE:\n" << response << NORM <<endl;
 		cout << MAG << "<<------------------------" << NORM << endl;
@@ -43,18 +46,17 @@ void printConfig(string name, configServer server)
 		cout << "Default page: " << it->second._index << endl;
 		cout << "Post: " << it->second._post << endl;
 		cout << "Get: " << it->second._get << endl;
-		cout << "Put: " << it->second._put << endl;
+		cout << "Put: " << it->second._delete << endl;
 	}
 
 }
 
 int main(int argc, char **argv)
 {
-	static CONFIG config;
 	if (!readConfig(argc, argv, config))
 		return -1;
-	static configServer configFile = config.begin()->second;
-	printConfig(config.begin()->first, configFile);
+	configfile = config.begin()->second;
+	printConfig(config.begin()->first, configfile);
 	// int numWorker = 4;
 	// parsing here
 	// add application map to interface before forking the workers

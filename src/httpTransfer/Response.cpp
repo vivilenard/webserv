@@ -5,27 +5,53 @@
 Config Response::_config = Config();
 StatusCode Response::_statusCode = StatusCode();
 
-Response::Response(Request & request):
+Response::Response(Request & request, configServer & configfile): _configfile(configfile),
 	_request(request), _status(500), _statusInfo(), _httpVersion("HTTP/1.1")
 {
-	// cout << GREEN << _request.getURI() << NORM << endl;
+	cout << GREEN << _request.getURI() << NORM << endl;
 	_URI = addRootPath(_request.getURI());
-	// cout << RED << _URI << NORM << endl;
+	cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
 		return ;
-	if (request.getMethod() == "GET")
+	if (request.getMethod() == "GET" && methodAllowed())
 		processGet();
-	else if (request.getMethod() == "POST")
+	else if (request.getMethod() == "POST" && methodAllowed())
 		processPost();
-	else if (request.getMethod() == "DELETE")
+	else if (request.getMethod() == "DELETE" && methodAllowed())
 		processDelete();
-	else if (request.getMethod() == "HEAD")
+	else if (request.getMethod() == "HEAD" && methodAllowed())
 		processGet();
 	else 
-		formResponse(501, _statusInfo);
-	cout << BLUE << STATUSCODE[_status] << " " << _statusInfo << NORM << endl;
+		formResponse(501, "This method is not allowed");
+	cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
 }
 
+bool Response::methodAllowed()
+{
+	string method = _request.getMethod();
+	string uri = _request.getURI();
+	LOCATION locations = _configfile._locations;
+
+	if (locations.find(uri) != locations.end())
+	{
+		if (method == "GET")
+		{
+			if (locations[uri]._get == false)
+				return (cout << method << ": not allowed for uri: " << uri << endl, false);
+		}
+		else if (method == "POST")
+		{
+			if (locations[uri]._post == false)
+				return (cout << method << ": not allowed for uri: " << uri << endl, false);
+		}
+		else if (method == "DELETE")
+		{
+			if (locations[uri]._delete == false)
+				return (cout << method << ": not allowed for uri: " << uri << endl, false);
+		}
+	}
+	return true;
+}
 bool Response::invalidRequest()
 {
 	if (_request.getSizeInRange() == false)
@@ -75,7 +101,8 @@ const string Response::createErrorBody(const int & status, const string & status
 
 string	Response::addRootPath(const string & path)
 {
-	return (_config.getRootPath() + path);
+	// return (_config.getRootPath() + path);
+	return (_configfile._root + path);
 
 }
 

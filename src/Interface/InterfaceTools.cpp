@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:02:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/02/15 16:36:42 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/02/29 20:39:58 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,14 @@ bool	Interface::readFromSocket(int sock, std::string &request) {
 	return (false);
 }
 
-bool	Interface::passRequest(std::string &request, std::string &response) {
+bool	Interface::passRequest(std::string &request, std::string &response, uint32_t port) {
 	if (request.empty())
 		return (true);
-	std::map<std::string, protocolFunction>::iterator it = _protocolMap.begin();
-	response = _protocolMap[it->first](request);
-	// for (std::map<std::string, protocolFunction>::iterator it = _protocolMap.begin(); it != _protocolMap.end(); it++) {
-	// 	if (request.find(it->first) != std::string::npos) {
-	// 		std::cout << "protocol found" << std::endl;
-	// 		response = _protocolMap[it->first](request);
-	// 		return (false);
-	// 	}
-	// }
-	// std::cout << "request: " << request << std::endl;
-	// std::cout << "unknown protocol" << std::endl;
+	if (_protocolMap.find(port) != _protocolMap.end()) {
+		response = _protocolMap[port](request);
+		return (false);
+	}
+	std::cout << "unknown protocol" << std::endl;
 	return (false);
 }
 

@@ -68,10 +68,10 @@ int main(int argc, char **argv)
 	// add application map to interface before forking the workers
 	// applicationInterface::addApplication(80, /*&http::application*/);
 	//Config config;
-	protocolFunction testFunction = &testHttp;
-	Interface::addProtocol("HTTP/1.1", testFunction);
 	// add sockets
 	{
+		protocolFunction testFunction = &testHttp;
+		Interface::addProtocol(config.begin()->second._listen, testFunction);
 		socketManager::addSocket(config.begin()->second._address, config.begin()->second._listen, IPV4, TCP);
 		// socketManager::addSocket("0.0.0.0", (config.begin()++)->second._listen, IPV4, TCP);
 	}

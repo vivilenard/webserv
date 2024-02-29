@@ -3,80 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   socketManagerTools.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:12:07 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/22 15:46:11 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/11 01:31:19 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "socketManager.hpp"
-#include <iostream>
-#include <cstdio>
 
-bool	socketManager::validateCreationParams(const std::string &interfaceAddress, uint32_t port, uint32_t protocol) {
-	// validate port
-	{
-		if (port > 0XFFFF) {
-			std::cout << "Port is out of range" << std::endl;
-			return true;
-		}
-	}
-	// validate protocol
-	{
-		switch (protocol)
-		{
-		case TCP:
-			break;
-		case UDP:
-			break;
-		default:
-			return true;
-		}
-	}
-	// check if socket already exists
-	{
-		for (std::map<int, t_data>::iterator it = _sockets.begin(); it != _sockets.end(); it++) {
-			if (it->second.port == port && it->second.protocol == protocol && it->second.interfaceAddress == interfaceAddress) {
-				std::cout << "Socket already exists" << std::endl;
-				return true;
-			}
-		}
-	}
-	return false;
+void	socketManager::bindSocket(int fd, struct sockaddr* address) {
+	if (bind(fd, address, sizeof(*address)) == -1)
+		throw std::runtime_error("binding failed");
 }
 
-bool	socketManager::bindSocket(int fd, const std::string &interfaceAddress, uint32_t port, uint32_t ipVersion) {
-		if (ipVersion == IPV4) {
-			sockaddr_in addr;
-			addr.sin_family = AF_INET;
-			addr.sin_port = htons(port);
-			if (inet_pton(AF_INET, interfaceAddress.c_str(), &addr.sin_addr) != 1) {
-				std::cout << "Invalid interface address" << std::endl;
-				return true;
-			}
-			if (bind(fd, (sockaddr *)&addr, sizeof(addr)) == -1) {
-				std::cout << "Socket binding failed" << std::endl;
-				return true;
-			}
-		}
-		else if (ipVersion == IPV6) {
-			sockaddr_in6 addr;
-			addr.sin6_family = AF_INET6;
-			addr.sin6_port = htons(port);
-			if (inet_pton(AF_INET6, interfaceAddress.c_str(), &addr.sin6_addr) != 1) {
-				std::cout << "Invalid interface address" << std::endl;
-				return true;
-			}
-			if (bind(fd, (sockaddr *)&addr, sizeof(addr)) == -1) {
-				std::cout << "Socket binding failed" << std::endl;
-				return true;
-			}
-		}
-		else {
-			std::cout << "Invalid ipVersion" << std::endl;
-			return true;
-		}
-	return false;
+uint32_t	socketManager::extractPort(struct sockaddr* address) {
+	if (address->sa_family == AF_INET)
+		return (ntohs(((struct sockaddr_in*)address)->sin_port));
+	else if (address->sa_family == AF_INET6)
+		return (ntohs(((struct sockaddr_in6*)address)->sin6_port));
+	else
+		throw std::runtime_error("extractPort: unknown address family");
 }
 
+void	socketManager::setSocketNonBlocking(int fd) {
+	if (fd < 0)
+		throw std::runtime_error("Invalid file descriptor: likely due to socket function failure");
+	int flags = fcntl(fd, F_GETFL, 0);
+	if (flags == -1)
+		throw std::runtime_error("Socketopt getting failed");
+	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1)
+		throw std::runtime_error("Socketopt setting failed");
+	int opt = 1;
+	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+		throw std::runtime_error("Socketopt setting failed");
+}
+
+void	socketManager::printMap() {
+	std::cout << "╔══════Socket Map══════╗" << std::endl;
+	std::cout << "║ fd ║ port ║  server  ║" << std::endl;
+	for (std::map<int, s_sockData>::iterator it = _sockets.begin(); it != _sockets.end(); it++) {
+		printf("║ %2d ║ %4d ║ %8d ║\n", it->first, it->second.port, (it->second.parentSocket == _sockets.end()) ? 1 : 0);
+	}
+	std::cout << "╚══════════════════════╝" << std::endl;
+}

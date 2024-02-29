@@ -57,6 +57,12 @@ int main(int argc, char **argv)
 		return -1;
 	configfile = config.begin()->second;
 	printConfig(config.begin()->first, configfile);
+	cout << configfile._serverName << endl;
+	if (configfile._serverName == "default")
+	{
+		cout << BACK << "Webserver is running with a default config file." << NORM << endl;
+		cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
+	}
 	// int numWorker = 4;
 	// parsing here
 	// add application map to interface before forking the workers

@@ -5,7 +5,8 @@ void ConfigFile::runByDefault()
 	configServer tmpServer;
 	tmpServer._serverName = "default";
 	tmpServer._listen = 80;
-	tmpServer._address = "localhost";
+	tmpServer._root = "/Users/vlenard/Desktop/webserv/www";
+	tmpServer._address = "0.0.0.0";
 	tmpServer.validFormat = true;
 	tmpServer._locations["default"]._name = "default";
 	tmpServer._locations["default"]._delete = false;

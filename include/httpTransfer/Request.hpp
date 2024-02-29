@@ -75,5 +75,6 @@ class Request
 #define MAG "\033[1;95m"
 #define BLUE "\033[1;96m"
 #define NORM "\033[0m"
+#define BACK "\033[45m"
 
 #endif

@@ -10,9 +10,10 @@
 
 #define CONFIG std::map<std::string, configServer>
 #define LOCATION std::map<std::string, configServer::Location>
+#define MAP std::map<std::string, std::string>
 
 const int MAX_PORT = 65535;
-
+using namespace std;
 
 struct configServer
 {
@@ -22,6 +23,7 @@ struct configServer
 	std::string _address;
 	std::string _root;
 	bool		validFormat;
+	MAP			_mimeTypes;
 	std::string _index;
 	struct Location //_locations[namelocation].whateverinside
 	{
@@ -40,6 +42,7 @@ class ConfigFile
 private:
 	std::string _server;
 	std::map<std::string, configServer> _configMap;
+	MAP	_mimeTypes;
 public:
 	ConfigFile();
 	void	runByDefault();
@@ -61,8 +64,11 @@ public:
 												  std::string rule);
 	void								setLocation(configServer &server, std::ifstream &inputFile,
 													std::string token, std::string &line, std::istringstream &find);
+	MAP 								parseMime();
+	void								createKeypairs(MAP & map, std::string s1, std::string s2);
 	~ConfigFile();
 };
 
 std::string stringConvert(char *input);
 bool readConfig(int argc, char **argv, std::map<std::string, configServer> & config);
+void	printMimes(MAP mime);

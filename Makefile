@@ -6,7 +6,7 @@
 #    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/02/26 17:09:41 by vlenard          ###   ########.fr        #
+#    Updated: 2024/02/29 16:29:24 by vlenard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,8 +51,7 @@ SRCS	=	webserver.cpp \
 			socketKqueue.cpp \
 			socketSelect.cpp \
 			InterfaceTools.cpp \
-			Config.cpp \
-			Error.cpp \
+			mimeTypes.cpp \
 			Request.cpp \
 			Response.cpp \
 			Status.cpp \

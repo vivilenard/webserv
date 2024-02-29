@@ -2,8 +2,6 @@
 #define REQUEST_HPP
 
 #include "../webserv.hpp"
-#include "../error/Error.hpp"
-#include "config/Config.hpp"
 
 #include <fstream>
 #include <fcntl.h>

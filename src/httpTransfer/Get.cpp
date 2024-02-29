@@ -5,10 +5,10 @@ void	Response::processGet()
 {
 	_status = 200;
 	ostringstream os;
+	addDefaultFile(_URI);
 	_fileContentType = getContentType(_URI);
 	if (listDirectory(this->_URI))
 		{ formResponse(200, ""); return ; }
-	// addDefaultFile(_URI);
 	if (isCgi(_URI))
 		{ return ; }
 	if (!readFile(_URI))
@@ -53,7 +53,7 @@ string Response::getContentType(const string & path)
 	if (j == -1)
 		return "";
 	string mime = path.substr(j + 1);
-	string contentType = _config._mimeTypes[mime];
+	string contentType = _configfile._mimeTypes[mime];
 	return contentType;
 }
 

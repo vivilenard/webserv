@@ -1,6 +1,6 @@
 #include "socketManager.hpp"
 #include "Interface.hpp"
-#include "../include/config/Config.hpp"
+// #include "../parse/Config.hpp"
 #include "../include/httpTransfer/Request.hpp"
 #include "../include/httpTransfer/Response.hpp"
 #include "../parse/configFile.hpp"
@@ -14,7 +14,7 @@ std::string testHttp(const std::string &request/* , Config & config */) {
         std::cout << "request is empty" << std::endl;
         return "";
     } else {
-		cout << configfile._root << endl;
+		// cout << configfile._root << endl;
 		cout << MAG << "-------request----->>" << NORM << endl;
 		Request		httpRequest(request);
 		// cout << httpRequest << endl;

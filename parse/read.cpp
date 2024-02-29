@@ -13,6 +13,7 @@ std::string stringConvert(char *input)
 
 bool readConfig(int argc, char **argv, std::map<std::string, configServer> & config)
 {
+	// cout << "read config" << endl;
 	if (argc == 2)
 	{
 		ConfigFile test;

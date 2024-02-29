@@ -16,7 +16,7 @@ void Response::processPost()
 	if (noFilename())
 		return (formResponse(400, "Please include a file with a name"));
 	_status = 201;
-	string contentType = findKeyByValue(_config._mimeTypes, _request.getHeaders()["Content-Type"]);
+	string contentType = findKeyByValue(_configfile._mimeTypes, _request.getHeaders()["Content-Type"]);
 	if (contentType == "form-urlencoded")
 		{_request.parseQuery(_request.getBody()); return; }
 	// cout << "test" <<endl;
@@ -44,7 +44,7 @@ bool Response::incorrectMimeType(const string & contentType)
 		return false;
 	else if (mime.empty())
 		return true;
-	if (_config._mimeTypes[mime] != contentType)
+	if (_configfile._mimeTypes[mime] != contentType)
 	{
 		// cout << "doesnt match: " << endl;
 		// cout << _config._mimeTypes[mime] << endl;

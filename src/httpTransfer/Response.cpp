@@ -2,13 +2,12 @@
 
 #define STATUSCODE _statusCode.getStati()
 
-Config Response::_config = Config();
 StatusCode Response::_statusCode = StatusCode();
 
 Response::Response(Request & request, configServer & configfile): _configfile(configfile),
 	_request(request), _status(500), _statusInfo(), _httpVersion("HTTP/1.1")
 {
-	cout << GREEN << _request.getURI() << NORM << endl;
+	// cout << GREEN << _request.getURI() << NORM << endl;
 	_URI = addRootPath(_request.getURI());
 	cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
@@ -109,9 +108,9 @@ string	Response::addRootPath(const string & path)
 //if there uri was '/', then add default file (index)
 int	Response::addDefaultFile(string & path)
 {
-	if (path == _config.getRootPath() + "/")
+	if (path == _configfile._root + "/")
 	{
-		path = path + "index.html";			//change to defaultFile
+		path = path.append(_configfile._index);			//change to defaultFile
 		return 1;
 	}
 	return 0;

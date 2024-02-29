@@ -1,6 +1,6 @@
 #include "configFile.hpp"
 
-ConfigFile::ConfigFile() {}
+ConfigFile::ConfigFile() { cout << "CREATING CONFIG FILE" << endl; }
 
 void	serverStatus(configServer &server)
 {
@@ -60,7 +60,13 @@ std::map<std::string, configServer> ConfigFile::readFile(std::string fileName)
  std::ifstream inputFile(fileName);
  configServer tmpServer;
  std::map<std::string, configServer> configTmp;
- if (inputFile.is_open())
+
+this->_mimeTypes = parseMime();
+if (_mimeTypes.empty())
+	std::cout << "no mimeTypes included. Save them in this directory: /config/mime.types" << endl;
+// printMimes(this->_mimeTypes);
+tmpServer._mimeTypes = this->_mimeTypes;
+if (inputFile.is_open())
  {
 	 std::string line;
 	 while (getline(inputFile, line))

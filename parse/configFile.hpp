@@ -7,6 +7,11 @@
 #include <map>
 #include <sys/stat.h>
 #include <string>
+#include "socketManager.hpp"
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
 
 #define CONFIG std::map<std::string, configServer>
 #define LOCATION std::map<std::string, configServer::Location>
@@ -18,21 +23,22 @@ using namespace std;
 
 struct configServer
 {
-	std::string _serverName;
-	std::string _include;
-	int			_listen;
-	std::string _address;
-	std::string _root;
-	bool		validFormat;
-	MAP			_mimeTypes;
-	std::string _index;
-	struct Location //_locations[namelocation].whateverinside
+	std::string 			_serverName;
+	std::string 			_include;
+	int						_listen;
+	struct sockParameter	_socketAddress;
+	std::string 			_address;
+	std::string 			_root;
+	bool					validFormat;
+	MAP						_mimeTypes;
+	std::string 			_index;
+	struct Location 		//_locations[namelocation].whateverinside
 	{
-		std::string _name;
-		std::string _index;
-		bool		_post;
-		bool		_get;
-		bool		_delete;
+		std::string 		_name;
+		std::string 		_index;
+		bool				_post;
+		bool				_get;
+		bool				_delete;
 
 	};
 	std::map<std::string, Location> _locations;
@@ -68,6 +74,7 @@ public:
 													std::string token, std::string &line, std::istringstream &find);
 	MAP 								parseMime();
 	void								createKeypairs(MAP & map, std::string s1, std::string s2);
+	sockaddr* 							convertToSockAddr(const std::string& ipAddress, int port);
 	~ConfigFile();
 };
 

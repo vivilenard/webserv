@@ -6,15 +6,17 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/01/22 15:47:07 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/11 06:22:10 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 include color.mk
 
 ifeq ($(UNAME), Darwin)
+PRINT	= printf
 PRONAME = Webserv
 else ifeq ($(UNAME), Linux)
+PRINT	= printf
 PRONAME = Webserv_linux
 endif
 
@@ -46,7 +48,6 @@ HEADER	+=
 # add source files without header with the same name and the file with the main function has to be the first in the list
 SRCS	=	webserver.cpp \
 			socketManagerTools.cpp \
-			socketManagerUtils.cpp \
 			socketEpoll.cpp \
 			socketKqueue.cpp \
 			socketSelect.cpp \
@@ -85,27 +86,27 @@ all:
 	@$(MAKE) -s std_all
 
 std_all:
-	@echo "%s$(RESET)\n" "$(FPurple)Compiling $(PRONAME)"
+	@$(PRINT) "%s$(RESET)\n" "$(FPurple)Compiling $(PRONAME)"
 	@-include $(OBJS:.o=.d)
 	@$(MAKE) -s $(PRONAME)
-	@echo "$(SETCURUP)$(CLEARLINE)$(SETCURUP)$(CLEARLINE)\r$(FPurple)%-21s$(FGreen)$(TICKBOX)$(RESET)\n" "Compiling $(PRONAME)"
+	@$(PRINT) "$(SETCURUP)$(CLEARLINE)$(SETCURUP)$(CLEARLINE)\r$(FPurple)%-21s$(FGreen)$(TICKBOX)$(RESET)\n" "Compiling $(PRONAME)"
 
 $(PRONAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(PRONAME)
 
 $(OBJ_DIR)%.o: %.cpp
 ifeq ($(shell test -d $(OBJ_DIR) || echo $$?), 1)
-	echo "$(CLEARLINE)\r$(Yellow)creting obj dir$(RESET)"
+	@$(PRINT) "$(CLEARLINE)\r$(Yellow)creting obj dir$(RESET)"
 	@mkdir -p $(OBJ_DIR)
 endif
-	@echo "$(CLEARLINE)\r%-28s$(RESET)" "$(Yellow)Compiling $< ..."
+	@$(PRINT) "$(CLEARLINE)\r%-28s$(RESET)" "$(Yellow)Compiling $< ..."
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@$(MAKE) -s proname_header
-	@echo "%-28s$(RESET)" "$(FRed)Cleaning $(PRONAME)"
+	@$(PRINT) "%-28s$(RESET)" "$(FRed)Cleaning $(PRONAME)"
 	@$(MAKE) -s std_clean
-	@echo "$(FGreen)$(TICKBOX)$(RESET)\n"
+	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"
 
 fclean:
 	@$(MAKE) -s proname_header
@@ -149,13 +150,13 @@ std_clean:
 	@rm -rf $(OBJ_DIR)
 
 cleanator:
-	@echo "%-28s$(RESET)" "$(FRed)FCleaning $(PRONAME)"
+	@$(PRINT) "%-28s$(RESET)" "$(FRed)FCleaning $(PRONAME)"
 	@rm -rf $(OBJ_DIR)
 	@rm -f $(PRONAME)
-	@echo "$(FGreen)$(TICKBOX)$(RESET)\n"
+	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"
 
 proname_header:
-	@echo "$(FYellow)╔══════════════════════╗\n\
+	@$(PRINT) "$(FYellow)╔══════════════════════╗\n\
 $(FYellow)║$(FRed)          (    (      $(FYellow)║$(RESET)\n\
 $(FYellow)║$(FRed)     (    )\\ ) )\\ )   $(FYellow)║$(RESET)\n\
 $(FYellow)║$(FRed)     )\\  (()/((()/(   $(FYellow)║$(RESET)\n\

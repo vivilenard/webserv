@@ -26,6 +26,16 @@ std::string testHttp(const std::string &request/* , Config & config */) {
     }
 }
 
+uint32_t	extractPort(struct sockaddr* address) 
+{
+	if (address->sa_family == AF_INET)
+		return (ntohs(((struct sockaddr_in*)address)->sin_port));
+	else if (address->sa_family == AF_INET6)
+		return (ntohs(((struct sockaddr_in6*)address)->sin6_port));
+	else
+		throw std::runtime_error("extractPort: unknown address family");
+}
+
 void printConfig(string name, configServer server)
 {
 	cout << RED << "CONFIG: " << name << NORM << endl;
@@ -68,11 +78,11 @@ int main(int argc, char **argv)
 	// add application map to interface before forking the workers
 	// applicationInterface::addApplication(80, /*&http::application*/);
 	//Config config;
-	protocolFunction testFunction = &testHttp;
-	Interface::addProtocol("HTTP/1.1", testFunction);
 	// add sockets
 	{
-		socketManager::addSocket(config.begin()->second._address, config.begin()->second._listen, IPV4, TCP);
+		protocolFunction testFunction = &testHttp;
+		Interface::addProtocol(extractPort(config.begin()->second._socketAddress.interfaceAddress), testFunction);
+		socketManager::addSocket(config.begin()->second._socketAddress);
 		// socketManager::addSocket("0.0.0.0", (config.begin()++)->second._listen, IPV4, TCP);
 	}
 	InterfaceFunction interfaceFunction = &Interface::interface;

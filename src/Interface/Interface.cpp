@@ -3,21 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Interface.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:01:41 by pharbst           #+#    #+#             */
-/*   Updated: 2024/01/22 17:08:25 by vlenard          ###   ########.fr       */
+/*   Updated: 2024/03/08 08:16:20 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Interface.hpp"
 
-std::map<std::string, protocolFunction>	Interface::_protocolMap;
+std::map<uint32_t, protocolFunction>	Interface::_protocolMap;
 std::map<int, std::string>				Interface::_outputBuffer;
 
-void	Interface::interface(int sock, t_data sockData) {
-	// std::cout << "interface called" << std::endl;
-	if (sockData.read) {
+void	Interface::interface(int sock, sockData data) {
+	if (data.read) {
 		std::string		request;
 		std::string		response;
 		if (readFromSocket(sock, request)) {
@@ -25,7 +24,7 @@ void	Interface::interface(int sock, t_data sockData) {
 			socketManager::removeSocket(sock);
 			return ;	// remove client
 		}
-		if (passRequest(request, response)) {
+		if (passRequest(request, response, data.port)) {
 			std::cout << "passRequest failed" << std::endl;
 			socketManager::removeSocket(sock);
 			return ;	// remove client
@@ -33,7 +32,7 @@ void	Interface::interface(int sock, t_data sockData) {
 		std::cout << "response added to buffer for socket: " << sock << std::endl;
 		_outputBuffer.insert(std::pair<int, std::string>(sock, response));
 	}
-	if (sockData.write && _outputBuffer.find(sock) != _outputBuffer.end()) {
+	else if (data.write && _outputBuffer.find(sock) != _outputBuffer.end()) {
 		std::cout << "writing to socket: " << sock << std::endl;
 		std::string		response = _outputBuffer[sock];
 		if (writeToSocket(sock, response)) {
@@ -46,6 +45,6 @@ void	Interface::interface(int sock, t_data sockData) {
 	}
 }
 
-void	Interface::addProtocol(std::string protocol, protocolFunction function) {
-	_protocolMap.insert(std::pair<std::string, protocolFunction>(protocol, function));
+void	Interface::addProtocol(uint32_t port, protocolFunction function) {
+	_protocolMap.insert(std::pair<uint32_t, protocolFunction>(port, function));
 }

@@ -69,7 +69,7 @@ void Request::parseQuery(const string & queryString)
 {
 	if (queryString.empty())
 		return ;
-	cout << queryString << endl;
+	this->_envCgi["query"] = "QUERY_STRING=" + queryString;
 	istringstream queryStream(queryString);
 	string queryPair;
 	while (getline(queryStream, queryPair, '&'))

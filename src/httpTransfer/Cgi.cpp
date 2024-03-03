@@ -40,6 +40,7 @@ print("HTTP_HOST:", os.environ.get("HTTP_HOST"))*/
 void Request::buildCgiEnv()
 {
 	this->_envCgi["method"] = "REQUEST_METHOD=" + this->_method;
+	std::cout << "Method ---> " << this->_envCgi["method"] << "$"<< std::endl;
 	Headers::iterator it;
 	for (it  = _headers.begin(); it != _headers.end(); it++)
 	{

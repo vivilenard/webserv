@@ -14,8 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ebc4e45a-0dec-4590-983b-ff93912b9abb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cgi-bin/executeCgi.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cgi-bin/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/cgi-bin/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/httpTransfer/Cgi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpTransfer/Cgi.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +137,7 @@
       <workItem from="1709306408952" duration="6928000" />
       <workItem from="1709386990450" duration="307000" />
       <workItem from="1709389392360" duration="2047000" />
-      <workItem from="1709475667254" duration="4081000" />
+      <workItem from="1709475667254" duration="5482000" />
     </task>
     <servers />
   </component>

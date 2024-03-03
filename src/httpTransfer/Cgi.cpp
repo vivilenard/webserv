@@ -50,6 +50,7 @@ void Request::buildCgiEnv()
 			break;
 		}
 	}
+	std::cout << "THIS IS YOUR QUERY ---> "<< this->_envCgi["query"] << std::endl;
 	//querry added in parseQuery
 }
 

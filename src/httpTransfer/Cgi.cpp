@@ -120,7 +120,7 @@ bool	Response::isCgi(const string & path)
 	if (pos == string::npos)
 		return false;
 	if (path.substr(pos) == ".py")
-	{
+	}
 		_request.buildCgiEnv();
 		_request.executeCgi(this->_cgiScript);
 		_fileContentType = "text/html";

@@ -6,7 +6,9 @@ void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
 	if (isCgi(_URI))
+	{
 		return ;
+	}
 	if (isMultipart()){
 		formResponse(100, _statusInfo);
 		return; }

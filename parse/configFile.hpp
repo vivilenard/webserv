@@ -1,18 +1,19 @@
 #pragma once
 
-#include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <cstdlib>
 #include <map>
 #include <sys/stat.h>
+#include <string>
 
 #define CONFIG std::map<std::string, configServer>
 #define LOCATION std::map<std::string, configServer::Location>
 #define MAP std::map<std::string, std::string>
 
 const int MAX_PORT = 65535;
+
 using namespace std;
 
 struct configServer
@@ -45,10 +46,11 @@ private:
 	MAP	_mimeTypes;
 public:
 	ConfigFile();
+	configServer	initializeObj();
 	void	runByDefault();
-	std::map<std::string, configServer> readFile(std::string fileName);
+	void	readFile(std::string &fileName, std::map<std::string, configServer> & config);
 	std::map<std::string, configServer> getConFile();
-	void								setConFile(std::map<std::string, configServer> set);
+	void								setConFile(std::map<std::string, configServer> &set);
 	void								addListen(configServer &server, std::string token,
 											   						std::istringstream &find);
 	void								addServerName(configServer &server, std::string token,

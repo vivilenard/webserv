@@ -54,7 +54,7 @@ void printConfig(string name, configServer server)
 int main(int argc, char **argv)
 {
 	if (!readConfig(argc, argv, config))
-		return -1;
+		return 1;
 	configfile = config.begin()->second;
 	printConfig(config.begin()->first, configfile);
 	cout << configfile._serverName << endl;

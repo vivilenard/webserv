@@ -2,11 +2,8 @@
 
 std::string stringConvert(char *input)
 {
-	std::stringstream format;
-	format << input;
-	std::string convert = format.str();
-	if (!convert.empty())
-		return (convert);
+	if (input)
+		return (std::string (input));
 	else
 		return ("");
 }
@@ -17,15 +14,14 @@ bool readConfig(int argc, char **argv, std::map<std::string, configServer> & con
 	if (argc == 2)
 	{
 		ConfigFile test;
-		std::map<std::string, configServer> set;
-		std::string file = stringConvert(argv[1]);
+		std::string file = std::string(argv[1]);
+		if (file.empty())
+			return (false);
 		std::cout << file << std::endl;
-		set = test.readFile(file);
-		if (set.empty())
+		test.readFile(file, config);
+		if (config.empty())
 			return false;
-		test.setConFile(set);
 		// std::map<std::string, configServer> out;
-		config = test.getConFile();
 		return true;
 	}
 	else if (argc == 1)

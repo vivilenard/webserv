@@ -1,5 +1,20 @@
 #include "configFile.hpp"
 
+
+configServer ConfigFile::initializeObj()
+{
+	configServer setUp;
+
+	setUp._serverName = "";
+	setUp._include = "";
+	setUp._listen = 0;
+	setUp._address = "";
+	setUp._root = "";
+	setUp.validFormat = false;
+	setUp._index = "";
+	return (setUp);
+}
+
 bool dotCheck(int *dot, std::string address, int idx)
 {
 	if (address[idx] == '.')

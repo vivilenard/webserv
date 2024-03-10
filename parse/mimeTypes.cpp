@@ -21,7 +21,7 @@ MAP ConfigFile::parseMime()
 		line.erase(0, line.find_first_not_of(_whitespace));
 		int del = line.find_first_of(_whitespace);
 		s1 = line.substr(0, del);
-		if (line[del])
+		if ((del >= 0) && line[del]) // problem
 		{
 			string buf = line.substr(del);
 			s2 = buf.substr(buf.find_first_not_of(_whitespace));

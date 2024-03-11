@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:01:41 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/08 08:16:20 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/11 10:07:20 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 std::map<uint32_t, protocolFunction>	Interface::_protocolMap;
 std::map<int, std::string>				Interface::_outputBuffer;
 
-void	Interface::interface(int sock, sockData data) {
+void	Interface::interface(int sock, struct sockData data) {
 	if (data.read) {
+		socketManager::detectActivity(sock);
 		std::string		request;
 		std::string		response;
 		if (readFromSocket(sock, request)) {
@@ -33,6 +34,7 @@ void	Interface::interface(int sock, sockData data) {
 		_outputBuffer.insert(std::pair<int, std::string>(sock, response));
 	}
 	else if (data.write && _outputBuffer.find(sock) != _outputBuffer.end()) {
+		socketManager::detectActivity(sock);
 		std::cout << "writing to socket: " << sock << std::endl;
 		std::string		response = _outputBuffer[sock];
 		if (writeToSocket(sock, response)) {

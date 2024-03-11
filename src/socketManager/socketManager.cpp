@@ -3,26 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   socketManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: peter <peter@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:05:28 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/11 07:46:30 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/11 11:36:13 by peter            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "socketManager.hpp"
 
 std::map<int, struct sockData>		socketManager::_sockets;
+unsigned long						socketManager::_keepAlive = 300000;
 
 void	socketManager::start(InterfaceFunction interfaceFunction) {
-	std::cout << "SocketManager:	Starting..." << std::endl;
+	std::cout << "socketManager::Starting..." << std::endl;
+	std::cout << "socketManager::KeepAlive: " << _keepAlive << "ms" << std::endl;
+	printMap();
 	SEPOLL(interfaceFunction);
 }
 
 void	socketManager::removeSocket(int fd) {
 	SEPOLLREMOVE(fd);
-	close(fd);
 	_sockets.erase(fd);
+	close(fd);
 }
 
 void	socketManager::addSocket(struct sockParameter &parameter) {
@@ -32,7 +35,7 @@ void	socketManager::addSocket(struct sockParameter &parameter) {
 		proto = TCP;
 	else if (parameter.protocol != TCP && parameter.protocol != UDP) {
 		delete parameter.interfaceAddress;
-		throw std::runtime_error("socketManager:	addSocket:	Invalid protocol");
+		throw std::runtime_error("socketManager::addSocket:	Invalid protocol");
 	}
 	else
 		proto = parameter.protocol;
@@ -48,10 +51,11 @@ void	socketManager::addSocket(struct sockParameter &parameter) {
 		throw e;
 	}
 	if (listen(fd, SOMAXCONN) == -1) {
-		throw std::runtime_error("socketManager:	addSocket:	Socket listening failed");
+		throw std::runtime_error("socketManager::addSocket:	Socket listening failed");
 	}
 	data.parentSocket = _sockets.end();
 	data.read = false;
 	data.write = false;
+	data.lastActivity = 0;
 	_sockets.insert(std::pair<int, struct sockData>(fd, data));
 }

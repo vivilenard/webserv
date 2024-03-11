@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/11 06:22:10 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/11 10:42:57 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,9 @@ PRONAME = Webserv
 else ifeq ($(UNAME), Linux)
 PRINT	= printf
 PRONAME = Webserv_linux
+endif
+ifeq ($(OS_LIKE), Debian)
+PRINT	= echo
 endif
 
 CC		= c++
@@ -48,9 +51,7 @@ HEADER	+=
 # add source files without header with the same name and the file with the main function has to be the first in the list
 SRCS	=	webserver.cpp \
 			socketManagerTools.cpp \
-			socketEpoll.cpp \
-			socketKqueue.cpp \
-			socketSelect.cpp \
+			socketSEPOLL.cpp \
 			InterfaceTools.cpp \
 			Request.cpp \
 			Response.cpp \

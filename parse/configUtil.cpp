@@ -33,14 +33,18 @@ sockaddr* ConfigFile::convertToSockAddr(const std::string& ipAddress, int port)
 		if (p->ai_family == AF_INET) 
 		{ // IPv4
 			struct sockaddr_in* ipv4 = (struct sockaddr_in*)p->ai_addr;
-			ipv4->sin_port = htons(port); // Convert port to network byte order
-			return (struct sockaddr*)ipv4;
+			struct sockaddr_in* ipv4Copy = new sockaddr_in(*ipv4);
+			freeaddrinfo(res);
+			ipv4Copy->sin_port = htons(port); // Convert port to network byte order
+			return (struct sockaddr*)ipv4Copy;
 		} 
 		else if (p->ai_family == AF_INET6) 
 		{ // IPv6
 			struct sockaddr_in6* ipv6 = (struct sockaddr_in6*)p->ai_addr;
+			struct sockaddr_in6* ipv6Copy = new sockaddr_in6(*ipv6);
+			freeaddrinfo(res);
 			ipv6->sin6_port = htons(port); // Convert port to network byte order
-			return (struct sockaddr*)ipv6;
+			return (struct sockaddr*)ipv6Copy;
 		}
 	}
 	freeaddrinfo(res);

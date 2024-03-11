@@ -15,6 +15,38 @@ configServer ConfigFile::initializeObj()
 	return (setUp);
 }
 
+sockaddr* ConfigFile::convertToSockAddr(const std::string& ipAddress, int port)
+{
+	std::cout << "ipAddress---> " << ipAddress << std::endl;
+	std::cout << "Port---> " << port << std::endl;
+	if (port < 0 || port > 0XFFFF)
+		throw std::runtime_error("Invalid port number");
+	struct addrinfo hints, *res;
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_UNSPEC; // Allow IPv4 or IPv6
+	hints.ai_socktype = SOCK_STREAM;
+	int status = getaddrinfo(ipAddress.c_str(), NULL, &hints, &res);
+	if (status != 0)
+		throw std::runtime_error("Failed to get address info: ");
+	for (struct addrinfo* p = res; p != NULL; p = p->ai_next) 
+	{
+		if (p->ai_family == AF_INET) 
+		{ // IPv4
+			struct sockaddr_in* ipv4 = (struct sockaddr_in*)p->ai_addr;
+			ipv4->sin_port = htons(port); // Convert port to network byte order
+			return (struct sockaddr*)ipv4;
+		} 
+		else if (p->ai_family == AF_INET6) 
+		{ // IPv6
+			struct sockaddr_in6* ipv6 = (struct sockaddr_in6*)p->ai_addr;
+			ipv6->sin6_port = htons(port); // Convert port to network byte order
+			return (struct sockaddr*)ipv6;
+		}
+	}
+	freeaddrinfo(res);
+	throw std::runtime_error("Failed to convert address to sockaddr");
+}
+
 bool dotCheck(int *dot, std::string address, int idx)
 {
 	if (address[idx] == '.')
@@ -66,12 +98,15 @@ bool	checkAddress(std::string address)
 	return (true);
 }
 
-void	insertAddress(configServer &server, std::string address)
+std::string	insertAddress(configServer &server, std::string address)
 {
 	if (!checkAddress(address))
+	{
 		server.validFormat = false;
+		return ("");
+	}
 	else
-		server._address = address;
+		return (address);
 }
 
 bool checkPortValue(int port)
@@ -86,7 +121,7 @@ bool checkPortValue(int port)
 	return (true);
 }
 
-void	addPort(configServer &server, std::string address)
+int	addPort(configServer &server, std::string address)
 {
 	char* endptr;
 	int port = std::strtol(address.c_str(), &endptr, 10);
@@ -94,12 +129,15 @@ void	addPort(configServer &server, std::string address)
 	{
 		std::cout << "Please add a valid port" << std::endl;
 		server.validFormat = false;
-		return;
+		return (-1);
 	}
 	if (checkPortValue(port))
-		server._listen = port;
+		return (port);
 	else
+	{
 		server.validFormat = false;
+		return (-1);
+	}	
 }
 
 void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
@@ -110,11 +148,13 @@ void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
 	{
 		std::istringstream iss(tmp);
 		getline(iss,address, ':');
-		insertAddress(server, address);
+		const std::string socketAddress = insertAddress(server, address);
 		if (server.validFormat == false)
 			return ;
-		getline(iss,address, ':');
-		addPort(server,address);
+		getline(iss,address,':');
+		int port = addPort(server,address);
+		server._socketAddress.interfaceAddress = convertToSockAddr(socketAddress, port);
+		server._socketAddress.protocol = TCP;
 		if (server.validFormat == false)
 			return ;
 	}

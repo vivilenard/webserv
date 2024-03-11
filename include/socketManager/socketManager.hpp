@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:05:15 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/11 01:32:55 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/11 06:13:34 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@
 
 
 
-# define TCP		SOCK_STREAM
-# define UDP		SOCK_DGRAM
+# define TCP		SOCK_STREAM	// 1
+# define UDP		SOCK_DGRAM	// 2
 # define LOCALHOST	AF_LOCAL
 # define IPV4		AF_INET
 # define IPV6		AF_INET6
@@ -51,28 +51,28 @@
 
 # define SERVERSOCKET _sockets[fd].parentSocket == _sockets.end()
 
-typedef struct s_sockData {
+struct sockData {
 	uint32_t									port;
 	bool										read;
 	bool										write;
-	std::map<int, s_sockData>::iterator			parentSocket;
-} sockData;
+	std::map<int, sockData>::iterator			parentSocket;
+};
 
-typedef struct s_sockParameter {
+struct sockParameter {
 	sockaddr*			interfaceAddress;
 	int					protocol;
-}	sockParameter;
+};
 
-typedef void	(*InterfaceFunction)(int sock, s_sockData Data);
+typedef void	(*InterfaceFunction)(int sock, sockData Data);
 
 class socketManager {
 	public:
-		static void							addSocket(const s_sockParameter &parameter);
+		static void							addSocket(const struct sockParameter &parameter);
 		static void							removeSocket(int fd);
 		static void							printMap();
 		static void							start(InterfaceFunction interfaceFunction);
 	private:
-		static std::map<int, s_sockData>		_sockets;
+		static std::map<int, sockData>		_sockets;
 
 		static fd_set						_interest;
 		static int							_maxfd;

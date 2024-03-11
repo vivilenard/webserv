@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 20:44:00 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/11 01:30:31 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/11 06:14:56 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ bool							socketManager::epollAdd(int newClient, int serverSocket) {
 		std::cerr << "Error adding file descriptor to epoll" << std::endl;
 		return true;
 	}
-	s_sockData data = _sockets[serverSocket];
+	struct sockData data = _sockets[serverSocket];
 	data.parentSocket = _sockets.find(serverSocket);
-	_sockets.insert(std::pair<int, s_sockData>(newClient, data));
+	_sockets.insert(std::pair<int, struct sockData>(newClient, data));
 	return (false);
 }
 
@@ -88,7 +88,7 @@ bool	socketManager::initEpoll() {
 		return (true);
 	}
 	struct epoll_event interest;
-	for (std::map<int, s_sockData>::iterator pair = _sockets.begin(); pair != _sockets.end(); pair++) {
+	for (std::map<int, struct sockData>::iterator pair = _sockets.begin(); pair != _sockets.end(); pair++) {
 		interest.events = EPOLLIN | EPOLLOUT;
 		interest.data.fd = pair->first;
 		if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, pair->first, &interest) == -1) {

@@ -20,14 +20,14 @@ sockaddr* ConfigFile::convertToSockAddr(const std::string& ipAddress, int port)
 	std::cout << "ipAddress---> " << ipAddress << std::endl;
 	std::cout << "Port---> " << port << std::endl;
 	if (port < 0 || port > 0XFFFF)
-		throw std::runtime_error("Invalid port number");
+		throw std::runtime_error("ConfigFile:	convertToSockAddr:	Invalid port number");
 	struct addrinfo hints, *res;
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC; // Allow IPv4 or IPv6
 	hints.ai_socktype = SOCK_STREAM;
 	int status = getaddrinfo(ipAddress.c_str(), NULL, &hints, &res);
 	if (status != 0)
-		throw std::runtime_error("Failed to get address info: ");
+		throw std::runtime_error("ConfigFile:	convertToSockAddr:	Failed to get address info: ");
 	for (struct addrinfo* p = res; p != NULL; p = p->ai_next) 
 	{
 		if (p->ai_family == AF_INET) 
@@ -44,7 +44,7 @@ sockaddr* ConfigFile::convertToSockAddr(const std::string& ipAddress, int port)
 		}
 	}
 	freeaddrinfo(res);
-	throw std::runtime_error("Failed to convert address to sockaddr");
+	throw std::runtime_error("ConfigFile:	convertToSockAddr:	Failed to convert address to sockaddr");
 }
 
 bool dotCheck(int *dot, std::string address, int idx)

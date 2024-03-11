@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:02:01 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/11 01:30:54 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/11 06:14:56 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ bool						socketManager::kqueueAdd(int newClient, int serverSocket) {
 		std::cerr << "Error adding file descriptor to kqueue" << std::endl;
 		return (true);
 	}
-	s_sockData data = _sockets[serverSocket];
+	struct sockData data = _sockets[serverSocket];
 	data.parentSocket = _sockets.find(serverSocket);
-	_sockets.insert(std::pair<int, s_sockData>(newClient, data));
+	_sockets.insert(std::pair<int, struct sockData>(newClient, data));
 	std::cout << "New client connected with:" << std::endl;
 	std::cout << "\tfd: " << newClient << std::endl;
 	return (false);
@@ -97,7 +97,7 @@ bool		socketManager::initKqueue() {
 		std::cerr << "Error creating kqueue" << std::endl;
 		return (true);
 	}
-	for (std::map<int, s_sockData>::iterator pair = _sockets.begin(); pair != _sockets.end(); pair++) {
+	for (std::map<int, struct sockData>::iterator pair = _sockets.begin(); pair != _sockets.end(); pair++) {
 		EV_SET(&_changes[0], pair->first, EVFILT_READ, EV_ADD, 0, 0, NULL);
 		if (kevent(_kq, &_changes[0], 1, NULL, 0, NULL) == -1) {
 			std::cerr << "Error adding file descriptor to kqueue" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:11:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/11 01:31:34 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/11 06:14:56 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void							socketManager::socketSelect(InterfaceFunction interfaceFunction) {
 			std::cerr << "Error in select" << std::endl;
 			return ;
 		}
-		for (std::map<int, s_sockData>::iterator it = _sockets.begin(); it != _sockets.end(); it++) {
-			s_sockData data = it->second;
+		for (std::map<int, struct sockData>::iterator it = _sockets.begin(); it != _sockets.end(); it++) {
+			struct sockData data = it->second;
 			if (FD_ISSET(it->first, &readList)) {
 				if (it->second.parentSocket == _sockets.end()) {
 					selectAccept(it->first);
@@ -56,9 +56,9 @@ void							socketManager::selectAccept(int fd) {
 		FD_SET(newClient, &_interest);
 		if (newClient > _maxfd)
 			_maxfd = newClient;
-		s_sockData data = _sockets[fd];
+		struct sockData data = _sockets[fd];
 		data.parentSocket = _sockets.find(fd);
-		_sockets.insert(std::pair<int, s_sockData>(newClient, data));
+		_sockets.insert(std::pair<int, struct sockData>(newClient, data));
 		std::cout << "New client connected" << std::endl;
 		std::cout << "\tfd: " << newClient << std::endl;
 	}
@@ -67,7 +67,7 @@ void							socketManager::selectRemove(int fd) {
 	std::cout << "Removing fd " << fd << std::endl;
 	FD_CLR(fd, &_interest);
 	if (fd == _maxfd) {
-		for (std::map<int, s_sockData>::iterator it = _sockets.begin(); it != _sockets.end(); it++) {
+		for (std::map<int, struct sockData>::iterator it = _sockets.begin(); it != _sockets.end(); it++) {
 			if (it->first > _maxfd)
 				_maxfd = it->first;
 		}
@@ -76,7 +76,7 @@ void							socketManager::selectRemove(int fd) {
 
 bool							socketManager::initSelect() {
 	FD_ZERO(&_interest);
-	for (std::map<int, s_sockData>::iterator pair = _sockets.begin(); pair != _sockets.end(); pair++) {
+	for (std::map<int, struct sockData>::iterator pair = _sockets.begin(); pair != _sockets.end(); pair++) {
 		FD_SET(pair->first, &_interest);
 		if (pair->first > _maxfd)
 			_maxfd = pair->first;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   socketManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: peter <peter@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:05:15 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/11 06:13:34 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/11 07:48:10 by peter            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef void	(*InterfaceFunction)(int sock, sockData Data);
 
 class socketManager {
 	public:
-		static void							addSocket(const struct sockParameter &parameter);
+		static void							addSocket(struct sockParameter &parameter);
 		static void							removeSocket(int fd);
 		static void							printMap();
 		static void							start(InterfaceFunction interfaceFunction);

@@ -26,7 +26,7 @@ endif
 CC		= c++
 
 # -MMD and -MP are ussed to create dependecy files
-CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 -pedantic $(INC_DIR)
+CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -fsanitize=address -std=c++98 -pedantic $(INC_DIR)
 
 INC_DIR	= 	-I./include/ \
 			-I./include/socketManager/ \

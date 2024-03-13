@@ -41,6 +41,9 @@ void Request::buildCgiEnv()
 {
 	this->_envCgi["method"] = "REQUEST_METHOD=" + this->_method;
 	std::cout << "Method ---> " << this->_envCgi["method"] << "$"<< std::endl;
+	this->_envCgi["post_data"] = "POST_DATA=" + this->getBody();
+	std::cout << "THE LENGTH ---> " <<  getBody().length() << std::endl;
+	std::cout << this->_envCgi["post_data"] << std::endl;
 	Headers::iterator it;
 	for (it  = _headers.begin(); it != _headers.end(); it++)
 	{
@@ -48,10 +51,9 @@ void Request::buildCgiEnv()
 		{
 			this->_envCgi["content-length"] = "CONTENT_LENGTH=" + it->second;
 			std::cout << "CONTENT_LENGTH " << this->_envCgi["content-length"] << "$" << std::endl;
-			break;
+			break ;
 		}
 	}
-	std::cout << "THIS IS YOUR QUERY ---> "<< this->_envCgi["query"] << std::endl;
 	//querry added in parseQuery
 }
 
@@ -72,21 +74,26 @@ int Request::executeCgi(std::string &cgiScript) {
 		dup2(pipe_stdout[1], STDOUT_FILENO);
 
 		// Close unused pipe ends
+		close(pipe_stdin[0]);
 		close(pipe_stdin[1]);
 		close(pipe_stdout[0]);
+		close(pipe_stdout[1]);
 		// Execute the CGI script
-		const char *command[] = {"/usr/bin/python3", "/home/paghe/Documents/webserv/cgi-bin/script.py", NULL};
+		const char *command[] = {"/usr/bin/python", "/Users/apaghera/Documents/webServ/cgi-bin/post.py", NULL};
 		std::vector<const char *>env;
 		for (EnvCgi::iterator it = this->_envCgi.begin(); it != this->_envCgi.end(); ++it)
 				env.push_back(const_cast<char *>(it->second.c_str()));
 		env.push_back(NULL);
-		execve("/usr/bin/python3", (char* const*)command, const_cast<char *const *>(env.data()));
+		if (execve(command[0], (char* const*)command, const_cast<char *const *>(env.data())) < 0)
+			exit(1);
 		// If execve returns, an error occurred
 		std::cerr << "Error executing CGI script\n";
 		return EXIT_FAILURE;
 	} else { // Parent process
 		// Close unused pipe ends
+		int return_value = EXIT_SUCCESS;
 		close(pipe_stdin[0]);
+		close(pipe_stdin[1]);
 		close(pipe_stdout[1]);
 
 		// Read data from the CGI script and send it to the client
@@ -95,22 +102,25 @@ int Request::executeCgi(std::string &cgiScript) {
 		while ((bytes_read = read(pipe_stdout[0], buffer, sizeof(buffer))) > 0) {
 			// Append the read data to the output string
 			cgiScript.append(buffer, bytes_read);
+			std::cout << "Read " << bytes_read << " bytes from pipe: " << std::string(buffer, bytes_read) << std::endl; // Debugging output
 		}
 		if (bytes_read == -1) {
 			// Error reading from pipe
 			std::cerr << "Error reading from pipe\n";
-			close(pipe_stdout[0]);
-			return EXIT_FAILURE;
+			return_value = EXIT_FAILURE;
 		}
-
+		else if (bytes_read == 0)
+		{
+			// End of file reached (child process closed its stdout)
+			std::cout << "End of file reached (child process closed its stdout)\n"; // Debugging output
+		}
 		// Close the read end of the pipe
 		close(pipe_stdout[0]);
-
-		// Wait for the child process to finish
 		waitpid(pid, NULL, 0);
-	}
+		// Wait for the child process to finish
 
-	return EXIT_SUCCESS;
+		return return_value;
+	}
 }
 
 
@@ -123,9 +133,14 @@ bool	Response::isCgi(const string & path)
 	{
 		_request.buildCgiEnv();
 		_request.executeCgi(this->_cgiScript);
+		std::cerr << "--- we are out ----" << std::endl;
 		_fileContentType = "text/html";
-		int pos_nl = _request.findDoubleNewline(_cgiScript);
-		_cgiScript = _cgiScript.substr(pos_nl);
+		if (!_cgiScript.empty())
+		{
+			int pos_nl = _request.findDoubleNewline(_cgiScript);
+			if (pos_nl > 0)
+				_cgiScript = _cgiScript.substr(pos_nl);
+		}
 		_status = 200;
 		return true;
 	}

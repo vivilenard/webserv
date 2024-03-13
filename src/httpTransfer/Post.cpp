@@ -10,6 +10,7 @@ void Response::processPost()
 	// cout << _request.getBody().length() << endl;
 	if (isCgi(_URI))
 	{
+		formResponse(201, _statusInfo);
 		return ;
 	}
 	if (isMultipart()){
@@ -120,4 +121,3 @@ std::string	Response::findKeyByValue(std::map<string, string>m, string value)
 	}
 	return fileType;
 }
-

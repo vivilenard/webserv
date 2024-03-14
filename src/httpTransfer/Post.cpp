@@ -8,7 +8,7 @@ void Response::processPost()
 	cout << NORM << "URI: " << _URI << endl;
 	cout << "filename: " << _request.getFilename() << endl;
 	// cout << _request.getBody().length() << endl;
-	if (isCgi(_URI))
+	if (isCgi(_URI)) // if is error we got throw an error
 	{
 		formResponse(201, _statusInfo);
 		return ;

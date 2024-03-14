@@ -75,7 +75,7 @@ class Request
 		void			parseQuery(const string & path);
 		const Query &	getQuery(){ return _query;}
 		void 			buildCgiEnv(void);
-		int				executeCgi(std::string &cgiScript);
+		int				executeCgi(std::string &cgiScript, const string & path);
 };
 
 #define RED "\033[1;91m"

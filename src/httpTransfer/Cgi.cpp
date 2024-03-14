@@ -1,6 +1,6 @@
 #include "../../include/httpTransfer/Response.hpp"
 #include "../../include/httpTransfer/Request.hpp"
-
+#include "../../parse/configFile.hpp"
 
 #define STATUSCODE _statusCode.getStati()
 
@@ -57,10 +57,24 @@ void Request::buildCgiEnv()
 	//querry added in parseQuery
 }
 
-int Request::executeCgi(std::string &cgiScript) {
+std::string currentPath()
+{
+	char cwd[PATH_MAX];
+
+	std::string path = std::string(getcwd(cwd, sizeof(cwd)));
+	if (path.empty())
+	{
+		std::cerr << "Wrong path for cgi!" << std::endl;
+		return ("");
+	}
+	return (path);
+}
+
+int Request::executeCgi(std::string &cgiScript, const string & path) {
 	// Create pipes for stdin and stdout
 	int pipe_stdin[2];
 	int pipe_stdout[2];
+
 	pipe(pipe_stdin);
 	pipe(pipe_stdout);
 	// Fork a child process
@@ -79,7 +93,7 @@ int Request::executeCgi(std::string &cgiScript) {
 		close(pipe_stdout[0]);
 		close(pipe_stdout[1]);
 		// Execute the CGI script
-		const char *command[] = {"/usr/bin/python", "/Users/apaghera/Documents/webServ/cgi-bin/post.py", NULL};
+		const char *command[] = {"/usr/bin/python", path.c_str(), NULL};
 		std::vector<const char *>env;
 		for (EnvCgi::iterator it = this->_envCgi.begin(); it != this->_envCgi.end(); ++it)
 				env.push_back(const_cast<char *>(it->second.c_str()));
@@ -123,7 +137,6 @@ int Request::executeCgi(std::string &cgiScript) {
 	}
 }
 
-
 bool	Response::isCgi(const string & path)
 {
 	size_t pos = path.find_last_of('.');
@@ -131,9 +144,15 @@ bool	Response::isCgi(const string & path)
 		return false;
 	if (path.substr(pos) == ".py")
 	{
+		std::string tmp = currentPath();
+		std::string dir = tmp + "/cgi-bin" + path.substr(1);
+		if (!checkRoot(dir))
+		{
+			std::cerr << "Wrong CGI path!" << std::endl;
+			return (false);
+		}
 		_request.buildCgiEnv();
-		_request.executeCgi(this->_cgiScript);
-		std::cerr << "--- we are out ----" << std::endl;
+		_request.executeCgi(this->_cgiScript, dir.c_str());
 		_fileContentType = "text/html";
 		if (!_cgiScript.empty())
 		{

@@ -30,33 +30,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ebc4e45a-0dec-4590-983b-ff93912b9abb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cgi-bin/hello.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cgi-bin/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/cgi-bin/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cgi-bin/index.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cgi-bin/server.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/defaultConf/defaultConf.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/defaultConf/defaultConf.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/defaultConf/example.conf" beforeDir="false" afterPath="$PROJECT_DIR$/defaultConf/example.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/Interface/Interface.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/Interface/Interface.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/httpTransfer/Request.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/httpTransfer/Request.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/httpTransfer/Response.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/httpTransfer/Response.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/httpTransfer/Status.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/httpTransfer/Status.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/socketManager/socketManager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/socketManager/socketManager.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/socketManager/socketManagerBase.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/socketManager/socketManagerBase.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/webserv.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/webserv.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/configFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse/configFile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/configFile.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse/configFile.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/configUtil.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse/configUtil.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/location.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse/location.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/mimeTypes.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse/mimeTypes.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/root.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse/root.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpTransfer/Cgi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpTransfer/Cgi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpTransfer/Get.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpTransfer/Get.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpTransfer/Post.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpTransfer/Post.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpTransfer/Response.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpTransfer/Response.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpTransfer/Status.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpTransfer/Status.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="ebc4e45a-0dec-4590-983b-ff93912b9abb" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -103,6 +77,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 3
@@ -127,6 +104,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.pluginManager",
+    "structure.view.defaults.are.configured": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -136,11 +114,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Makefile Application.all">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -226,6 +199,11 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Makefile Application.all" />
       <item itemvalue="Makefile Application.cleanator" />
@@ -293,6 +271,7 @@
       <workItem from="1709475667254" duration="5780000" />
       <workItem from="1709560757136" duration="6190000" />
       <workItem from="1710258985389" duration="7733000" />
+      <workItem from="1710350533923" duration="6091000" />
     </task>
     <servers />
   </component>

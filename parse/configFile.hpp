@@ -78,6 +78,7 @@ public:
 	~ConfigFile();
 };
 
-std::string stringConvert(char *input);
-bool readConfig(int argc, char **argv, std::map<std::string, configServer> & config);
-void	printMimes(MAP mime);
+std::string	stringConvert(char *input);
+bool		readConfig(int argc, char **argv, std::map<std::string, configServer> & config);
+void		printMimes(MAP mime);
+bool		checkRoot(std::string &root);

@@ -40,21 +40,17 @@ print("HTTP_HOST:", os.environ.get("HTTP_HOST"))*/
 void Request::buildCgiEnv()
 {
 	this->_envCgi["method"] = "REQUEST_METHOD=" + this->_method;
-	std::cout << "Method ---> " << this->_envCgi["method"] << "$"<< std::endl;
-	this->_envCgi["post_data"] = "POST_DATA=" + this->getBody();
-	std::cout << "THE LENGTH ---> " <<  getBody().length() << std::endl;
-	std::cout << this->_envCgi["post_data"] << std::endl;
+	if (!this->getBody().empty())
+		this->_envCgi["post_data"] = "POST_DATA=" + this->getBody();
 	Headers::iterator it;
 	for (it  = _headers.begin(); it != _headers.end(); it++)
 	{
 		if (it->first == "Content-Length")
 		{
 			this->_envCgi["content-length"] = "CONTENT_LENGTH=" + it->second;
-			std::cout << "CONTENT_LENGTH " << this->_envCgi["content-length"] << "$" << std::endl;
 			break ;
 		}
 	}
-	//querry added in parseQuery
 }
 
 std::string currentPath()
@@ -70,29 +66,30 @@ std::string currentPath()
 	return (path);
 }
 
-int Request::executeCgi(std::string &cgiScript, const string & path) {
-	// Create pipes for stdin and stdout
+void closePipes(int *pipeIn, int *pipeOut)
+{
+	close(pipeIn[0]);
+	close(pipeIn[1]);
+	close(pipeOut[0]);
+	close(pipeOut[1]);
+}
+
+int Request::executeCgi(std::string &cgiScript, const string & path)
+{
 	int pipe_stdin[2];
 	int pipe_stdout[2];
 
 	pipe(pipe_stdin);
 	pipe(pipe_stdout);
-	// Fork a child process
 	pid_t pid = fork();
 	if (pid == -1) {
 		std::cerr << "Error forking process\n";
 		return EXIT_FAILURE;
-	} else if (pid == 0) { // Child process
-		// Redirect stdin and stdout to pipes
+	} else if (pid == 0)
+	{
 		dup2(pipe_stdin[0], STDIN_FILENO);
 		dup2(pipe_stdout[1], STDOUT_FILENO);
-
-		// Close unused pipe ends
-		close(pipe_stdin[0]);
-		close(pipe_stdin[1]);
-		close(pipe_stdout[0]);
-		close(pipe_stdout[1]);
-		// Execute the CGI script
+		closePipes(pipe_stdin, pipe_stdout);
 		const char *command[] = {"/usr/bin/python", path.c_str(), NULL};
 		std::vector<const char *>env;
 		for (EnvCgi::iterator it = this->_envCgi.begin(); it != this->_envCgi.end(); ++it)
@@ -100,40 +97,29 @@ int Request::executeCgi(std::string &cgiScript, const string & path) {
 		env.push_back(NULL);
 		if (execve(command[0], (char* const*)command, const_cast<char *const *>(env.data())) < 0)
 			exit(1);
-		// If execve returns, an error occurred
 		std::cerr << "Error executing CGI script\n";
 		return EXIT_FAILURE;
-	} else { // Parent process
-		// Close unused pipe ends
+	}
+	else
+	{
 		int return_value = EXIT_SUCCESS;
 		close(pipe_stdin[0]);
 		close(pipe_stdin[1]);
 		close(pipe_stdout[1]);
-
-		// Read data from the CGI script and send it to the client
 		char buffer[1024];
 		ssize_t bytes_read;
-		while ((bytes_read = read(pipe_stdout[0], buffer, sizeof(buffer))) > 0) {
-			// Append the read data to the output string
+		while ((bytes_read = read(pipe_stdout[0], buffer, sizeof(buffer))) > 0)
 			cgiScript.append(buffer, bytes_read);
-			std::cout << "Read " << bytes_read << " bytes from pipe: " << std::string(buffer, bytes_read) << std::endl; // Debugging output
-		}
-		if (bytes_read == -1) {
-			// Error reading from pipe
+		if (bytes_read == -1)
+		{
 			std::cerr << "Error reading from pipe\n";
 			return_value = EXIT_FAILURE;
 		}
 		else if (bytes_read == 0)
-		{
-			// End of file reached (child process closed its stdout)
 			std::cout << "End of file reached (child process closed its stdout)\n"; // Debugging output
-		}
-		// Close the read end of the pipe
 		close(pipe_stdout[0]);
 		waitpid(pid, NULL, 0);
-		// Wait for the child process to finish
-
-		return return_value;
+		return (return_value);
 	}
 }
 
@@ -146,13 +132,13 @@ bool	Response::isCgi(const string & path)
 	{
 		std::string tmp = currentPath();
 		std::string dir = tmp + "/cgi-bin" + path.substr(1);
-		if (!checkRoot(dir))
+	/*	if (!checkRoot(dir))
 		{
 			std::cerr << "Wrong CGI path!" << std::endl;
 			return (false);
-		}
+		}*/
 		_request.buildCgiEnv();
-		_request.executeCgi(this->_cgiScript, dir.c_str());
+		_request.executeCgi(this->_cgiScript, path.c_str());
 		_fileContentType = "text/html";
 		if (!_cgiScript.empty())
 		{

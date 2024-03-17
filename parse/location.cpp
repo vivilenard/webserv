@@ -4,17 +4,32 @@ void	ConfigFile::setMethod(configServer &server, std::string dir,
 							  					std::string rule)
 {
 	std::string divider;
-	std::string method;
+	std::string methodLine;
+	std::string methodStream;
+	std::string	method;
 	std::istringstream ruleStream(rule);
 	ruleStream >> divider;
-	ruleStream >> method;
-	if (method == "DELETE")
-		server._locations[dir]._delete = true;
-	else if (method == "GET")
-		server._locations[dir]._get = true;
-	else if (method == "POST")
-		server._locations[dir]._post = true;
-
+	if (divider == "allow_methods")
+	{
+		std::getline(ruleStream, methodLine);
+		std::istringstream methodStream(methodLine);
+		while (methodStream >> method)
+		{
+			if (method == "DELETE")
+				server._locations[dir]._delete = true;
+			else if (method == "GET")
+				server._locations[dir]._get = true;
+			else if (method == "POST")
+				server._locations[dir]._post = true;
+			else
+			{
+				std::cerr << "Wrong method ---> " << method << " <--- "<< std::endl;
+				server._locations[dir]._delete = false;
+				server._locations[dir]._get = false;
+				server._locations[dir]._post = false;
+			}
+		}
+	}
 }
 
 std::string	ConfigFile::addNameLocation(configServer &server, std::string token, std::istringstream &find)

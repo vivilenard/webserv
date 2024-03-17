@@ -5,7 +5,7 @@ void ConfigFile::runByDefault()
 	configServer tmpServer;
 	tmpServer._serverName = "default";
 	tmpServer._listen = 80;
-	tmpServer._root = "/home/paghe/Documents/webserv";
+	tmpServer._root = "/Users/apaghera/Documents/webServ";
 	tmpServer._address = "0.0.0.0";
 	tmpServer.validFormat = true;
 	tmpServer._locations["default"]._name = "default";

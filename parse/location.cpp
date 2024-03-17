@@ -23,7 +23,7 @@ void	ConfigFile::setMethod(configServer &server, std::string dir,
 				server._locations[dir]._post = true;
 			else
 			{
-				std::cerr << "Wrong method ---> " << method << " <--- "<< std::endl;
+				std::cerr << "Wrong method ---> " << method << " <---"<< std::endl;
 				server._locations[dir]._delete = false;
 				server._locations[dir]._get = false;
 				server._locations[dir]._post = false;

@@ -32,11 +32,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ebc4e45a-0dec-4590-983b-ff93912b9abb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cgi-bin/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/cgi-bin/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/defaultConf/defaultConf.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/defaultConf/defaultConf.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/defaultConf/example.conf" beforeDir="false" afterPath="$PROJECT_DIR$/defaultConf/example.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example.conf" beforeDir="false" afterPath="$PROJECT_DIR$/example.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parse/location.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse/location.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpTransfer/Cgi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpTransfer/Cgi.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,7 +274,7 @@
       <workItem from="1710350533923" duration="6091000" />
       <workItem from="1710442730371" duration="3024000" />
       <workItem from="1710445966901" duration="498000" />
-      <workItem from="1710689152564" duration="11134000" />
+      <workItem from="1710689152564" duration="13437000" />
     </task>
     <servers />
   </component>

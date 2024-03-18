@@ -131,14 +131,16 @@ bool	Response::isCgi(const string & path)
 	if (path.substr(pos) == ".py")
 	{
 		std::string tmp = currentPath();
-		std::string dir = tmp + "/cgi-bin" + path.substr(1);
+		std::string dir = tmp + "/cgi-bin" + path.substr(1); // <----- if the root = "./"
+		std::cout << "CGI PATH---> " << path.c_str() << std::endl; // <----- if you have an absolute  
+		std::cout << "CGI  DIR PATH---> " << dir << std::endl;
 	/*	if (!checkRoot(dir))
 		{
 			std::cerr << "Wrong CGI path!" << std::endl;
 			return (false);
 		}*/
 		_request.buildCgiEnv();
-		_request.executeCgi(this->_cgiScript, path.c_str());
+		_request.executeCgi(this->_cgiScript, dir);
 		_fileContentType = "text/html";
 		if (!_cgiScript.empty())
 		{

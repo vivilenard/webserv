@@ -1,4 +1,5 @@
 #include "../../include/httpTransfer/Request.hpp"
+#include "../../parse/configFile.hpp"
 
 int		Request::MultipartApproved = 0;
 string	Request::boundary = "bound";
@@ -7,7 +8,7 @@ int		Request::McontentLength = 0;
 string	Request::MultipartContentType = "";
 string	Request::MultipartName = ".empty.";
 
-Request::Request(const string & request): _request(request), _filename(""), _sizeInRange(true)
+Request::Request(const string & request, configServer & configfile):  _configfile(configfile), _request(request), _filename(""), _sizeInRange(true)
 {
 	parseMainHeader();
 	if (_standardRequest)
@@ -33,6 +34,11 @@ void	Request::parseMainHeader()
 		parseQuery(_URI.substr(pos + 1));
 		_URI.erase(pos);
 	}
+	// cout << "INITIAL URI: !" << _URI << "!" << endl;
+	// if (_URI == "/" && !_configfile._index.empty())
+	// {
+	// 	_URI.append(_configfile._index);
+	// }
 	identifyRequest();
 }
 

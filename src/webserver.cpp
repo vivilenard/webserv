@@ -16,7 +16,7 @@ std::string testHttp(const std::string &request/* , Config & config */) {
     } else {
 		// cout << configfile._root << endl;
 		cout << MAG << "-------request----->>" << NORM << endl;
-		Request		httpRequest(request);
+		Request		httpRequest(request, configfile);
 		// cout << httpRequest << endl;
 		Response	httpResponse(httpRequest, configfile);
 		std::string response = httpResponse.getResponse();

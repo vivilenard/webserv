@@ -5,11 +5,11 @@
 void Response::processDelete()
 {
 	cout << "DELETE REQUEST" << endl;
-	cout << RED << "Deleting: " << _URI << NORM << endl;
 	if (std::remove(_URI.c_str()) == 0)
 	{
 		_status = 204;
 		_statusInfo = "Deleting successful";
+		cout << RED << "Deleted: " << _URI << NORM << endl;
 	}
 	else
 	{

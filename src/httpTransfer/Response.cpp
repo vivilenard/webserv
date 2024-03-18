@@ -5,11 +5,11 @@
 StatusCode Response::_statusCode = StatusCode();
 
 Response::Response(Request & request, configServer & configfile): _configfile(configfile),
-	_request(request), _status(500), _statusInfo(), _httpVersion("HTTP/1.1")
+	_request(request), _status(500), _statusInfo(""), _httpVersion("HTTP/1.1")
 {
-	cout << "in Response " << endl;
+	// cout << "in Response " << endl;
 	_URI = addRootPath(_request.getURI());
-	cout << RED << _URI << NORM << endl;
+	// cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
 		return ;
 	if (request.getMethod() == "GET" && methodAllowed())
@@ -21,33 +21,63 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 	else if (request.getMethod() == "HEAD" && methodAllowed())
 		processGet();
 	else 
-		formResponse(501, "This method is not allowed");
+		formResponse(_status, _statusInfo);
 	cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
+}
+
+const string getDir(string & uri)
+{
+	//    /files/upload.html
+	string dir = uri;
+	if (!uri.find('.')) //endpoint is already a directory
+		return uri;
+	if (uri.find_last_of("/") < uri.npos - 1)
+		dir = uri.substr(0, uri.find_last_of("/"));
+	return dir;
 }
 
 bool Response::methodAllowed()
 {
+	bool methodAllowed = true;
 	string method = _request.getMethod();
 	string uri = _request.getURI();
+	string directory = getDir(uri);
+	// string uri = _URI;
 	LOCATION locations = _configfile._locations;
 
-	if (locations.find(uri) != locations.end())
+	// cout << ORANGE << "method: " << method << NORM << endl;
+	// cout << "uri: " << uri << endl;
+	// cout << "directory: " << directory << NORM << endl;
+	if (locations.find(directory) != locations.end())
 	{
+		// cout << "location: " << ORANGE << locations[directory]._name << " " << locations[directory]._get << NORM << endl;
 		if (method == "GET")
 		{
-			if (locations[uri]._get == false)
-				return (cout << method << ": not allowed for uri: " << uri << endl, false);
+			// cout << "GET METHOD" << endl;
+			if (locations[directory]._get == false)
+				methodAllowed = false;
+				// return (cout << RED << method << ": not allowed for uri: " << uri << NORM << endl, false);
 		}
 		else if (method == "POST")
 		{
-			if (locations[uri]._post == false)
-				return (cout << method << ": not allowed for uri: " << uri << endl, false);
+			// cout << "POST METHOD" << endl;
+			if (locations[directory]._post == false)
+				methodAllowed = false;
+				// return (cout << RED << method << ": not allowed for uri: " << uri << NORM << endl, false);
 		}
 		else if (method == "DELETE")
 		{
-			if (locations[uri]._delete == false)
-				return (cout << method << ": not allowed for uri: " << uri << endl, false);
+			// cout << "DELETE METHOD" << endl;
+			if (locations[directory]._delete == false)
+				methodAllowed = false;
+				// return (cout << RED << method << ": not allowed for uri: " << uri << NORM << endl, false);
 		}
+	}
+	if (methodAllowed == false)
+	{
+		_status = 405;
+		cout << RED << method << ": not allowed for uri: " << uri << NORM << endl;
+		return false;
 	}
 	return true;
 }
@@ -105,9 +135,7 @@ const string Response::createErrorBody(const int & status, const string & status
 
 string	Response::addRootPath(const string & path)
 {
-	// return (_config.getRootPath() + path);
 	return (_configfile._root + path);
-
 }
 
 //if there uri was '/', then add default file (index)

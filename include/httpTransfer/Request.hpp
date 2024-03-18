@@ -2,6 +2,8 @@
 #define REQUEST_HPP
 
 #include "../webserv.hpp"
+#include "../../parse/configFile.hpp"
+
 
 #include <fstream>
 #include <fcntl.h>
@@ -16,7 +18,7 @@
 
 class Request
 {
-	// static	Config	_config;
+	configServer	_configfile;
 	bool			_standardRequest;
 	string			_request; // to add in cgi
 	string			_method;	// to add in cgi
@@ -30,7 +32,7 @@ class Request
 	string			_filename;
 	Headers			_headers;
 	Query			_query;
-	EnvCgi				_envCgi;
+	EnvCgi			_envCgi;
 	void			parseMainHeader();
 	void			parseHeaders();
 	int				parseBody();
@@ -55,7 +57,7 @@ class Request
 	void			parseContentAttributes(Headers & attributes, const string & s);
 
 	public:
-		int				findDoubleNewline(const std::string & s);
+		int						findDoubleNewline(const std::string & s);
 		static int				MultipartApproved;
 		static string			MultipartName;
 		static string			MultipartBody;
@@ -63,7 +65,7 @@ class Request
 		static int				McontentLength;
 		static string			boundary; //if boundary is cleared, body is ready to be used.
 											//and treated as normal post.
-		Request(const string & request);
+		Request(const string & request, configServer & configfile);
 		friend ostream & operator<<(ostream & os, const Request & r);
 
 		const string & 	getMethod()	{ return _method; }

@@ -13,7 +13,7 @@
 #include "socketManager.hpp"
 
 std::map<int, struct sockData>		socketManager::_sockets;
-unsigned long						socketManager::_keepAlive = 300000;
+unsigned long						socketManager::_keepAlive = 100;
 
 void	socketManager::start(InterfaceFunction interfaceFunction) {
 	std::cout << "socketManager::Starting..." << std::endl;

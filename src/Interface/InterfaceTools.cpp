@@ -21,29 +21,23 @@ bool	Interface::readFromSocket(int sock, std::string &request) {
 			std::cout << "recv failed" << std::endl;
 			return (true);
 		}
-		if (n == 0 && request.empty()) {
-			std::cout << "client disconnected" << std::endl;
-			return (true);
-		}
 		request.append(buffer, n);
 	}
 	return (false);
 }
 
 bool	Interface::passRequest(std::string &request, std::string &response, uint32_t port) {
-	if (request.empty())
-		return (true);
 	if (_protocolMap.find(port) != _protocolMap.end()) {
 		response = _protocolMap[port](request);
 		return (false);
 	}
 	std::cout << "unknown protocol" << std::endl;
-	return (false);
+	return (true);
 }
 
 bool	Interface::writeToSocket(int sock, std::string &response) {
 	int i = send(sock, response.c_str(), response.length(), 0);
-	if (i < 0 || i == 0)
+	if (i < 0)
 		return (true);
 	return (false);
 }

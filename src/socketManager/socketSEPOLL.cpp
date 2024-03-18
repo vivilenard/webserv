@@ -171,6 +171,8 @@ void						socketManager::kqueueAdd(int newClient, int serverSocket) {
 	}
 	struct sockData data = _sockets[serverSocket];
 	data.parentSocket = _sockets.find(serverSocket);
+	if (_keepAlive)
+		data.lastActivity = getCurrentTime();
 	_sockets.insert(std::pair<int, struct sockData>(newClient, data));
 }
 

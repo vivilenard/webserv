@@ -80,8 +80,8 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 			addRoot(tmpServer, token, find);
 			addIndex(tmpServer, token, find);
 			setLocation(tmpServer,inputFile, token,line, find);
+			config[tmpServer._serverName] = tmpServer;
 		}
-		config[tmpServer._serverName] = tmpServer;
 		serverStatus(tmpServer);
 	}
 	else

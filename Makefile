@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
+#    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/11 10:42:57 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/18 16:29:40 by vlenard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,6 @@ SRCS	=	webserver.cpp \
 			location.cpp \
 			mimeTypes.cpp \
 			root.cpp \
-			defaultConf.cpp \
 			$(SOURCE)
 
 OBJ_DIR	= ./obj/
@@ -80,7 +79,7 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 
 
 # in case of subdirectories in the src folder add them here
-VPATH := src include src/socketManager src/Interface src/config src/error src/httpTransfer parse defaultConf
+VPATH := src include src/socketManager src/Interface src/config src/error src/httpTransfer src/parse
 
 all:
 	@$(MAKE) -s proname_header

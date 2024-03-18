@@ -1,6 +1,6 @@
 #include "../../include/httpTransfer/Response.hpp"
 #include "../../include/httpTransfer/Request.hpp"
-#include "../../parse/configFile.hpp"
+#include "../../src/parse/configFile.hpp"
 
 #define STATUSCODE _statusCode.getStati()
 

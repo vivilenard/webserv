@@ -27,11 +27,10 @@ bool readConfig(int argc, char **argv, std::map<std::string, configServer> & con
 	else if (argc == 1)
 	{
 		ConfigFile test;
-		test.runByDefault();
-		// std::map<std::string, configServer> out;
-		config = test.getConFile();
-		std::cout << "server name " << config["default"]._serverName << std::endl;
-		std::cout << "location name " << config["default"]._locations["default"]._name << std::endl;
+		std::string file = "config/default.conf";
+		test.readFile(file, config);
+		if (config.empty())
+			return (cout << "No default config file found. Please create one in: config/default.conf" << endl, false);
 		return true;
 	}
 	return false;

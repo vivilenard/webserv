@@ -3,7 +3,7 @@
 // #include "../parse/Config.hpp"
 #include "../include/httpTransfer/Request.hpp"
 #include "../include/httpTransfer/Response.hpp"
-#include "../parse/configFile.hpp"
+#include "parse/configFile.hpp"
 
 CONFIG config;
 configServer configfile;
@@ -83,6 +83,7 @@ int main(int argc, char **argv)
 		protocolFunction testFunction = &testHttp;
 		Interface::addProtocol(extractPort(config.begin()->second._socketAddress.interfaceAddress), testFunction);
 		socketManager::addSocket(config.begin()->second._socketAddress);
+		// add all the things !
 		// socketManager::addSocket("0.0.0.0", (config.begin()++)->second._listen, IPV4, TCP);
 	}
 	InterfaceFunction interfaceFunction = &Interface::interface;

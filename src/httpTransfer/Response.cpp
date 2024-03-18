@@ -9,7 +9,7 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 {
 	// cout << "in Response " << endl;
 	_URI = addRootPath(_request.getURI());
-	// cout << RED << _URI << NORM << endl;
+	cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
 		return ;
 	if (request.getMethod() == "GET" && methodAllowed())
@@ -23,17 +23,6 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 	else 
 		formResponse(_status, _statusInfo);
 	cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
-}
-
-const string getDir(string & uri)
-{
-	//    /files/upload.html
-	string dir = uri;
-	if (!uri.find('.')) //endpoint is already a directory
-		return uri;
-	if (uri.find_last_of("/") < uri.npos - 1)
-		dir = uri.substr(0, uri.find_last_of("/"));
-	return dir;
 }
 
 bool Response::methodAllowed()
@@ -136,6 +125,17 @@ const string Response::createErrorBody(const int & status, const string & status
 string	Response::addRootPath(const string & path)
 {
 	return (_configfile._root + path);
+}
+
+const string getDir(string & uri)
+{
+	//    /files/upload.html
+	string dir = uri;
+	if (!uri.find('.')) //endpoint is already a directory
+		return uri;
+	if (uri.find_last_of("/") < uri.npos - 1)
+		dir = uri.substr(0, uri.find_last_of("/"));
+	return dir;
 }
 
 //if there uri was '/', then add default file (index)

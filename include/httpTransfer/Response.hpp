@@ -4,7 +4,7 @@
 #include "Request.hpp"
 // #include "../../parse/Config.hpp"
 #include "Status.hpp"
-#include "../../parse/configFile.hpp"
+#include "../../src/parse/configFile.hpp"
 
 #include <map>
 #include <sys/types.h>
@@ -26,7 +26,6 @@ class Response
 	configServer	_configfile;
 	Request			_request;
 	string			_response;
-	// static Config 	_config;
 	static StatusCode _statusCode;
 	int				_status;
 	string			_statusInfo;
@@ -67,4 +66,5 @@ class Response
 };
 
 int executeCgi(std::string &cgiScript);
+const string getDir(string & uri);
 #endif

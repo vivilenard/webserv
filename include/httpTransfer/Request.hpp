@@ -2,7 +2,7 @@
 #define REQUEST_HPP
 
 #include "../webserv.hpp"
-#include "../../parse/configFile.hpp"
+#include "../../src/parse/configFile.hpp"
 
 
 #include <fstream>

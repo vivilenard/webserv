@@ -3,27 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   InterfaceTools.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:02:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/19 16:47:17 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/20 17:43:59 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Interface.hpp"
 
-bool	Interface::readFromSocket(int sock, std::string &request) {
+int	Interface::readFromSocket(int sock, std::string &request) {
 	int	n = BUFFER_SIZE;
 	char buffer[BUFFER_SIZE];
 	while (n == BUFFER_SIZE) {
 		n = recv(sock, buffer, BUFFER_SIZE, 0);
 		if (n < 0) {
 			std::cout << "recv failed" << std::endl;
-			return (true);
+			return n;
 		}
+		else if (n == 0 && request.empty())
+			return n;
 		request.append(buffer, n);
 	}
-	return (false);
+	return 1;
 }
 
 bool	Interface::passRequest(std::string &request, std::string &response, uint32_t port) {
@@ -36,6 +38,8 @@ bool	Interface::passRequest(std::string &request, std::string &response, uint32_
 }
 
 bool	Interface::writeToSocket(int sock, std::string &response) {
+	std::cout << "just sent: " << std::endl;
+	std::cout << response.c_str() << std::endl;
 	int i = send(sock, response.c_str(), response.length(), 0);
 	if (i < 0)
 		return (true);

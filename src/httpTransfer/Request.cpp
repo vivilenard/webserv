@@ -7,24 +7,33 @@ string	Request::MultipartBody = "";
 int		Request::McontentLength = 0;
 string	Request::MultipartContentType = "";
 string	Request::MultipartName = ".empty.";
+string	Request::MultipartURI = "";
 
 Request::Request(const string & request, configServer & configfile):  _configfile(configfile), _request(request), _filename(""), _sizeInRange(true)
 {
-	// cout << request << endl;
-	cout << "request" << endl;
-	parseMainHeader();
+	// cout << "request" << endl;
+	// cout << GREEN << request << NORM << endl;
+	identifyRequest();
 	if (_standardRequest)
 	{
-		parseHeaders(_headers);
+		// cout << "is standard request" << endl;
+		parseMainHeader();
+		parseHeaders(_headers, _request);
 		parseBody(_body, _request, atoi(_headers["Content-Length"].c_str()));
 	}
+	// cout << "URI: " << _URI << endl;
+	// cout << "mulitURI: " << MultipartURI << endl;
+
 	checkRequestSize();
 	handleMultipart();
+	// cout << "URI: " << _URI << endl;
 }
 
 void	Request::parseMainHeader()
 {
 	// cout << "parse Header" << endl;
+	// if (!_standardRequest)
+	// 	return ;
 	istringstream istream(_request);
 	getline(istream, _method, ' ');
 	getline(istream, _URI, ' ');
@@ -41,13 +50,16 @@ void	Request::parseMainHeader()
 	// {
 	// 	_URI.append(_configfile._index);
 	// }
-	identifyRequest();
 }
 
 
 void Request::identifyRequest()
 {
-	if (_httpVersion.find("HTTP/") != string::npos)
+	// if (_httpVersion.find("HTTP/") != string::npos)
+	istringstream istream(_request);
+	string buffer;
+	getline(istream, buffer);
+	if (buffer.find("HTTP/") != string::npos)
 	{
 		_standardRequest = true;
 		clearMultipartData();
@@ -56,10 +68,10 @@ void Request::identifyRequest()
 	_standardRequest = false;
 }
 
-void	Request::parseHeaders(Headers & headers)
+void	Request::parseHeaders(Headers & headers, const string & chunk)
 {
 	PAIR p;
-	istringstream istream(_request);
+	istringstream istream(chunk);
 	string line;
 	getline(istream, line, '\n');
 	while (getline(istream, line, '\n'))
@@ -96,16 +108,6 @@ bool	Request::ContainsMultipartHeader()
 	return false;
 }
 
-// bool	Request::isMultipartChunk() //doineed?
-// {
-// 	istringstream istream(_request);
-// 	string firstLine;
-// 	getline(istream, firstLine, '\r');
-// 	if (ApproveMultipart("--", firstLine))
-// 		return true;
-// 	return false;
-// }
-
 bool	Request::setBoundary()
 {
 	// cout << "Boundary at:" << _headers["Content-Type"].find("boundary=") << endl;
@@ -130,20 +132,28 @@ bool	Request::handleMultipart()
 	Headers headers;
 	if (Request::boundary.empty())
 		return false;
-	cout << NORM << "HANDLE MULTIPART" << NORM << endl;
+	cout << RED << "MULTIPART" << NORM << endl;
 	// cout << RED << _body << NORM << endl;
-	if (_standardRequest && _body.length() == 0)
-		return true;
-	else if (_standardRequest)
+	if (_standardRequest)
+	{
+		MultipartURI = _URI;
+		if (_body.length() == 0)
+			return true;
+		// cout << "parsing body" << endl;
 		parseMultipart(_body); //shoult look if there is sth before boundary
+	}
 	else
+	{
+		_URI = MultipartURI;
 		parseMultipart(_request);
+	}
 	return true;
 }
 
 bool	Request::parseMultipart(const string & chunk)
 {
-	cout << "parse Multipart" << endl;
+	cout << RED << "parse Multipart" << NORM << endl;
+	// cout << chunk << endl;
 	istringstream s(chunk);
 	string body;
 	string line;
@@ -157,7 +167,7 @@ bool	Request::parseMultipart(const string & chunk)
 			clearMultipartData();
 			return (MultipartApproved = -1, false);
 		}
-		parseHeaders(_headers); //adds headers to existing ones
+		parseHeaders(_headers, chunk); //adds headers to existing ones
 		setFilename();
 		getline(s, line, '\n'); //should be empty line
 		parseBody(body, chunk, McontentLength - findDoubleNewline(_request));
@@ -172,8 +182,12 @@ bool	Request::parseMultipart(const string & chunk)
 
 void Request::packTogether()
 {
+	// cout << "---" << endl << MultipartBody << endl << "---" << endl;
+	// cout << boundary << endl;
+	// cout << setBoundaryTogether(boundary, "end") << endl;
 	if (MultipartBody.find(setBoundaryTogether(boundary, "end")) != string::npos)
 	{
+		// cout << RED << "FOUND END" << NORM << endl;
 		MultipartBody.erase(MultipartBody.find(setBoundaryTogether(boundary, "end")));
 		if (MultipartBody == "\r\n")
 			cout << "File body is empty" << endl;
@@ -182,42 +196,64 @@ void Request::packTogether()
 		_filename = MultipartName;
 		_body = MultipartBody;
 		_contentType = MultipartContentType;
+		_URI = MultipartURI;
+		// cout << "MULTI URI: " << MultipartURI << endl;
+		// cout << "URI in pack: " << _URI << endl;
 		clearMultipartData();
+	}
+}
+
+void Request::setName(const string & attr, Headers & attributes)
+{
+	// Headers::iterator it = attributes.begin();
+	// for (; it != attributes.end(); it++)
+	// {
+	// 	cout << it->first << " " << it->second << endl;
+	// }
+	if (attributes.find(attr) != attributes.end())
+	{
+		if (!attributes[attr].empty())
+		{
+			MultipartName = attributes[attr];
+			return;
+		}
 	}
 }
 
 void Request::setFilename()
 {
+	// cout << GREEN << "setFilename" << NORM << endl;
+	// cout << "headers: " << endl;
+	// Headers::iterator it = _headers.begin();
+	// for (; it != _headers.end(); it++)
+	// {
+	// 	cout << it->first << " " << it->second << endl;
+	// }
 	if (_headers["Content-Disposition"].empty())
 		return ;
+	// cout << _headers["Content-Disposition"] << endl;
 	istringstream is(_headers["Content-Disposition"]);
 	string s;
 	Headers attributes;
 	getline(is, s, ';');
 	while (getline(is, s, ';'))
-	{
 		parseContentAttributes(attributes, s);
-		if (attributes.find("filename") != attributes.end())
-		{
-			if (!attributes["filename"].empty())
-			{
-				MultipartName = attributes["filename"];
-				return;
-			}
-		}
-	}
+	setName("filename", attributes);
+	if (MultipartName == ".empty.")
+		setName("name", attributes);
 }
 
 void	Request::parseContentAttributes(Headers & attributes, const string & s)
 {
-		PAIR p;
-		if (s.find('='))
-		{
-			p.first = s.substr(0, s.find('='));
-			p.second = s.substr(s.find('=') + 1);
-			p.second.erase(remove(p.second.begin(), p.second.end(), '"'), p.second.end());
-			attributes[p.first] = p.second;
-		}
+	PAIR p;
+	if (s.find('='))
+	{
+		p.first = s.substr(0, s.find('='));
+		p.second = s.substr(s.find('=') + 1);
+		p.second.erase(remove(p.second.begin(), p.second.end(), '"'), p.second.end());
+		attributes[p.first] = p.second;
+		// cout << p.first << " and " << p.second << endl;
+	}
 }
 
 void	Request::clearMultipartData()
@@ -228,6 +264,7 @@ void	Request::clearMultipartData()
 	boundary = "";
 	MultipartContentType = ""; //default textplain
 	MultipartName = ".empty."; //default file.txt
+	MultipartURI = "";
 }
 
 const string Request::setBoundaryTogether(const string & bound, const string & type)

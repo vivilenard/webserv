@@ -24,7 +24,7 @@ void Response::processPost()
 		cout << ORANGE << "JOO: " << incorrectMimeType(_request.getHeaders()["Content-Type"]) << endl; return; }
 	else if (!createFile(_URI, _request.getBody()))
 		{ _status = 400; _statusInfo = "Please include a valid path. File could not be created"; }
-	formResponse(_status, _statusInfo);
+	formResponse(_status, "");
 }
 
 bool Response::incorrectMimeType(const string & contentType)
@@ -33,22 +33,16 @@ bool Response::incorrectMimeType(const string & contentType)
 	if (!_request.getFilename().empty())
 		filepath = _request.getFilename();
 	size_t mimePos = filepath.find_last_of('.');
-	// cout << "Mime Pos: " << mimePos << endl;
 	string mime = "";
 	if (mimePos != string::npos)
 		mime = filepath.substr(mimePos + 1);
-	// cout << RED << "FILEPATH: " << filepath << endl;
-	// cout << "MIME: " << mime << endl;
-	// cout << "contentType: " << contentType << NORM << endl;
-	if (mime.empty() && (contentType == "text/plain" || contentType == "plain/text"))
-		return false;
-	else if (mime.empty())
+	if (mime.empty() && !(contentType == "text/plain" || contentType == "plain/text"))
 		return true;
 	if (_configfile._mimeTypes[mime] != contentType && !(contentType == "text/plain" || contentType == "plain/text"))
 	{
-		// cout << "doesnt match: " << endl;
-		// cout << _configfile._mimeTypes[mime] << endl;
-		// cout << contentType << endl;
+		cout << "doesnt match: " << endl;
+		cout << _configfile._mimeTypes[mime] << endl;
+		cout << contentType << endl;
 		return true;
 	}
 	return false;

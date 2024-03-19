@@ -8,8 +8,14 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 	_request(request), _status(501), _statusInfo(""), _httpVersion("HTTP/1.1")
 {
 	// cout << "in Response " << endl;
+	if (request.getRequest().empty())
+	{
+		cout << RED << "request is empty" << endl;
+		// formResponse(501, "empty request");
+		return ;
+	}
 	_URI = addRootPath(_request.getURI());
-	cout << RED << _URI << NORM << endl;
+	// cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
 		return ;
 	if (request.getMethod() == "GET" && methodAllowed())
@@ -22,7 +28,9 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 		processGet();
 	else 
 		formResponse(_status, "");
-	cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
+	if (request.getMethod() == "POST")
+		cout << BLUE << _response << NORM << endl;
+	// cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
 }
 
 bool Response::methodAllowed()
@@ -97,7 +105,7 @@ void Response::formResponse(const int & status, const string & statusInfo)
 	os << _httpVersion << " " << STATUSCODE[status] << "\r\n";
 	if (status != 100)
 	{
-		os << "Content-Type:" 		<< _fileContentType << "\r\n";
+		os << "Content-Type: " 		<< _fileContentType << "\r\n";
 		os << "Content-Length: " 	<< body.length() << "\r\n";
 		os << "\r\n";
 		os << body;
@@ -126,6 +134,8 @@ const string Response::createErrorBody(const int & status, const string & status
 	_fileContentType = "text/html";
 	if (status == 404)
 		return (FileToString("error/404.html"));
+	else if (status == 405)
+		return (FileToString("error/405.html"));
 	else
 	{
 		ostringstream body_os;

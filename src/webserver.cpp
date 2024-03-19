@@ -15,11 +15,11 @@ void sigHandler(int signum)
 }
 
 std::string testHttp(const std::string &request/* , Config & config */) {
-    // std::cout << "testHttp called" << std::endl;
-    if (request.empty()) {
-        // std::cout << "request is empty" << std::endl;
-        return "";
-    } else {
+    std::cout << "testHttp called" << std::endl;
+    // if (request.empty()) {
+    //     std::cout << "request is empty" << std::endl;
+    //     return "";
+    // } else {
 		// cout << configfile._root << endl;
 		cout << MAG << "-------request----->>" << NORM << endl;
 		Request		httpRequest(request, configfile);
@@ -29,7 +29,7 @@ std::string testHttp(const std::string &request/* , Config & config */) {
 		// cout << BLUE << "RESPONSE:\n" << response << NORM <<endl;
 		cout << MAG << "<<------------------------" << NORM << endl;
 		return response;
-    }
+    // }
 }
 
 uint32_t	extractPort(struct sockaddr* address) 

@@ -11,6 +11,7 @@ string	Request::MultipartName = ".empty.";
 Request::Request(const string & request, configServer & configfile):  _configfile(configfile), _request(request), _filename(""), _sizeInRange(true)
 {
 	// cout << request << endl;
+	cout << "request" << endl;
 	parseMainHeader();
 	if (_standardRequest)
 	{

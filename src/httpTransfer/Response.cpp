@@ -5,7 +5,7 @@
 StatusCode Response::_statusCode = StatusCode();
 
 Response::Response(Request & request, configServer & configfile): _configfile(configfile),
-	_request(request), _status(500), _statusInfo(""), _httpVersion("HTTP/1.1")
+	_request(request), _status(501), _statusInfo(""), _httpVersion("HTTP/1.1")
 {
 	// cout << "in Response " << endl;
 	_URI = addRootPath(_request.getURI());
@@ -21,7 +21,7 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 	else if (request.getMethod() == "HEAD" && methodAllowed())
 		processGet();
 	else 
-		formResponse(_status, _statusInfo);
+		formResponse(_status, "");
 	cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
 }
 

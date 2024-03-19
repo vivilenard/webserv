@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   socketManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: peter <peter@student.42.fr>                +#+  +:+       +#+        */
+/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:05:28 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/11 11:36:13 by peter            ###   ########.fr       */
+/*   Updated: 2024/03/19 14:48:16 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "socketManager.hpp"
 
 std::map<int, struct sockData>		socketManager::_sockets;
-unsigned long						socketManager::_keepAlive = 100;
+unsigned long						socketManager::_keepAlive = 0; //change here if needed
 
 void	socketManager::start(InterfaceFunction interfaceFunction) {
 	std::cout << "socketManager::Starting..." << std::endl;

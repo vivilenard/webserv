@@ -56,6 +56,7 @@ bool Response::incorrectMimeType(const string & contentType)
 
 int Response::handleMultipart()
 {
+	cout << "handle Multipart" << endl;
 	formResponse(100, _statusInfo);
 	if (Request::MultipartApproved == -1)
 	{
@@ -69,7 +70,6 @@ int Response::handleMultipart()
 
 int	Response::createFile(std::string & path, const std::string & content)
 {
-	// cout << "create file" << endl;
 	fstream file;
 	string filepath = path;
 	//config filepath for upload

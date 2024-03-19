@@ -87,9 +87,7 @@ void Response::formResponse(const int & status, const string & statusInfo)
 	string body;
 
 	if (_cgiScript.empty() == false)
-	{
 		body = _cgiScript;
-	}
 	else if (status == 200)
 		body = _fileContent;
 	else if(status != 200)
@@ -108,15 +106,34 @@ void Response::formResponse(const int & status, const string & statusInfo)
 	// cout << ORANGE << _status << NORM << endl;
 }
 
+
+const string FileToString(const string & filepath)
+{
+	string str = "";
+	ifstream file(filepath.c_str());
+	if (file)
+	{
+		stringstream buffer;
+		buffer << file.rdbuf();
+		str = buffer.str();
+	}
+	file.close();
+	return str;
+}
+
 const string Response::createErrorBody(const int & status, const string & statusInfo)
 {
-	ostringstream body_os;
 	_fileContentType = "text/html";
-
-	body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
-	if (!statusInfo.empty())
-		body_os << "<h3> " << statusInfo << "</h3>";
-	return body_os.str();
+	if (status == 404)
+		return (FileToString("error/404.html"));
+	else
+	{
+		ostringstream body_os;
+		body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
+		if (!statusInfo.empty())
+			body_os << "<h3> " << statusInfo << "</h3>";
+		return body_os.str();
+	}
 }
 
 

@@ -1,1 +1,0 @@
-curl -X POST -H "Content-Type: text/plain" --data "Hello" localhost:8000/upload/hi.txt

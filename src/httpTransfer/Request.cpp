@@ -10,6 +10,7 @@ string	Request::MultipartName = ".empty.";
 
 Request::Request(const string & request, configServer & configfile):  _configfile(configfile), _request(request), _filename(""), _sizeInRange(true)
 {
+	// cout << request << endl;
 	parseMainHeader();
 	if (_standardRequest)
 	{
@@ -141,6 +142,7 @@ bool	Request::handleMultipart()
 
 bool	Request::parseMultipart(const string & chunk)
 {
+	cout << "parse Multipart" << endl;
 	istringstream s(chunk);
 	string body;
 	string line;

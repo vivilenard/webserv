@@ -24,7 +24,7 @@ void Response::processPost()
 		cout << ORANGE << "JOO: " << incorrectMimeType(_request.getHeaders()["Content-Type"]) << endl; return; }
 	else if (!createFile(_URI, _request.getBody()))
 		{ _status = 400; _statusInfo = "Please include a valid path. File could not be created"; }
-	formResponse(_status, _statusInfo);
+	formResponse(_status, "");
 }
 
 bool Response::incorrectMimeType(const string & contentType)

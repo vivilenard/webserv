@@ -22,7 +22,9 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 		processGet();
 	else 
 		formResponse(_status, "");
-	cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
+	if (request.getMethod() == "POST")
+		cout << BLUE << _response << NORM << endl;
+	// cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
 }
 
 bool Response::methodAllowed()
@@ -97,7 +99,7 @@ void Response::formResponse(const int & status, const string & statusInfo)
 	os << _httpVersion << " " << STATUSCODE[status] << "\r\n";
 	if (status != 100)
 	{
-		os << "Content-Type:" 		<< _fileContentType << "\r\n";
+		os << "Content-Type: " 		<< _fileContentType << "\r\n";
 		os << "Content-Length: " 	<< body.length() << "\r\n";
 		os << "\r\n";
 		os << body;

@@ -57,8 +57,9 @@ void	ConfigFile::addIndex(configServer &server, std::string token, std::istrings
 
 void ConfigFile::readFile(std::string &fileName, std::map<std::string, configServer> & config)
 {
- 	std::ifstream inputFile(fileName.c_str());
- 	configServer tmpServer;
+	std::ifstream inputFile(fileName.c_str());
+	configServer tmpServer;
+	bool full = false;
 	tmpServer = initializeObj();
 	this->_mimeTypes = parseMime();
 	if (_mimeTypes.empty())
@@ -73,16 +74,27 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 			std::string token;
 			std::istringstream find(line);
 			find >> token;
+			if (token == "server" && full)
+			{
+				config[tmpServer._serverName] = tmpServer;
+				serverStatus(tmpServer);
+				full = false;
+				tmpServer = initializeObj();
+			}
 			addServerName(tmpServer, token, find);
 			addListen(tmpServer, token, find);
 			if (!tmpServer.validFormat )
 				break ;
 			addRoot(tmpServer, token, find);
 			addIndex(tmpServer, token, find);
-			setLocation(tmpServer,inputFile, token,line, find);
-			config[tmpServer._serverName] = tmpServer;
+			if (!full)
+				full = setLocation(tmpServer,inputFile, token,line, find);
 		}
-		serverStatus(tmpServer);
+		if (full && config.find(tmpServer._serverName) == config.end())
+		{
+			config[tmpServer._serverName] = tmpServer;
+			serverStatus(tmpServer);
+		}
 	}
 	else
  		std::cout << "wrong format" << std::endl;

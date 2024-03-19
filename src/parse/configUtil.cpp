@@ -136,7 +136,10 @@ int	addPort(configServer &server, std::string address)
 		return (-1);
 	}
 	if (checkPortValue(port))
+	{
+		server._listen = port;
 		return (port);
+	}
 	else
 	{
 		server.validFormat = false;

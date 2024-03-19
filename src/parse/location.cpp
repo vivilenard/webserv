@@ -51,7 +51,30 @@ std::string	ConfigFile::addNameLocation(configServer &server, std::string token,
 	return ("");
 }
 
-void	ConfigFile::setLocation(configServer &server, std::ifstream &inputFile,
+void ConfigFile::hasRedirection(configServer &server, std::string dir, std::string rule)
+{
+	std::string divider;
+	std::istringstream ruleStream(rule);
+	std::string redirectionPath;
+	std::string redirLine;
+	if (ruleStream >> divider)
+	{
+		if (divider == "redirection")
+		{
+			std::getline(ruleStream, redirLine);
+			std::istringstream redirStream(redirLine);
+			if (redirStream >> redirectionPath)
+			{
+				server._locations[dir]._redirect = redirectionPath;
+			}
+			else
+				server._locations[dir]._redirect = "";
+
+		}
+	}
+}
+
+bool	ConfigFile::setLocation(configServer &server, std::ifstream &inputFile,
 										std::string token, std::string &line, std::istringstream &find)
 {
 	if (token == "location")
@@ -64,11 +87,14 @@ void	ConfigFile::setLocation(configServer &server, std::ifstream &inputFile,
 			std::istringstream find1(line2);
 			find1 >> token1;
 			setMethod(server, dir, line2);
+			hasRedirection(server, dir,line2);
 			if (token1 == "}")
 			{
 				line += line2;
 				break ;
 			}
 		}
+		return (true);
 	}
+	return (false);
 }

@@ -36,6 +36,7 @@ struct configServer
 	{
 		std::string 		_name;
 		std::string 		_index;
+		std::string 		_redirect;
 		bool				_post;
 		bool				_get;
 		bool				_delete;
@@ -70,11 +71,12 @@ public:
 													   				std::istringstream &find);
 	void								setMethod(configServer &server, std::string dir,
 												  std::string rule);
-	void								setLocation(configServer &server, std::ifstream &inputFile,
+	bool								setLocation(configServer &server, std::ifstream &inputFile,
 													std::string token, std::string &line, std::istringstream &find);
 	MAP 								parseMime();
 	void								createKeypairs(MAP & map, std::string s1, std::string s2);
 	sockaddr* 							convertToSockAddr(const std::string& ipAddress, int port);
+	void 								hasRedirection(configServer &server, std::string dir, std::string rule);
 	~ConfigFile();
 };
 

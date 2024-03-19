@@ -11,7 +11,7 @@ configServer configfile;
 std::string testHttp(const std::string &request/* , Config & config */) {
     // std::cout << "testHttp called" << std::endl;
     if (request.empty()) {
-        std::cout << "request is empty" << std::endl;
+        // std::cout << "request is empty" << std::endl;
         return "";
     } else {
 		// cout << configfile._root << endl;

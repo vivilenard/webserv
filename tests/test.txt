@@ -1,0 +1,24 @@
+HOSTNAME RESOLVING:
+    curl --resolve example.com:80:127.0.0.1 http://example.com/
+    curl --resolve test.com:80:127.0.0.1 http://test.com/
+
+
+REQUESTS
+    curl http://localhost:8000
+    curl -X POST -H "Content-Type: text/plain" --data "Hello" localhost:8000/upload/hi.txt !!!!
+    curl -X POST -H "Content-Type: plain/text" --data "Hello" localhost:8000/upload/hi.txt !!!!
+    curl -X DELETE -d 'filename=hi.txt' 'http://localhost:8000/upload/hi.txt'
+    curl -v -X UNKNOWN http://localhost:8000
+
+FILE upload
+	curl -X POST --data-binary @webserv/Makefile http://localhost:8000
+    curl -F 'filename=@Makefile' http://localhost:8000/upload/save_file.py  !!!!
+    curl -v -X GET http://localhost/upload/some.html
+    curl -v -X DELETE -d 'filename=Makefile' 'http://localhost/upload/save_file.py'
+
+SIEGE
+    siege -b -c10 -r1 http://localhost:8000/empty
+    siege -b -c10 -r1 http://localhost:8000/test.py
+
+To do:
+	- test HEAD

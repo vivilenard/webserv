@@ -5,7 +5,7 @@
 StatusCode Response::_statusCode = StatusCode();
 
 Response::Response(Request & request, configServer & configfile): _configfile(configfile),
-	_request(request), _status(500), _statusInfo(""), _httpVersion("HTTP/1.1")
+	_request(request), _status(501), _statusInfo(""), _httpVersion("HTTP/1.1")
 {
 	// cout << "in Response " << endl;
 	_URI = addRootPath(_request.getURI());
@@ -21,7 +21,7 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 	else if (request.getMethod() == "HEAD" && methodAllowed())
 		processGet();
 	else 
-		formResponse(_status, _statusInfo);
+		formResponse(_status, "");
 	cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
 }
 
@@ -87,9 +87,7 @@ void Response::formResponse(const int & status, const string & statusInfo)
 	string body;
 
 	if (_cgiScript.empty() == false)
-	{
 		body = _cgiScript;
-	}
 	else if (status == 200)
 		body = _fileContent;
 	else if(status != 200)
@@ -108,15 +106,34 @@ void Response::formResponse(const int & status, const string & statusInfo)
 	// cout << ORANGE << _status << NORM << endl;
 }
 
+
+const string FileToString(const string & filepath)
+{
+	string str = "";
+	ifstream file(filepath.c_str());
+	if (file)
+	{
+		stringstream buffer;
+		buffer << file.rdbuf();
+		str = buffer.str();
+	}
+	file.close();
+	return str;
+}
+
 const string Response::createErrorBody(const int & status, const string & statusInfo)
 {
-	ostringstream body_os;
 	_fileContentType = "text/html";
-
-	body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
-	if (!statusInfo.empty())
-		body_os << "<h3> " << statusInfo << "</h3>";
-	return body_os.str();
+	if (status == 404)
+		return (FileToString("error/404.html"));
+	else
+	{
+		ostringstream body_os;
+		body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
+		if (!statusInfo.empty())
+			body_os << "<h3> " << statusInfo << "</h3>";
+		return body_os.str();
+	}
 }
 
 

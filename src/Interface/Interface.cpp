@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Interface.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:01:41 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/11 10:07:20 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/19 13:44:37 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ void	Interface::interface(int sock, struct sockData data) {
 			socketManager::removeSocket(sock);
 			return ;	// remove client
 		}
-		std::cout << "response added to buffer for socket: " << sock << std::endl;
+		if (PRINT) { std::cout << "response added to buffer for socket: " << sock << std::endl; }
 		_outputBuffer.insert(std::pair<int, std::string>(sock, response));
 	}
 	else if (data.write && _outputBuffer.find(sock) != _outputBuffer.end()) {
 		socketManager::detectActivity(sock);
-		std::cout << "writing to socket: " << sock << std::endl;
+		if (PRINT) { std::cout << "writing to socket: " << sock << std::endl; }
 		std::string		response = _outputBuffer[sock];
 		if (writeToSocket(sock, response)) {
 			std::cout << "writeToSocket failed" << std::endl;

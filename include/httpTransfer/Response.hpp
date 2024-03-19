@@ -16,6 +16,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstring>
+#include <fstream>
+#include <sstream>
 
 struct configServer;
 

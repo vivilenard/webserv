@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
+#    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/18 16:29:40 by vlenard          ###   ########.fr        #
+#    Updated: 2024/03/19 17:48:20 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,23 +23,36 @@ ifeq ($(OS_LIKE), Debian)
 PRINT	= echo
 endif
 
-CC		= c++
+# Submodules
+SOCKETMANAGER_DIR	:= ./socketManager
+SOCKETMANAGER		:= $(SOCKETMANAGER_DIR)/libsocketManager.a
 
-# -MMD and -MP are ussed to create dependecy files
-CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -fsanitize=address -std=c++98 -pedantic $(INC_DIR)
-
-INC_DIR	= 	-I./include/ \
-			-I./include/socketManager/ \
-			-I./include/Interface/ \
+INC_DIR		:= 	-I./include/ \
 			-I./parse/ \
+			-I$(SOCKETMANAGER_DIR)/include \
 			# -I./include/config/ \
 			# -I./include/error/ \
 			# -I./include/httpTransfer/ \
 
+ifeq ($(UNAME), Darwin)
+SUDO		:= 
+SSLCFLAGS	:= -I$(shell brew --prefix)/opt/openssl@3/include/
+SSLLDFLAGS	:= -L$(shell brew --prefix)/opt/openssl@3/lib/ -lssl -lcrypto
+CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(SSLCFLAGS) $(INC_DIR)
+LDFLAGS		:= $(SSLLDFLAGS) -L$(SOCKETMANAGER_DIR) -lsocketManager
+else ifeq ($(UNAME), Linux)
+SUDO		:= sudo
+CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
+LDFLAGS		:= -lssl -lcrypto -L./$(SOCKETMANAGER_DIR) -lsocketManager
+endif
+
+CC		= c++
+
+# -MMD and -MP are ussed to create dependecy files
+# CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 -pedantic $(INC_DIR)
+
 # add source files with header with the same name
-SOURCE	=	socketManager.cpp \
-			Interface.cpp \
-			# Config.cpp \
+SOURCE	=	# Config.cpp \
 			# Error.cpp \
 			# httpTransfer.cpp
 
@@ -50,9 +63,6 @@ HEADER	+=
 
 # add source files without header with the same name and the file with the main function has to be the first in the list
 SRCS	=	webserver.cpp \
-			socketManagerTools.cpp \
-			socketSEPOLL.cpp \
-			InterfaceTools.cpp \
 			Request.cpp \
 			Response.cpp \
 			Status.cpp \
@@ -79,32 +89,44 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 
 
 # in case of subdirectories in the src folder add them here
-VPATH := src include src/socketManager src/Interface src/config src/error src/httpTransfer src/parse
+VPATH := src include src/config src/error src/httpTransfer src/parse
 
 all:
+	echo $(UNAME) $(OS) $(OS_LIKE)
 	@$(MAKE) -s proname_header
 	@$(MAKE) -s std_all
 
-std_all:
-	@$(PRINT) "%s$(RESET)\n" "$(FPurple)Compiling $(PRONAME)"
-	@-include $(OBJS:.o=.d)
+std_all: $(SOCKETMANAGER)
+	@$(PRINT) "$(CLEARLINE)%s$(RESET)\n" "$(FPurple)Compiling $(PRONAME)"
+	@-include $(OBJS:.o=.d) > /dev/null 2>&1
 	@$(MAKE) -s $(PRONAME)
-	@$(PRINT) "$(SETCURUP)$(CLEARLINE)$(SETCURUP)$(CLEARLINE)\r$(FPurple)%-21s$(FGreen)$(TICKBOX)$(RESET)\n" "Compiling $(PRONAME)"
+	@$(PRINT) "$(SETCURUP)$(CLEARLINE)\r$(FPurple)%-33s$(FGreen)$(TICKBOX)$(RESET)\n" "Compiling $(PRONAME)"
 
-$(PRONAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(PRONAME)
+$(PRONAME): $(OBJS) $(SOCKETMANAGER)
+# @printf "\n\n$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(PRONAME)\n\n"
+	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(PRONAME)
 
 $(OBJ_DIR)%.o: %.cpp
 ifeq ($(shell test -d $(OBJ_DIR) || echo $$?), 1)
 	@$(PRINT) "$(CLEARLINE)\r$(Yellow)creting obj dir$(RESET)"
 	@mkdir -p $(OBJ_DIR)
 endif
-	@$(PRINT) "$(CLEARLINE)\r%-28s$(RESET)" "$(Yellow)Compiling $< ..."
+	@$(PRINT) "$(CLEARLINE)\r%-40s$(RESET)" "$(Yellow)Compiling $< ..."
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(SOCKETMANAGER):
+ifeq ($(shell test $(SOCKETMANAGER_DIR)/Makefile || echo $$?), 1)
+	@$(PRINT) "$(CLEARLINE)\r%-40s$(RESET)" "$(FCyan)Initializing submodule"
+	@git submodule update --init > /dev/null
+	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"
+endif
+	@$(PRINT) "$(CLEARLINE)\r%-40s\n$(RESET)" "$(FCyan)Compiling submodule"
+	@$(MAKE) std_all -s -C $(SOCKETMANAGER_DIR)
+	@$(PRINT) "$(SETCURUP)$(SETCURUP)$(SETCURUP)%-40s$(RESET)$(FGreen)$(TICKBOX)$(RESET)\n\n\n" "$(FCyan)Compiling submodule"
 
 clean:
 	@$(MAKE) -s proname_header
-	@$(PRINT) "%-28s$(RESET)" "$(FRed)Cleaning $(PRONAME)"
+	@$(PRINT) "%-40s$(RESET)" "$(FRed)Cleaning $(PRONAME)"
 	@$(MAKE) -s std_clean
 	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"
 
@@ -114,7 +136,7 @@ fclean:
 
 re:
 	@$(MAKE) -s proname_header
-	@$(MAKE) -s cleanator
+	@$(MAKE) -s cleanator 2> /dev/null
 	@$(MAKE) -s std_all
 
 run: re
@@ -150,10 +172,11 @@ std_clean:
 	@rm -rf $(OBJ_DIR)
 
 cleanator:
-	@$(PRINT) "%-28s$(RESET)" "$(FRed)FCleaning $(PRONAME)"
+	@$(PRINT) "%-40s$(RESET)\n" "$(FRed)FCleaning $(PRONAME)"
 	@rm -rf $(OBJ_DIR)
 	@rm -f $(PRONAME)
-	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"
+	@$(MAKE) cleanator -s -C socketManager
+	@$(PRINT) "$(SETCURUP)$(SETCURUP)$(CLEARLINE)%-40s$(FGreen)$(TICKBOX)$(RESET)\n\n" "$(FRed)FCleaning $(PRONAME)"
 
 proname_header:
 	@$(PRINT) "$(FYellow)╔══════════════════════╗\n\

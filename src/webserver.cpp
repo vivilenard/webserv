@@ -1,6 +1,5 @@
 #include "socketManager.hpp"
 #include "Interface.hpp"
-// #include "../parse/Config.hpp"
 #include "../include/httpTransfer/Request.hpp"
 #include "../include/httpTransfer/Response.hpp"
 #include "parse/configFile.hpp"
@@ -73,20 +72,22 @@ int main(int argc, char **argv)
 		cout << BACK << "Webserver is running with a default config file." << NORM << endl;
 		cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
 	}
-	// int numWorker = 4;
-	// parsing here
-	// add application map to interface before forking the workers
-	// applicationInterface::addApplication(80, /*&http::application*/);
-	//Config config;
-	// add sockets
-	{
+	// for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
 		protocolFunction testFunction = &testHttp;
 		Interface::addProtocol(extractPort(config.begin()->second._socketAddress.interfaceAddress), testFunction);
-		socketManager::addSocket(config.begin()->second._socketAddress);
-		// add all the things !
-		// socketManager::addSocket("0.0.0.0", (config.begin()++)->second._listen, IPV4, TCP);
-	}
+		// for () {
+			socketManager::addServerSocket(config.begin()->second._socketAddress);
+		// }
+	// }
 	InterfaceFunction interfaceFunction = &Interface::interface;
-	socketManager::start(interfaceFunction);
-	return 0;
+	for (int i = 0; i < 10; i++) {
+		try {
+			socketManager::start(interfaceFunction);
+		}
+		catch (std::exception &e) {
+			std::cout << "Exception: " << e.what() << std::endl;
+			std::cout << "Restarting server" << std::endl;
+		}
+	}
+	return 1;
 }

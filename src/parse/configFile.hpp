@@ -26,7 +26,7 @@ struct configServer
 	std::string 			_serverName;
 	std::string 			_include;
 	int						_listen;
-	struct sockParameter	_socketAddress;
+	struct socketParameter	_socketAddress;
 	std::string 			_address;
 	std::string 			_root;
 	bool					validFormat;

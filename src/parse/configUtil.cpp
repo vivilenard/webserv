@@ -18,37 +18,41 @@ configServer ConfigFile::initializeObj()
 sockaddr* ConfigFile::convertToSockAddr(const std::string& ipAddress, int port)
 {
 	std::cout << "ipAddress---> " << ipAddress << std::endl;
-	std::cout << "Port---> " << port << std::endl;
-	if (port < 0 || port > 0XFFFF)
-		throw std::runtime_error("ConfigFile:	convertToSockAddr:	Invalid port number");
+	std::cout << "Port--------> " << port << std::endl;
+	if (port < 0 || port > 0xFFFF)
+		throw std::runtime_error("ConfigFile: convertToSockAddr: Invalid port number");
+
 	struct addrinfo hints, *res;
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_family = AF_UNSPEC; // Allow IPv4 or IPv6
+	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	int status = getaddrinfo(ipAddress.c_str(), NULL, &hints, &res);
 	if (status != 0)
-		throw std::runtime_error("ConfigFile:	convertToSockAddr:	Failed to get address info: ");
+		throw std::runtime_error("ConfigFile: convertToSockAddr: Failed to get address info: ");
+
+	struct sockaddr_in* ipv4 = new sockaddr_in;
+	struct sockaddr_in6* ipv6 = new sockaddr_in6;
 	for (struct addrinfo* p = res; p != NULL; p = p->ai_next) 
 	{
 		if (p->ai_family == AF_INET) 
-		{ // IPv4
-			struct sockaddr_in* ipv4 = (struct sockaddr_in*)p->ai_addr;
-			struct sockaddr_in* ipv4Copy = new sockaddr_in(*ipv4);
+		{
+			memcpy(ipv4, p->ai_addr, sizeof(sockaddr_in));
+			ipv4->sin_port = htons(port);
 			freeaddrinfo(res);
-			ipv4Copy->sin_port = htons(port); // Convert port to network byte order
-			return (struct sockaddr*)ipv4Copy;
-		} 
+			delete ipv6;
+			return reinterpret_cast<sockaddr*>(ipv4);
+		}
 		else if (p->ai_family == AF_INET6) 
-		{ // IPv6
-			struct sockaddr_in6* ipv6 = (struct sockaddr_in6*)p->ai_addr;
-			struct sockaddr_in6* ipv6Copy = new sockaddr_in6(*ipv6);
+		{
+			memcpy(ipv6, p->ai_addr, sizeof(sockaddr_in6));
+			ipv6->sin6_port = htons(port);
 			freeaddrinfo(res);
-			ipv6->sin6_port = htons(port); // Convert port to network byte order
-			return (struct sockaddr*)ipv6Copy;
+			delete ipv4;
+			return reinterpret_cast<sockaddr*>(ipv6);
 		}
 	}
 	freeaddrinfo(res);
-	throw std::runtime_error("ConfigFile:	convertToSockAddr:	Failed to convert address to sockaddr");
+	throw std::runtime_error("ConfigFile: convertToSockAddr: Failed to convert address to sockaddr");
 }
 
 bool dotCheck(int *dot, std::string address, int idx)
@@ -162,6 +166,7 @@ void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
 		int port = addPort(server,address);
 		server._socketAddress.interfaceAddress = convertToSockAddr(socketAddress, port);
 		server._socketAddress.protocol = TCP;
+		server._socketAddress.ssl = false;
 		if (server.validFormat == false)
 			return ;
 	}

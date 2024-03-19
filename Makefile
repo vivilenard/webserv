@@ -6,9 +6,11 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/19 17:48:20 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/19 18:38:37 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+# openssl req -new -newkey rsa:2048 -nodes -keyout test.key -subj "/C=DE/ST=Baden-Württemberg /L=Heilbronn /O=42/CN=42heilbronn.com" -x509 -days 365 -out test.crt && cat test.key test.crt >> test.pem
 
 include color.mk
 
@@ -137,7 +139,7 @@ fclean:
 re:
 	@$(MAKE) -s proname_header
 	@$(MAKE) -s cleanator 2> /dev/null
-	@$(MAKE) -s std_all
+	@$(MAKE) -s std_all 2> /dev/null
 
 run: re
 	./$(PRONAME)

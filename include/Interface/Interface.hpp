@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Interface.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/08 07:43:53 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/19 13:44:15 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "socketManager.hpp"
 
 # define BUFFER_SIZE 1024
+# define PRINT false
 
 typedef std::string (*protocolFunction)(const std::string &request);
 

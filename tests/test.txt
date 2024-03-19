@@ -6,13 +6,12 @@ HOSTNAME RESOLVING:
 REQUESTS
     curl http://localhost:8000
     curl -X POST -H "Content-Type: text/plain" --data "Hello" localhost:8000/upload/hi.txt !!!!
-    curl -X POST -H "Content-Type: plain/text" --data "Hello" localhost:8000/upload/hi.txt !!!!
-    curl -X DELETE -d 'filename=hi.txt' 'http://localhost:8000/upload/hi.txt'
+    curl -X DELETE 'http://localhost:8000/upload/hi.txt'
     curl -v -X UNKNOWN http://localhost:8000
 
-FILE upload
+FILE UPLOAD   ???????????  Not need though, can upload file via site
 	curl -X POST --data-binary @webserv/Makefile http://localhost:8000
-    curl -F 'filename=@Makefile' http://localhost:8000/upload/save_file.py  !!!!
+    curl -F 'filename=@Makefile' http://localhost:8000/upload/save_file.py  !!!!?????
     curl -v -X GET http://localhost/upload/some.html
     curl -v -X DELETE -d 'filename=Makefile' 'http://localhost/upload/save_file.py'
 

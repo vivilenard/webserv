@@ -39,7 +39,7 @@ class Request
 	bool			_sizeInRange;
 	// string			parseHeader(string s);
 
-	void			parseHeaders(Headers & headers);
+	void			parseHeaders(Headers & headers, const string & chunk);
 	int				parseBody(string & body, const string & chunk, const int & length);
 	PAIR 			parsePair(string line);
 	void			identifyRequest();
@@ -52,6 +52,7 @@ class Request
 	const string	setBoundaryTogether(const string & bound, const string & type);
 	void			clearMultipartData();
 	void			setFilename();
+	void			setName(const string & attr, Headers & attributes);
 	void			packTogether();
 	bool			checkRequestSize();
 	void			parseContentAttributes(Headers & attributes, const string & s);

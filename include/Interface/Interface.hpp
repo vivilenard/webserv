@@ -6,7 +6,7 @@
 /*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/19 13:44:15 by vlenard          ###   ########.fr       */
+/*   Updated: 2024/03/20 14:03:27 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "socketManager.hpp"
 
 # define BUFFER_SIZE 1024
-# define PRINT false
+# define PRINT true
 
 typedef std::string (*protocolFunction)(const std::string &request);
 
@@ -26,7 +26,7 @@ class Interface {
 		static void						interface(int sock, sockData sockData);
 
 	private:
-		static bool						readFromSocket(int sock, std::string &request);
+		static int						readFromSocket(int sock, std::string &request);
 		static bool						passRequest(std::string &request, std::string &response, uint32_t port);
 		static bool						writeToSocket(int sock, std::string &response);
 

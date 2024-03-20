@@ -18,6 +18,8 @@ std::string testHttp(const std::string &request/* , Config & config */) {
 		cout << MAG << "-------request----->>" << NORM << endl;
 		Request		httpRequest(request, configfile);
 		// cout << httpRequest << endl;
+		if (!httpRequest.boundary.empty())
+			return "";
 		Response	httpResponse(httpRequest, configfile);
 		std::string response = httpResponse.getResponse();
 		// cout << BLUE << "RESPONSE:\n" << response << NORM <<endl;

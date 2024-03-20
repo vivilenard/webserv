@@ -1,8 +1,8 @@
-#include "../socketManager/include/socketManager.hpp"
-#include "../socketManager/include/Interface.hpp"
-#include "../include/httpTransfer/Request.hpp"
-#include "../include/httpTransfer/Response.hpp"
-#include "parse/configFile.hpp"
+#include "socketManager.hpp"
+#include "Interface.hpp"
+#include "Request.hpp"
+#include "Response.hpp"
+#include "configFile.hpp"
 
 CONFIG config;
 configServer configfile;

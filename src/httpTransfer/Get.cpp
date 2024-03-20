@@ -1,5 +1,5 @@
-#include "../../include/httpTransfer/Response.hpp"
-#include "../../include/httpTransfer/Request.hpp"
+#include "Response.hpp"
+#include "Request.hpp"
 
 void	Response::processGet()
 {

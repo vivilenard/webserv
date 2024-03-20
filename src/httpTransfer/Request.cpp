@@ -1,5 +1,5 @@
-#include "../../include/httpTransfer/Request.hpp"
-#include "../parse/configFile.hpp"
+#include "Request.hpp"
+#include "configFile.hpp"
 
 int		Request::MultipartApproved = 0;
 string	Request::boundary = "bound";

@@ -1,4 +1,4 @@
-#include "../../include/httpTransfer/Response.hpp"
+#include "Response.hpp"
 
 #define STATUSCODE _statusCode.getStati()
 

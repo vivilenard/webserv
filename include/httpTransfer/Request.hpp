@@ -1,8 +1,8 @@
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
-#include "../webserv.hpp"
-#include "../../src/parse/configFile.hpp"
+#include "webserv.hpp"
+#include "configFile.hpp"
 
 
 #include <fstream>

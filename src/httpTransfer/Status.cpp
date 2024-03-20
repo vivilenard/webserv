@@ -1,4 +1,4 @@
-#include "../../include/httpTransfer/Status.hpp"
+#include "Status.hpp"
 
 StatusCode::StatusCode()
 {

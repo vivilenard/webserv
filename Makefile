@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/20 18:01:53 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/20 19:26:39 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,11 +30,11 @@ SOCKETMANAGER_DIR	:= ./socketManager
 SOCKETMANAGER		:= $(SOCKETMANAGER_DIR)/libsocketManager.a
 
 INC_DIR		:= 	-I./include/ \
-			-I./parse/ \
-			-I$(SOCKETMANAGER_DIR)/include \
-			# -I./include/config/ \
-			# -I./include/error/ \
-			# -I./include/httpTransfer/ \
+				-I./include/httpTransfer/ \
+				-I$(SOCKETMANAGER_DIR)/include \
+				# -I./include/config/ \
+				# -I./include/error/ \
+				# -I./include/httpTransfer/ \
 
 ifeq ($(UNAME), Darwin)
 SUDO		:= 
@@ -65,6 +65,8 @@ HEADER	+=
 
 # add source files without header with the same name and the file with the main function has to be the first in the list
 SRCS	=	webserver.cpp \
+			interface.cpp \
+			interfaceTools.cpp \
 			Request.cpp \
 			Response.cpp \
 			Status.cpp \
@@ -91,7 +93,7 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 
 
 # in case of subdirectories in the src folder add them here
-VPATH := src include src/config src/error src/httpTransfer src/parse
+VPATH := src include src/config src/error src/httpTransfer src/parse src/interface
 
 all:
 	@$(MAKE) -s proname_header

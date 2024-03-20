@@ -4,7 +4,7 @@
 #include "Request.hpp"
 // #include "../../parse/Config.hpp"
 #include "Status.hpp"
-#include "../../src/parse/configFile.hpp"
+#include "configFile.hpp"
 
 #include <map>
 #include <sys/types.h>

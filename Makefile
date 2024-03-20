@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/20 14:09:28 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/20 17:03:55 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -117,7 +117,7 @@ endif
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(SOCKETMANAGER):
-ifeq ($(shell test $(SOCKETMANAGER_DIR)/Makefile || echo $$?), 1)
+ifeq ($(shell test -f $(SOCKETMANAGER_DIR)/Makefile || echo $$?), 1)
 	@$(PRINT) "$(CLEARLINE)\r%-40s$(RESET)" "$(FCyan)Initializing submodule"
 	@git submodule update --init > /dev/null
 	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"

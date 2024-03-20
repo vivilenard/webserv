@@ -7,6 +7,13 @@
 CONFIG config;
 configServer configfile;
 
+void sigHandler(int signum)
+{
+	std::cout << "shutting down..." << std::endl;
+	socketManager::stop();
+	exit(signum);
+}
+
 std::string testHttp(const std::string &request/* , Config & config */) {
     // std::cout << "testHttp called" << std::endl;
     if (request.empty()) {
@@ -62,6 +69,7 @@ void printConfig(string name, configServer server)
 
 int main(int argc, char **argv)
 {
+	signal(SIGINT, &sigHandler);
 	if (!readConfig(argc, argv, config))
 		return 1;
 	configfile = config.begin()->second;

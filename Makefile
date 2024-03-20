@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/19 18:38:37 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/20 14:09:28 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -169,6 +169,9 @@ logs:
 
 restart_docker:
 	docker restart webserv
+
+siege:
+	brew install siege
 
 std_clean:
 	@rm -rf $(OBJ_DIR)

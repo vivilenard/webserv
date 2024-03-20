@@ -7,24 +7,33 @@ string	Request::MultipartBody = "";
 int		Request::McontentLength = 0;
 string	Request::MultipartContentType = "";
 string	Request::MultipartName = ".empty.";
+string	Request::MultipartURI = "";
 
 Request::Request(const string & request, configServer & configfile):  _configfile(configfile), _request(request), _filename(""), _sizeInRange(true)
 {
 	// cout << "request" << endl;
 	// cout << GREEN << request << NORM << endl;
-	parseMainHeader();
+	identifyRequest();
 	if (_standardRequest)
 	{
+		// cout << "is standard request" << endl;
+		parseMainHeader();
 		parseHeaders(_headers, _request);
 		parseBody(_body, _request, atoi(_headers["Content-Length"].c_str()));
 	}
+	// cout << "URI: " << _URI << endl;
+	// cout << "mulitURI: " << MultipartURI << endl;
+
 	checkRequestSize();
 	handleMultipart();
+	// cout << "URI: " << _URI << endl;
 }
 
 void	Request::parseMainHeader()
 {
 	// cout << "parse Header" << endl;
+	// if (!_standardRequest)
+	// 	return ;
 	istringstream istream(_request);
 	getline(istream, _method, ' ');
 	getline(istream, _URI, ' ');
@@ -41,13 +50,16 @@ void	Request::parseMainHeader()
 	// {
 	// 	_URI.append(_configfile._index);
 	// }
-	identifyRequest();
 }
 
 
 void Request::identifyRequest()
 {
-	if (_httpVersion.find("HTTP/") != string::npos)
+	// if (_httpVersion.find("HTTP/") != string::npos)
+	istringstream istream(_request);
+	string buffer;
+	getline(istream, buffer);
+	if (buffer.find("HTTP/") != string::npos)
 	{
 		_standardRequest = true;
 		clearMultipartData();
@@ -120,17 +132,21 @@ bool	Request::handleMultipart()
 	Headers headers;
 	if (Request::boundary.empty())
 		return false;
-	cout << NORM << "HANDLE MULTIPART" << NORM << endl;
+	cout << RED << "MULTIPART" << NORM << endl;
 	// cout << RED << _body << NORM << endl;
-	if (_standardRequest && _body.length() == 0)
-		return true;
-	else if (_standardRequest)
+	if (_standardRequest)
 	{
+		MultipartURI = _URI;
+		if (_body.length() == 0)
+			return true;
 		// cout << "parsing body" << endl;
 		parseMultipart(_body); //shoult look if there is sth before boundary
 	}
 	else
+	{
+		_URI = MultipartURI;
 		parseMultipart(_request);
+	}
 	return true;
 }
 
@@ -152,11 +168,6 @@ bool	Request::parseMultipart(const string & chunk)
 			return (MultipartApproved = -1, false);
 		}
 		parseHeaders(_headers, chunk); //adds headers to existing ones
-		// Headers::iterator it = _headers.begin();
-		// for (; it != _headers.end(); it++)
-		// {
-		// 	cout << it->first << " " << it->second << endl;
-		// }
 		setFilename();
 		getline(s, line, '\n'); //should be empty line
 		parseBody(body, chunk, McontentLength - findDoubleNewline(_request));
@@ -171,8 +182,12 @@ bool	Request::parseMultipart(const string & chunk)
 
 void Request::packTogether()
 {
+	// cout << "---" << endl << MultipartBody << endl << "---" << endl;
+	// cout << boundary << endl;
+	// cout << setBoundaryTogether(boundary, "end") << endl;
 	if (MultipartBody.find(setBoundaryTogether(boundary, "end")) != string::npos)
 	{
+		// cout << RED << "FOUND END" << NORM << endl;
 		MultipartBody.erase(MultipartBody.find(setBoundaryTogether(boundary, "end")));
 		if (MultipartBody == "\r\n")
 			cout << "File body is empty" << endl;
@@ -181,6 +196,9 @@ void Request::packTogether()
 		_filename = MultipartName;
 		_body = MultipartBody;
 		_contentType = MultipartContentType;
+		_URI = MultipartURI;
+		// cout << "MULTI URI: " << MultipartURI << endl;
+		// cout << "URI in pack: " << _URI << endl;
 		clearMultipartData();
 	}
 }
@@ -246,6 +264,7 @@ void	Request::clearMultipartData()
 	boundary = "";
 	MultipartContentType = ""; //default textplain
 	MultipartName = ".empty."; //default file.txt
+	MultipartURI = "";
 }
 
 const string Request::setBoundaryTogether(const string & bound, const string & type)

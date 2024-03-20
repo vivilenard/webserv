@@ -8,8 +8,14 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 	_request(request), _status(501), _statusInfo(""), _httpVersion("HTTP/1.1")
 {
 	// cout << "in Response " << endl;
+	if (request.getRequest().empty())
+	{
+		cout << RED << "request is empty" << endl;
+		// formResponse(501, "empty request");
+		return ;
+	}
 	_URI = addRootPath(_request.getURI());
-	cout << RED << _URI << NORM << endl;
+	// cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
 		return ;
 	if (request.getMethod() == "GET" && methodAllowed())

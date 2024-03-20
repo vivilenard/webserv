@@ -33,15 +33,9 @@ bool Response::incorrectMimeType(const string & contentType)
 	if (!_request.getFilename().empty())
 		filepath = _request.getFilename();
 	size_t mimePos = filepath.find_last_of('.');
-	// cout << "Mime Pos: " << mimePos << endl;
 	string mime = "";
 	if (mimePos != string::npos)
 		mime = filepath.substr(mimePos + 1);
-	cout << "FILENAME: " << _request.getFilename() << endl;
-	cout << "MIME: " << mime << endl;
-	// cout << "contentType: " << contentType << NORM << endl;
-	// if (mime.empty() && (contentType == "text/plain" || contentType == "plain/text"))
-	// 	return false;
 	if (mime.empty() && !(contentType == "text/plain" || contentType == "plain/text"))
 		return true;
 	if (_configfile._mimeTypes[mime] != contentType && !(contentType == "text/plain" || contentType == "plain/text"))

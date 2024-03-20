@@ -128,6 +128,8 @@ const string Response::createErrorBody(const int & status, const string & status
 	_fileContentType = "text/html";
 	if (status == 404)
 		return (FileToString("error/404.html"));
+	else if (status == 405)
+		return (FileToString("error/405.html"));
 	else
 	{
 		ostringstream body_os;

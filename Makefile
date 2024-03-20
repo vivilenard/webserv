@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/20 19:26:39 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/20 19:46:05 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,6 +67,7 @@ HEADER	+=
 SRCS	=	webserver.cpp \
 			interface.cpp \
 			interfaceTools.cpp \
+			http.cpp \
 			Request.cpp \
 			Response.cpp \
 			Status.cpp \

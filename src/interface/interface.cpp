@@ -6,13 +6,13 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:01:41 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 14:24:50 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/20 20:02:40 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Interface.hpp"
 
-std::map<uint32_t, protocolFunction>	Interface::_protocolMap;
+std::map<uint32_t, http*>				Interface::_executerMap;
 std::map<int, std::string>				Interface::_outputBuffer;
 
 void	Interface::interface(int sock, struct sockData data) {
@@ -50,6 +50,13 @@ void	Interface::interface(int sock, struct sockData data) {
 	}
 }
 
-void	Interface::addProtocol(uint32_t port, protocolFunction function) {
-	_protocolMap.insert(std::pair<uint32_t, protocolFunction>(port, function));
+void	Interface::clearExecuters() {
+	for (std::map<uint32_t, http*>::iterator it = _executerMap.begin(); it != _executerMap.end(); it++) {
+		delete it->second;
+	}
+	_executerMap.clear();
+}
+
+void	Interface::addExecuter(uint32_t port, http *executer) {
+	_executerMap.insert(std::pair<uint32_t, http*>(port, executer));
 }

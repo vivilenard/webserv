@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:02:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 17:04:14 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/20 19:52:25 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int	Interface::readFromSocket(int sock, struct sockData data, std::string &reque
 }
 
 bool	Interface::passRequest(std::string &request, std::string &response, uint32_t port) {
-	for (std::map<uint32_t, protocolFunction>::iterator it = _protocolMap.begin(); it != _protocolMap.end(); it++) {
-		if (_protocolMap.find(port) != _protocolMap.end())
-			response = _protocolMap[port](request);
+	for (std::map<uint32_t, http*>::iterator it = _executerMap.begin(); it != _executerMap.end(); it++) {
+		if (_executerMap.find(port) != _executerMap.end())
+			response = _executerMap[port]->executer(request);
 		return (false);
 	}
 	return (false);

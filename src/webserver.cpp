@@ -3,35 +3,15 @@
 #include "Request.hpp"
 #include "Response.hpp"
 #include "configFile.hpp"
+#include "http.hpp"
 
 CONFIG config;
-configServer configfile;
 
 void sigHandler(int signum)
 {
 	std::cout << "shutting down..." << std::endl;
 	socketManager::stop();
 	exit(signum);
-}
-
-std::string testHttp(const std::string &request/* , Config & config */) {
-    std::cout << "testHttp called" << std::endl;
-    // if (request.empty()) {
-    //     std::cout << "request is empty" << std::endl;
-    //     return "";
-    // } else {
-		// cout << configfile._root << endl;
-		cout << MAG << "-------request----->>" << NORM << endl;
-		Request		httpRequest(request, configfile);
-		// cout << httpRequest << endl;
-		if (!httpRequest.boundary.empty())
-			return "";
-		Response	httpResponse(httpRequest, configfile);
-		std::string response = httpResponse.getResponse();
-		// cout << BLUE << "RESPONSE:\n" << response << NORM <<endl;
-		cout << MAG << "<<------------------------" << NORM << endl;
-		return response;
-    // }
 }
 
 uint32_t	extractPort(struct sockaddr* address) 
@@ -74,21 +54,20 @@ int main(int argc, char **argv)
 	signal(SIGINT, &sigHandler);
 	if (!readConfig(argc, argv, config))
 		return 1;
-	configfile = config.begin()->second;
-	printConfig(config.begin()->first, configfile);
-	cout << configfile._serverName << endl;
-	if (configfile._serverName == "default")
-	{
-		cout << BACK << "Webserver is running with a default config file." << NORM << endl;
-		cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
-	}
-	// for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
-		protocolFunction testFunction = &testHttp;
-		Interface::addProtocol(extractPort(config.begin()->second._socketAddress.interfaceAddress), testFunction);
-		// for () {
-			socketManager::addServerSocket(config.begin()->second._socketAddress);
-		// }
+	// configfile = config.begin()->second;
+	// printConfig(config.begin()->first, configfile);
+	// cout << configfile._serverName << endl;
+	// if (configfile._serverName == "default")
+	// {
+	// 	cout << BACK << "Webserver is running with a default config file." << NORM << endl;
+	// 	cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
 	// }
+	for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
+		// for () {
+			Interface::addExecuter(extractPort(it->second._socketAddress.interfaceAddress), new http(it->second));
+			socketManager::addServerSocket(it->second._socketAddress);
+		// }
+	}
 	InterfaceFunction interfaceFunction = &Interface::interface;
 	for (int i = 0; i < 10; i++) {
 		try {

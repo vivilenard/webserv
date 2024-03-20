@@ -5,14 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/30 15:05:28 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 17:43:10 by vlenard          ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/03/20 17:58:50 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "socketManager.hpp"
 
 std::map<int, struct sockData>		socketManager::_sockets;
+unsigned long						socketManager::_keepAlive = 0; //change here if needed
 unsigned long						socketManager::_keepAlive = 0; //change here if needed
 
 void	socketManager::start(InterfaceFunction interfaceFunction) {

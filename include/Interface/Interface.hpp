@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 17:44:31 by vlenard          ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/03/20 17:58:09 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef APPLICATIONINTERFACE_HPP
 # define APPLICATIONINTERFACE_HPP
@@ -16,6 +17,7 @@
 # include "socketManager.hpp"
 
 # define BUFFER_SIZE 1024
+# define PRINT true
 # define PRINT true
 
 typedef std::string (*protocolFunction)(const std::string &request);
@@ -26,6 +28,7 @@ class Interface {
 		static void						interface(int sock, sockData sockData);
 
 	private:
+		static int						readFromSocket(int sock, std::string &request);
 		static int						readFromSocket(int sock, std::string &request);
 		static bool						passRequest(std::string &request, std::string &response, uint32_t port);
 		static bool						writeToSocket(int sock, std::string &response);

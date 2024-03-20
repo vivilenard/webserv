@@ -5,13 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/13 12:02:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 17:44:15 by vlenard          ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/03/20 17:58:19 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "Interface.hpp"
 
+int	Interface::readFromSocket(int sock, std::string &request) {
 int	Interface::readFromSocket(int sock, std::string &request) {
 	int	n = BUFFER_SIZE;
 	char buffer[BUFFER_SIZE];
@@ -20,11 +22,15 @@ int	Interface::readFromSocket(int sock, std::string &request) {
 		if (n < 0) {
 			std::cout << "recv failed" << std::endl;
 			return n;
+			return n;
 		}
+		else if (n == 0 && request.empty())
+			return n;
 		else if (n == 0 && request.empty())
 			return n;
 		request.append(buffer, n);
 	}
+	return 1;
 	return 1;
 }
 
@@ -38,6 +44,14 @@ bool	Interface::passRequest(std::string &request, std::string &response, uint32_
 }
 
 bool	Interface::writeToSocket(int sock, std::string &response) {
+	if (response.empty())
+	{
+		// std::cout << "response is empty" << std::endl;
+		return false;
+	}
+	// std::cout << "just sent: " << std::endl;
+	// std::cout << response.c_str() << std::endl;
+	_outputBuffer.erase(sock);
 	if (response.empty())
 	{
 		// std::cout << "response is empty" << std::endl;

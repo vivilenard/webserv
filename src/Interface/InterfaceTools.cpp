@@ -6,7 +6,7 @@
 /*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:02:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 17:43:59 by vlenard          ###   ########.fr       */
+/*   Updated: 2024/03/20 17:44:15 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,14 @@ bool	Interface::passRequest(std::string &request, std::string &response, uint32_
 }
 
 bool	Interface::writeToSocket(int sock, std::string &response) {
-	std::cout << "just sent: " << std::endl;
-	std::cout << response.c_str() << std::endl;
+	if (response.empty())
+	{
+		// std::cout << "response is empty" << std::endl;
+		return false;
+	}
+	// std::cout << "just sent: " << std::endl;
+	// std::cout << response.c_str() << std::endl;
+	_outputBuffer.erase(sock);
 	int i = send(sock, response.c_str(), response.length(), 0);
 	if (i < 0)
 		return (true);

@@ -21,3 +21,7 @@ SIEGE
 
 To do:
 	- test HEAD
+
+
+errors:
+wrong root --> termination

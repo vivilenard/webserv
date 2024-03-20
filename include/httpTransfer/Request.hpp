@@ -61,6 +61,7 @@ class Request
 		int						findDoubleNewline(const std::string & s);
 		static int				MultipartApproved;
 		static string			MultipartName;
+		static string			MultipartURI;
 		static string			MultipartBody;
 		static string			MultipartContentType;
 		static int				McontentLength;
@@ -69,6 +70,7 @@ class Request
 		Request(const string & request, configServer & configfile);
 		friend ostream & operator<<(ostream & os, const Request & r);
 
+		const string & 	getRequest(){ return _request; }
 		const string & 	getMethod()	{ return _method; }
 		const string & 	getURI()	{ return _URI; }
 		const string & 	getFilename()	{ return _filename; }

@@ -6,7 +6,7 @@
 /*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:01:41 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 14:13:52 by vlenard          ###   ########.fr       */
+/*   Updated: 2024/03/20 16:38:15 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	Interface::interface(int sock, struct sockData data) {
 			_outputBuffer.erase(sock);
 			return ;	// remove client
 		}
+		// socketManager::removeSocket(sock);
 		_outputBuffer.erase(sock);
 	}
 }

@@ -11,7 +11,7 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 	if (request.getRequest().empty())
 	{
 		cout << RED << "request is empty" << endl;
-		// formResponse(501, "empty request");
+		formResponse(501, "empty request");
 		return ;
 	}
 	_URI = addRootPath(_request.getURI());

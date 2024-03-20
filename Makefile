@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/20 17:03:55 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/20 18:01:53 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -94,7 +94,6 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 VPATH := src include src/config src/error src/httpTransfer src/parse
 
 all:
-	echo $(UNAME) $(OS) $(OS_LIKE)
 	@$(MAKE) -s proname_header
 	@$(MAKE) -s std_all
 
@@ -119,7 +118,7 @@ endif
 $(SOCKETMANAGER):
 ifeq ($(shell test -f $(SOCKETMANAGER_DIR)/Makefile || echo $$?), 1)
 	@$(PRINT) "$(CLEARLINE)\r%-40s$(RESET)" "$(FCyan)Initializing submodule"
-	@git submodule update --init > /dev/null
+	@git submodule update --init > /dev/null 2>&1
 	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"
 endif
 	@$(PRINT) "$(CLEARLINE)\r%-40s\n$(RESET)" "$(FCyan)Compiling submodule"

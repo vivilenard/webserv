@@ -45,6 +45,7 @@ void printConfig(string name, configServer server)
 		cout << "Post: " << it->second._post << endl;
 		cout << "Get: " << it->second._get << endl;
 		cout << "Put: " << it->second._delete << endl;
+		cout << "redirection: " << it->second._redirect << endl;
 	}
 
 }
@@ -54,19 +55,18 @@ int main(int argc, char **argv)
 	signal(SIGINT, &sigHandler);
 	if (!readConfig(argc, argv, config))
 		return 1;
-	// configfile = config.begin()->second;
-	// printConfig(config.begin()->first, configfile);
-	// cout << configfile._serverName << endl;
+	configServer configfile = config.begin()->second;
+	printConfig(config.begin()->first, config.begin()->second);
 	// if (configfile._serverName == "default")
 	// {
 	// 	cout << BACK << "Webserver is running with a default config file." << NORM << endl;
 	// 	cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
 	// }
 	for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
-		// for () {
 			Interface::addExecuter(extractPort(it->second._socketAddress.interfaceAddress), new http(it->second));
 			socketManager::addServerSocket(it->second._socketAddress);
-		// }
+	}
+	}
 	}
 	}
 	InterfaceFunction interfaceFunction = &Interface::interface;

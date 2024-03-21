@@ -30,6 +30,7 @@ struct configServer
 	std::string 			_address;
 	std::string 			_root;
 	bool					validFormat;
+	bool					_directoryListing;
 	MAP						_mimeTypes;
 	std::string 			_index;
 	struct Location 		//_locations[namelocation].whateverinside
@@ -63,6 +64,7 @@ public:
 	void								addServerName(configServer &server, std::string token,
 													  				std::istringstream &find);
 	void								addAddress(configServer &server, std::istringstream &find);
+	void								addDirectoryListing(configServer &server, std::string token, std::istringstream &find);
 	void								addRoot(configServer &server, std::string token,
 																		std::istringstream &find);
 	void								addIndex(configServer &server, std::string token,

@@ -7,16 +7,8 @@ StatusCode Response::_statusCode = StatusCode();
 Response::Response(Request & request, configServer & configfile): _configfile(configfile),
 	_request(request), _status(501), _redir(0), _statusInfo(""), _httpVersion("HTTP/1.1")
 {
-	// cout << "in Response " << endl;
-	if (request.getRequest().empty())
-	{
-		cout << RED << "request is empty" << endl;
-		formResponse(501, "empty request");
-		return ;
-	}
 	_URI = redirectURI(_request.getURI());
 	_URI = addRootPath(_URI);
-	// cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
 		return ;
 	if (request.getMethod() == "GET" && methodAllowed())
@@ -29,9 +21,8 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 		processGet();
 	else 
 		formResponse(_status, "");
-	if (request.getMethod() == "POST")
-		cout << BLUE << _response << NORM << endl;
-	// cout << BLUE << STATUSCODE[_status] << endl << _statusInfo << NORM << endl;
+	// if (request.getMethod() == "POST")
+	// 	cout << BLUE << _response << NORM << endl;
 }
 
 bool Response::methodAllowed()
@@ -40,35 +31,25 @@ bool Response::methodAllowed()
 	string method = _request.getMethod();
 	string uri = _request.getURI();
 	string directory = getDir(uri);
-	// string uri = _URI;
 	LOCATION locations = _configfile._locations;
 
-	// cout << ORANGE << "method: " << method << NORM << endl;
-	// cout << "uri: " << uri << endl;
-	// cout << "directory: " << directory << NORM << endl;
+
 	if (locations.find(directory) != locations.end())
 	{
-		// cout << "location: " << ORANGE << locations[directory]._name << " " << locations[directory]._get << NORM << endl;
 		if (method == "GET")
 		{
-			// cout << "GET METHOD" << endl;
 			if (locations[directory]._get == false)
 				methodAllowed = false;
-				// return (cout << RED << method << ": not allowed for uri: " << uri << NORM << endl, false);
 		}
 		else if (method == "POST")
 		{
-			// cout << "POST METHOD" << endl;
 			if (locations[directory]._post == false)
 				methodAllowed = false;
-				// return (cout << RED << method << ": not allowed for uri: " << uri << NORM << endl, false);
 		}
 		else if (method == "DELETE")
 		{
-			// cout << "DELETE METHOD" << endl;
 			if (locations[directory]._delete == false)
 				methodAllowed = false;
-				// return (cout << RED << method << ": not allowed for uri: " << uri << NORM << endl, false);
 		}
 	}
 	if (methodAllowed == false)
@@ -114,7 +95,6 @@ void Response::formResponse(int status, const string & statusInfo)
 		os << body;
 	}
 	_response = os.str();
-	// cout << ORANGE << _status << NORM << endl;
 }
 
 
@@ -135,7 +115,9 @@ const string FileToString(const string & filepath)
 const string Response::createErrorBody(const int & status, const string & statusInfo)
 {
 	_fileContentType = "text/html";
-	if (status == 404)
+	if (status == 7)
+		return (FileToString("error/directory.html"));
+	else if (status == 404)
 		return (FileToString("error/404.html"));
 	else if (status == 405)
 		return (FileToString("error/405.html"));

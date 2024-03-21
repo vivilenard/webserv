@@ -35,6 +35,7 @@ void printConfig(string name, configServer server)
 	std::cout << "ROOT:" << " " << server._root << "\n";
 	std::cout << "VALIDFORMAT:" << " " << server.validFormat << "\n";
 	std::cout << "INDEX:" << " " << server._index << "\n";
+	std::cout << "DIRECTORYLISTING: " << server._directoryListing << endl;
 
 	cout << ORANGE << "LOCATIONS" << NORM << endl;
 	std::map<std::string, configServer::Location>::iterator it = server._locations.begin();

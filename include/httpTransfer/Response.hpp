@@ -58,7 +58,8 @@ class Response
 	int				handleMultipart();
 	bool			incorrectMimeType(const string & contentType);
 	bool			noFilename();
-	bool			listDirectory(const string & endpoint);
+	bool			isDirectory(const string & endpoint);
+	bool			listDirectory(DIR* dirp);
 	string			currentDir();
 
 

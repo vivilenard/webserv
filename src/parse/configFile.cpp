@@ -55,49 +55,82 @@ void	ConfigFile::addIndex(configServer &server, std::string token, std::istrings
 	}
 }
 
+void	ConfigFile::addDirectoryListing(configServer &server, std::string token, std::istringstream &find)
+{
+	std::string isBool;
+	if (token == "directoryListing")
+	{
+		std::cout << "exist" << std::endl;
+		if (find >> isBool)
+		{
+			cout << "boool: " << isBool << endl;
+			if (isBool == "true")
+			{
+				std::cout << "is true" << std::endl;
+				server._directoryListing = true;
+			}
+			if (isBool == "false")
+			{
+				std::cout << "is false" << std::endl;
+				server._directoryListing = false;
+			}
+		}
+		else
+		{
+			std::cerr << "No token after the keyword!" << std::endl; 
+			server.validFormat = false;
+		}
+	}
+}
+
 void ConfigFile::readFile(std::string &fileName, std::map<std::string, configServer> & config)
 {
 	std::ifstream inputFile(fileName.c_str());
 	configServer tmpServer;
-	bool full = false;
+	int full = 0 ;
 	tmpServer = initializeObj();
 	this->_mimeTypes = parseMime();
 	if (_mimeTypes.empty())
-		std::cout << "no mimeTypes included. Save them in this directory: /config/mime.types" << endl;
+	   std::cout << "no mimeTypes included. Save them in this directory: /config/mime.types" << endl;
 // printMimes(this->_mimeTypes);
 	tmpServer._mimeTypes = this->_mimeTypes;
 	if (inputFile.is_open())
 	{
-		std::string line;
-		while (getline(inputFile, line))
-		{
-			std::string token;
-			std::istringstream find(line);
-			find >> token;
-			if (token == "server" && full)
-			{
+	   std::string line;
+	   while (getline(inputFile, line))
+	   {
+		  std::string token;
+		  std::istringstream find(line);
+		  find >> token;
+		  if (token == "server")
+		  {
+			 if (full)
+			 {
 				config[tmpServer._serverName] = tmpServer;
 				serverStatus(tmpServer);
-				full = false;
 				tmpServer = initializeObj();
-			}
-			addServerName(tmpServer, token, find);
-			addListen(tmpServer, token, find);
-			if (!tmpServer.validFormat )
-				break ;
-			addRoot(tmpServer, token, find);
-			addIndex(tmpServer, token, find);
-			if (!full)
-				full = setLocation(tmpServer,inputFile, token,line, find);
-		}
-		if (full && config.find(tmpServer._serverName) == config.end())
-		{
-			config[tmpServer._serverName] = tmpServer;
-			serverStatus(tmpServer);
-		}
+			 }
+			 full ^= 1;
+		  }
+		  addServerName(tmpServer, token, find);
+		  addDirectoryListing(tmpServer, token, find);
+		  addListen(tmpServer, token, find);
+		  if (!tmpServer.validFormat )
+			 break ;
+		  addRoot(tmpServer, token, find);
+		  addIndex(tmpServer, token, find);
+		  setLocation(tmpServer,inputFile, token,line, find);
+	   }
+	   if (full && config.find(tmpServer._serverName) == config.end())
+	   {
+		  config[tmpServer._serverName] = tmpServer;
+			std::cout << "stored" << std::endl;
+			std::cout << "MY NAME IS---> " << config[tmpServer._serverName]._serverName << std::endl;
+		  serverStatus(tmpServer);
+	   }
 	}
 	else
- 		std::cout << "wrong format" << std::endl;
+	   std::cout << "wrong format" << std::endl;
 	inputFile.close();
 }
 

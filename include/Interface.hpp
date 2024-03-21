@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 19:58:07 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/21 12:37:41 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "socketManager.hpp"
 # include "http.hpp"
 
-# define BUFFER_SIZE 1024
+# define BUFFER_SIZE 4194304
 
 class Interface {
 	public:

@@ -11,6 +11,7 @@ void sigHandler(int signum)
 {
 	std::cout << "shutting down..." << std::endl;
 	socketManager::stop();
+	Interface::clearExecuters();
 	exit(signum);
 }
 
@@ -63,11 +64,14 @@ int main(int argc, char **argv)
 	// 	cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
 	// }
 	for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
-			Interface::addExecuter(extractPort(it->second._socketAddress.interfaceAddress), new http(it->second));
-			socketManager::addServerSocket(it->second._socketAddress);
-	}
-	}
-	}
+			try {
+				Interface::addExecuter(extractPort(it->second._socketAddress.interfaceAddress), new http(it->second));
+				socketManager::addServerSocket(it->second._socketAddress);
+			}
+			catch (std::exception &e) {
+				std::cout << "Exception: " << e.what() << std::endl;
+				std::cout << "Skipping server" << std::endl;
+			}
 	}
 	InterfaceFunction interfaceFunction = &Interface::interface;
 	for (int i = 0; i < 10; i++) {
@@ -75,9 +79,16 @@ int main(int argc, char **argv)
 			socketManager::start(interfaceFunction);
 		}
 		catch (std::exception &e) {
+			if (dynamic_cast<std::runtime_error*>(&e)) {
+                std::cout << "Exception: " << e.what() << std::endl;
+                std::cout << "Exiting program" << std::endl;
+                socketManager::stop();
+				Interface::clearExecuters();
+				return 1;
+            }
 			std::cout << "Exception: " << e.what() << std::endl;
 			std::cout << "Restarting server" << std::endl;
 		}
 	}
-	return 1;
+	return 2;
 }

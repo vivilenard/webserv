@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   InterfaceTools.cpp                                 :+:      :+:    :+:   */
+/*   interfaceTools.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:02:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 19:52:25 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/21 12:22:28 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	Interface::readFromSocket(int sock, struct sockData data, std::string &reque
 		else
 			n = recv(sock, buffer, BUFFER_SIZE, 0);
 		if (n < 0) {
-			std::cout << "recv failed" << std::endl;
 			return n;
 		}
 		if (n == 0 && request.empty())

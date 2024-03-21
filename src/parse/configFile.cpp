@@ -59,7 +59,6 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 {
 	std::ifstream inputFile(fileName.c_str());
 	configServer tmpServer;
-	bool full = false;
 	tmpServer = initializeObj();
 	this->_mimeTypes = parseMime();
 	if (_mimeTypes.empty())
@@ -73,27 +72,31 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 		{
 			std::string token;
 			std::istringstream find(line);
-			find >> token;
-			if (token == "server" && full)
+			if (token.empty())
+				find >> token;
+			if (token == "server")
 			{
+				while (getline(inputFile, line) && !line.empty())
+				{
+					std::istringstream findNextLine(line);
+					findNextLine >> token;
+					addServerName(tmpServer, token, findNextLine);
+					addListen(tmpServer, token, findNextLine);
+					if (!tmpServer.validFormat)
+					{
+						std::cout << "THE ERROR---> " << token << std::endl;
+						break;
+					}
+					addRoot(tmpServer, token, findNextLine);
+					addIndex(tmpServer, token, findNextLine);
+					setLocation(tmpServer, inputFile, token, line, findNextLine);
+					if (token == "server")
+						break ;
+				}
 				config[tmpServer._serverName] = tmpServer;
 				serverStatus(tmpServer);
-				full = false;
 				tmpServer = initializeObj();
 			}
-			addServerName(tmpServer, token, find);
-			addListen(tmpServer, token, find);
-			if (!tmpServer.validFormat )
-				break ;
-			addRoot(tmpServer, token, find);
-			addIndex(tmpServer, token, find);
-			if (!full)
-				full = setLocation(tmpServer,inputFile, token,line, find);
-		}
-		if (full && config.find(tmpServer._serverName) == config.end())
-		{
-			config[tmpServer._serverName] = tmpServer;
-			serverStatus(tmpServer);
 		}
 	}
 	else

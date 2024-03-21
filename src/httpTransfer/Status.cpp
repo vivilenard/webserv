@@ -12,6 +12,9 @@ void StatusCode::setStatusMap()
     _statusMap[200] = "200 OK";
     _statusMap[201] = "201 Created";
     _statusMap[204] = "204 No Content";
+	_statusMap[301] = "301 Moved Permanently";
+	_statusMap[302] = "302 Found";
+	_statusMap[308] = "308 Permanent Redirect";
     _statusMap[400] = "400 Bad Request";
     _statusMap[403] = "403 Forbidden";
     _statusMap[404] = "404 Not Found";

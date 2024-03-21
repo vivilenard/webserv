@@ -12,21 +12,15 @@ string	Request::MultipartURI = "";
 Request::Request(const string & request, configServer & configfile):  _configfile(configfile), _request(request), _filename(""), _sizeInRange(true)
 {
 	// cout << "request" << endl;
-	// cout << GREEN << request << NORM << endl;
 	identifyRequest();
 	if (_standardRequest)
 	{
-		// cout << "is standard request" << endl;
 		parseMainHeader();
 		parseHeaders(_headers, _request);
 		parseBody(_body, _request, atoi(_headers["Content-Length"].c_str()));
 	}
-	// cout << "URI: " << _URI << endl;
-	// cout << "mulitURI: " << MultipartURI << endl;
-
 	checkRequestSize();
 	handleMultipart();
-	// cout << "URI: " << _URI << endl;
 }
 
 void	Request::parseMainHeader()

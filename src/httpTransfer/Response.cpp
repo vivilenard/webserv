@@ -5,7 +5,7 @@
 StatusCode Response::_statusCode = StatusCode();
 
 Response::Response(Request & request, configServer & configfile): _configfile(configfile),
-	_request(request), _status(501), _statusInfo(""), _httpVersion("HTTP/1.1")
+	_request(request), _status(501), _redir(0), _statusInfo(""), _httpVersion("HTTP/1.1")
 {
 	// cout << "in Response " << endl;
 	if (request.getRequest().empty())
@@ -14,7 +14,8 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 		formResponse(501, "empty request");
 		return ;
 	}
-	_URI = addRootPath(_request.getURI());
+	_URI = redirectURI(_request.getURI());
+	_URI = addRootPath(_URI);
 	// cout << RED << _URI << NORM << endl;
 	if (invalidRequest())
 		return ;
@@ -88,7 +89,7 @@ bool Response::invalidRequest()
 	return false;
 }
 
-void Response::formResponse(const int & status, const string & statusInfo)
+void Response::formResponse(int status, const string & statusInfo)
 {
 	_status = status;
 	_statusInfo = statusInfo;
@@ -102,6 +103,8 @@ void Response::formResponse(const int & status, const string & statusInfo)
 		body = createErrorBody(status, statusInfo);
 
 	ostringstream os;
+	if (status == 200 && (_redir >= 300 && _redir < 400))
+		status = _redir;
 	os << _httpVersion << " " << STATUSCODE[status] << "\r\n";
 	if (status != 100)
 	{
@@ -152,6 +155,23 @@ const string Response::createErrorBody(const int & status, const string & status
 string	Response::addRootPath(const string & path)
 {
 	return (_configfile._root + path);
+}
+
+string	Response::redirectURI(string path)
+{
+	if (_redir > 0)
+		return path;
+	LOCATION locations = _configfile._locations;
+	cout << path << endl;
+
+	if (locations.find(path) != locations.end() && !locations[path]._redirect.empty())
+	{
+		cout << "its a redirection!" << endl;
+		path = locations[path]._redirect;
+		_redir = 308;
+		cout << path << endl;
+	}
+	return path;
 }
 
 const string getDir(string & uri)

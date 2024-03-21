@@ -2,7 +2,6 @@
 
 StatusCode::StatusCode()
 {
-    cout << "Creating STATUS CLASS" << endl;
     setStatusMap();
 }
 

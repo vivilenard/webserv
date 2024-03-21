@@ -20,11 +20,7 @@ void ConfigFile::addRoot(configServer &server, std::string token, std::istringst
 		if (find >> root)
 		{
 			if (checkRoot(root))
-			{
 				server._root = root;
-				std::cout << "Root stored" << std::endl;
-				std::cout << server._root << std::endl;
-			}
 			else
 				server.validFormat = false;
 		}

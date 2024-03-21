@@ -6,20 +6,12 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 19:22:29 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/20 20:04:49 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/24 00:32:00 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HTTP_HPP
 # define HTTP_HPP
-
-# define RED "\033[1;91m"
-# define GREEN "\033[1;92m"
-# define ORANGE "\033[1;93m"
-# define MAG "\033[1;95m"
-# define BLUE "\033[1;96m"
-# define NORM "\033[0m"
-# define BACK "\033[45m"
 
 # include "configFile.hpp"
 # include "Request.hpp"

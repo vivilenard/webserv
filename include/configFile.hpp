@@ -23,25 +23,25 @@ using namespace std;
 
 struct configServer
 {
-	std::string 			_serverName;
-	std::string 			_include;
-	int						_listen;
-	struct socketParameter	_socketAddress;
-	std::string 			_address;
-	std::string 			_root;
-	bool					validFormat;
-	bool					_directoryListing;
-	MAP						_mimeTypes;
-	std::string 			_index;
+	std::string 							_serverName;
+	std::string 							_include;
+	int										_listen;
+	// std::vector<struct socketParameter>		_socketAddress;
+	struct socketParameter					_socketAddress;
+	std::string 							_address;
+	std::string 							_root;
+	bool									validFormat;
+	bool									_directoryListing;
+	MAP										_mimeTypes;
+	std::string 							_index;
 	struct Location 		//_locations[namelocation].whateverinside
 	{
-		std::string 		_name;
-		std::string 		_index;
-		std::string 		_redirect;
-		bool				_post;
-		bool				_get;
-		bool				_delete;
-
+		std::string 						_name;
+		std::string 						_index;
+		std::string 						_redirect;
+		bool								_post;
+		bool								_get;
+		bool								_delete;
 	};
 	std::map<std::string, Location> _locations;
 };
@@ -59,11 +59,13 @@ public:
 	void	readFile(std::string &fileName, std::map<std::string, configServer> & config);
 	std::map<std::string, configServer> getConFile();
 	void								setConFile(std::map<std::string, configServer> &set);
-	void								addListen(configServer &server, std::string token,
-											   						std::istringstream &find);
 	void								addServerName(configServer &server, std::string token,
 													  				std::istringstream &find);
 	void								addAddress(configServer &server, std::string token, std::istringstream &find);
+	void								addCertificate(configServer &server, std::string token,
+															std::istringstream &find);
+	void								addKey(configServer &server, std::string token,
+													std::istringstream &find);
 	void								addRoot(configServer &server, std::string token,
 																		std::istringstream &find);
 	void								addIndex(configServer &server, std::string token,

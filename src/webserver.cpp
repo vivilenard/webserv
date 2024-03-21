@@ -4,6 +4,8 @@
 #include "Response.hpp"
 #include "configFile.hpp"
 #include "http.hpp"
+#include <iomanip>
+#include "color.hpp"
 
 CONFIG config;
 
@@ -25,30 +27,32 @@ uint32_t	extractPort(struct sockaddr* address)
 		throw std::runtime_error("extractPort: unknown address family");
 }
 
-void printConfig(string name, configServer server)
-{
-	cout << RED << "CONFIG: " << name << NORM << endl;
-	std::cout << "SERVERNAME:" << " " << server._serverName<< "\n";
-	std::cout << "INCLUDE:" << " " << server._include << "\n";
-	std::cout << "LISTEN:" << " " << server._listen << "\n";
-	std::cout << "ADDRESS:" << " " << server._address << "\n";
-	std::cout << "ROOT:" << " " << server._root << "\n";
-	std::cout << "VALIDFORMAT:" << " " << server.validFormat << "\n";
-	std::cout << "INDEX:" << " " << server._index << "\n";
-	std::cout << "DIRECTORYLISTING: " << server._directoryListing << endl;
-
-	cout << ORANGE << "LOCATIONS" << NORM << endl;
+void printConfig(std::string name, configServer server) {
+	std::cout << FPurple << "╔══════════════════════════════════════════════════════╗" << NORMAL << std::endl;
+	std::cout << FPurple << "║" << GREEN << std::setw(54) << std::left << "SERVER: " + name + " " + (server.validFormat ? "[VALID]" : "[INVALID]")  << FPurple << "║" << NORMAL << std::endl;
+	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "SERVERNAME" + server._serverName << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "INCLUDE: " + server._include << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "LISTEN: " + server._listen << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ADDRESS: " + server._address << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ROOT: " + server._root << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "VALIDFORMAT: " + server.validFormat << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "INDEX: " + server._index << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::left << "DIRECTORYLISTING: " << std::setw(36) << std::left << (server._directoryListing ? "true" : "false") << FPurple << "║" << std::endl;
+	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
+	std::cout << FPurple << "║" << FCyan << std::setw(54) << std::left << "LOCATIONS" << FPurple << "║" << NORMAL << std::endl;
+	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
 	std::map<std::string, configServer::Location>::iterator it = server._locations.begin();
-	for (; it != server._locations.end(); it++)
-	{
-		cout << "Location: " << it->first << endl;
-		cout << "Name: " << it->second._name << endl;
-		cout << "Default page: " << it->second._index << endl;
-		cout << "Post: " << it->second._post << endl;
-		cout << "Get: " << it->second._get << endl;
-		cout << "Put: " << it->second._delete << endl;
-		cout << "redirection: " << it->second._redirect << endl;
+	for (; it != server._locations.end(); it++) {
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Location: " + it->first << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Name: " + it->second._name << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Default page: " + it->second._index << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Post: " + it->second._post << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Get: " + it->second._get << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Put: " + it->second._delete << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "redirection: " + it->second._redirect << FPurple << "║" << NORMAL << std::endl;
 	}
+	std::cout << FPurple << "╚══════════════════════════════════════════════════════╝" << NORMAL << std::endl;
 }
 
 int main(int argc, char **argv)
@@ -56,12 +60,6 @@ int main(int argc, char **argv)
 	signal(SIGINT, &sigHandler);
 	if (!readConfig(argc, argv, config))
 		return 1;
-	configServer configfile = config.begin()->second;
-	// if (configfile._serverName == "default")
-	// {
-	// 	cout << BACK << "Webserver is running with a default config file." << NORM << endl;
-	// 	cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
-	// }
 	for (CONFIG::iterator it2 = config.begin(); it2 != config.end(); it2++) {
 			printConfig(it2->first, it2->second);
 	}

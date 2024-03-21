@@ -68,7 +68,6 @@ int main(int argc, char **argv)
 			socketManager::addServerSocket(it->second._socketAddress);
 		// }
 	}
-	}
 	InterfaceFunction interfaceFunction = &Interface::interface;
 	for (int i = 0; i < 10; i++) {
 		try {

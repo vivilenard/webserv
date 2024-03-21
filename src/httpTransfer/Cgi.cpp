@@ -1,6 +1,8 @@
 #include "Response.hpp"
 #include "Request.hpp"
 #include "configFile.hpp"
+#include <sys/time.h>
+#include <signal.h>
 
 #define STATUSCODE _statusCode.getStati()
 
@@ -82,7 +84,8 @@ int Request::executeCgi(std::string &cgiScript, const string & path)
 	pipe(pipe_stdin);
 	pipe(pipe_stdout);
 	pid_t pid = fork();
-	if (pid == -1) {
+	if (pid == -1)
+	{
 		std::cerr << "Error forking process\n";
 		return EXIT_FAILURE;
 	} else if (pid == 0)
@@ -96,20 +99,34 @@ int Request::executeCgi(std::string &cgiScript, const string & path)
 				env.push_back(const_cast<char *>(it->second.c_str()));
 		env.push_back(NULL);
 		if (execve(command[0], (char* const*)command, const_cast<char *const *>(env.data())) < 0)
-			exit(1);
-		std::cerr << "Error executing CGI script\n";
-		return EXIT_FAILURE;
+		{
+			std::cerr << "Error executing CGI script\n";
+			return EXIT_FAILURE;
+		}
 	}
 	else
 	{
+		int status;
 		int return_value = EXIT_SUCCESS;
+		int timeOut = 5;
+		bool overTime = false;
 		close(pipe_stdin[0]);
 		close(pipe_stdin[1]);
 		close(pipe_stdout[1]);
 		char buffer[1024];
+		struct timeval startTime, currentTime;
+		gettimeofday(&startTime, NULL);
 		ssize_t bytes_read;
 		while ((bytes_read = read(pipe_stdout[0], buffer, sizeof(buffer))) > 0)
+		{
 			cgiScript.append(buffer, bytes_read);
+			gettimeofday(&currentTime, NULL);
+			if (currentTime.tv_sec - startTime.tv_sec > timeOut)
+			{
+				overTime = true;
+				break ;
+			}
+		}
 		if (bytes_read == -1)
 		{
 			std::cerr << "Error reading from pipe\n";
@@ -117,10 +134,28 @@ int Request::executeCgi(std::string &cgiScript, const string & path)
 		}
 		else if (bytes_read == 0)
 			std::cout << "End of file reached (child process closed its stdout)\n"; // Debugging output
+		if (overTime)
+		{
+			kill(pid, SIGKILL);
+			close(pipe_stdout[0]);
+			return EXIT_FAILURE;
+		}
 		close(pipe_stdout[0]);
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+		{
+			if(WEXITSTATUS(status) != 0)
+				std::cerr << "error in python script " <<  WEXITSTATUS(status) << std::endl;
+			return_value = EXIT_FAILURE;
+		}
+		else
+		{
+			std::cerr << "Python script exit abnormally" << std::endl;
+			return_value = EXIT_FAILURE;
+		}
 		return (return_value);
 	}
+	return (EXIT_SUCCESS);
 }
 
 bool	Response::isCgi(const string & path)
@@ -131,14 +166,15 @@ bool	Response::isCgi(const string & path)
 	if (path.substr(pos) == ".py")
 	{
 		std::string tmp = currentPath();
-		std::string dir = tmp + "/cgi-bin" + path.substr(1); // <----- if the root = "./"
-		std::cout << "CGI PATH---> " << path.c_str() << std::endl; // <----- if you have an absolute  
+		std::string dir = path.substr(1) + "/cgi-bin"; // <----- if the root = "./"
+		/*std::cout << "CGI PATH---> " << path.c_str() << std::endl; // <----- if you have an absolute  */
+		std::cout << "CURRENT PATH" << tmp << std::endl;
 		std::cout << "CGI  DIR PATH---> " << dir << std::endl;
-	/*	if (!checkRoot(dir))
+		if (!checkRoot(dir))
 		{
 			std::cerr << "Wrong CGI path!" << std::endl;
 			return (false);
-		}*/
+		}
 		_request.buildCgiEnv();
 		_request.executeCgi(this->_cgiScript, dir);
 		_fileContentType = "text/html";

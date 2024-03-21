@@ -44,7 +44,7 @@ CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(SSLCFLAGS) $(INC_DIR)
 LDFLAGS		:= $(SSLLDFLAGS) -L$(SOCKETMANAGER_DIR) -lsocketManager
 else ifeq ($(UNAME), Linux)
 SUDO		:= sudo
-CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
+CFLAGS		:= -fsanitize -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
 LDFLAGS		:= -lssl -lcrypto -L./$(SOCKETMANAGER_DIR) -lsocketManager
 endif
 

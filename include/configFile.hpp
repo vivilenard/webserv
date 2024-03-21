@@ -63,8 +63,7 @@ public:
 											   						std::istringstream &find);
 	void								addServerName(configServer &server, std::string token,
 													  				std::istringstream &find);
-	void								addAddress(configServer &server, std::istringstream &find);
-	void								addDirectoryListing(configServer &server, std::string token, std::istringstream &find);
+	void								addAddress(configServer &server, std::string token, std::istringstream &find);
 	void								addRoot(configServer &server, std::string token,
 																		std::istringstream &find);
 	void								addIndex(configServer &server, std::string token,

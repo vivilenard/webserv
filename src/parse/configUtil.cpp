@@ -151,28 +151,33 @@ int	addPort(configServer &server, std::string address)
 	}	
 }
 
-void	ConfigFile::addAddress(configServer &server, std::istringstream &find)
+void	ConfigFile::addAddress(configServer &server, std::string token, std::istringstream &find)
 {
 	std::string tmp;
 	std::string address;
-	if (find >> tmp)
+	if (token == "listen")
 	{
-		std::istringstream iss(tmp);
-		getline(iss,address, ':');
-		const std::string socketAddress = insertAddress(server, address);
-		if (server.validFormat == false)
-			return ;
-		getline(iss,address,':');
-		int port = addPort(server,address);
-		server._socketAddress.interfaceAddress = convertToSockAddr(socketAddress, port);
-		server._socketAddress.protocol = TCP;
-		server._socketAddress.ssl = false;
-		if (server.validFormat == false)
-			return ;
-	}
-	else
-	{
-		std::cerr << "invalid format" << std::endl;
-		server.validFormat = false;
+		if (!find.good())
+		{
+			std::cerr << "input error" << std::endl;
+			exit(1);
+		}
+		if (find >> tmp)
+		{
+			std::istringstream iss(tmp);
+			getline(iss,address, ':');
+			const std::string socketAddress = insertAddress(server, address);
+			if (server.validFormat == false)
+				return ;
+			getline(iss,address,':');
+			int port = addPort(server,address);
+			server._socketAddress.interfaceAddress = convertToSockAddr(socketAddress, port);
+			server._socketAddress.protocol = TCP;
+			server._socketAddress.ssl = false;
+			if (server.validFormat == false)
+				return ;
+		}
+		else
+			server.validFormat = false;
 	}
 }

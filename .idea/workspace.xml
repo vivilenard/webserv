@@ -3,17 +3,40 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="webServ" targetName="siege" />
+      <config projectName="webServ" targetName="arch" />
+      <config projectName="webServ" targetName="fclean" />
+      <config projectName="webServ" targetName="all" />
+      <config projectName="webServ" targetName="pro_header" />
+      <config projectName="webServ" targetName="Makefile" />
+      <config projectName="webServ" targetName="Webserv" />
+      <config projectName="webServ" targetName="restart_docker" />
+      <config projectName="webServ" targetName="std_all" />
+      <config projectName="webServ" targetName="re" />
+      <config projectName="webServ" targetName="debian" />
+      <config projectName="webServ" targetName="logs" />
+      <config projectName="webServ" targetName="proname_header" />
+      <config projectName="webServ" targetName="std_clean" />
+      <config projectName="webServ" targetName="alpine" />
+      <config projectName="webServ" targetName="ubuntu" />
+      <config projectName="webServ" targetName="run" />
+      <config projectName="webServ" targetName="cleanator" />
+    </generated>
+  </component>
   <component name="CMakeSettings">
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="24ca8876-a754-4598-bffb-86df3651e255" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="ebc4e45a-0dec-4590-983b-ff93912b9abb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example.conf" beforeDir="false" afterPath="$PROJECT_DIR$/example.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socketManager" beforeDir="false" afterPath="$PROJECT_DIR$/socketManager" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parse/configFile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/parse/configFile.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/webserver.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/webserver.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,15 +54,183 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)"
   }
-}]]></component>
-  <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/include/parser" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Makefile Application.all">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Webserv" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="Webserv" CONFIG_NAME="Webserv" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="all" CONFIG_NAME="all" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="alpine" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="alpine" CONFIG_NAME="alpine" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="arch" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="arch" CONFIG_NAME="arch" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="cleanator" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="cleanator" CONFIG_NAME="cleanator" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="debian" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="debian" CONFIG_NAME="debian" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="fclean" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="fclean" CONFIG_NAME="fclean" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="logs" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="logs" CONFIG_NAME="logs" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="pro_header" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="pro_header" CONFIG_NAME="pro_header" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="proname_header" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="proname_header" CONFIG_NAME="proname_header" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="re" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="re" CONFIG_NAME="re" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="restart_docker" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="restart_docker" CONFIG_NAME="restart_docker" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="run" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="run" CONFIG_NAME="run" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="siege" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="siege" CONFIG_NAME="siege" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="std_all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="std_all" CONFIG_NAME="std_all" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="std_clean" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="std_clean" CONFIG_NAME="std_clean" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ubuntu" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="webServ" TARGET_NAME="ubuntu" CONFIG_NAME="ubuntu" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Makefile Application.all" />
+      <item itemvalue="Makefile Application.cleanator" />
+      <item itemvalue="Makefile Application.fclean" />
+      <item itemvalue="Makefile Application.pro_header" />
+      <item itemvalue="Makefile Application.proname_header" />
+      <item itemvalue="Makefile Application.re" />
+      <item itemvalue="Makefile Application.std_all" />
+      <item itemvalue="Makefile Application.std_clean" />
+      <item itemvalue="Makefile Application.alpine" />
+      <item itemvalue="Makefile Application.arch" />
+      <item itemvalue="Makefile Application.debian" />
+      <item itemvalue="Makefile Application.logs" />
+      <item itemvalue="Makefile Application.Makefile" />
+      <item itemvalue="Makefile Application.restart_docker" />
+      <item itemvalue="Makefile Application.run" />
+      <item itemvalue="Makefile Application.siege" />
+      <item itemvalue="Makefile Application.ubuntu" />
+      <item itemvalue="Makefile Application.Webserv" />
+    </list>
   </component>
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ebc4e45a-0dec-4590-983b-ff93912b9abb" name="Changes" comment="" />
+      <created>1705364281698</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1705364281698</updated>
+      <workItem from="1705364288134" duration="13728000" />
+      <workItem from="1705505472537" duration="1789000" />
+      <workItem from="1705524353793" duration="691000" />
+      <workItem from="1705612131984" duration="3725000" />
+      <workItem from="1705675023317" duration="1053000" />
+      <workItem from="1705684252919" duration="7021000" />
+      <workItem from="1705762133008" duration="832000" />
+      <workItem from="1705764559843" duration="225000" />
+      <workItem from="1705774339161" duration="1240000" />
+      <workItem from="1705847307934" duration="10007000" />
+      <workItem from="1705951456356" duration="12452000" />
+      <workItem from="1706120490151" duration="5091000" />
+      <workItem from="1706281278729" duration="5324000" />
+      <workItem from="1706299745933" duration="8049000" />
+      <workItem from="1706367572718" duration="6000" />
+      <workItem from="1706370480217" duration="860000" />
+      <workItem from="1706383611548" duration="5444000" />
+      <workItem from="1706451908515" duration="3165000" />
+      <workItem from="1706464027646" duration="12505000" />
+      <workItem from="1706537988347" duration="9970000" />
+      <workItem from="1706645774953" duration="6227000" />
+      <workItem from="1706885503208" duration="7906000" />
+      <workItem from="1706956893504" duration="5797000" />
+      <workItem from="1707048014356" duration="298000" />
+      <workItem from="1707139586807" duration="2320000" />
+      <workItem from="1707231312340" duration="1205000" />
+      <workItem from="1707844821606" duration="5124000" />
+      <workItem from="1707923764725" duration="10674000" />
+      <workItem from="1708104409036" duration="1732000" />
+      <workItem from="1708955241083" duration="7498000" />
+      <workItem from="1709034016110" duration="5996000" />
+      <workItem from="1709057009210" duration="752000" />
+      <workItem from="1709129816942" duration="7713000" />
+      <workItem from="1709306408952" duration="6928000" />
+      <workItem from="1709386990450" duration="307000" />
+      <workItem from="1709389392360" duration="2047000" />
+      <workItem from="1709475667254" duration="5780000" />
+      <workItem from="1709560757136" duration="6190000" />
+      <workItem from="1710258985389" duration="7733000" />
+      <workItem from="1710350533923" duration="6091000" />
+      <workItem from="1710442730371" duration="3024000" />
+      <workItem from="1710445966901" duration="498000" />
+      <workItem from="1710689152564" duration="13437000" />
+      <workItem from="1711017647238" duration="59000" />
+      <workItem from="1711018384575" duration="4793000" />
+      <workItem from="1711025835874" duration="160000" />
+    </task>
     <servers />
   </component>
 </project>

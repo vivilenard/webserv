@@ -14,7 +14,7 @@ void	ConfigFile::addListen(configServer &server, std::string token, std::istring
 {
 
 	if (token == "listen")
-		addAddress(server, find);
+		addAddress(server, token, find);
 }
 
 void	ConfigFile::addServerName(configServer &server, std::string token, std::istringstream &find)
@@ -59,6 +59,7 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 {
 	std::ifstream inputFile(fileName.c_str());
 	configServer tmpServer;
+	int size = 0;
 	tmpServer = initializeObj();
 	this->_mimeTypes = parseMime();
 	if (_mimeTypes.empty())
@@ -72,32 +73,35 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 		{
 			std::string token;
 			std::istringstream find(line);
-			if (token.empty())
-				find >> token;
+			find >> token;
 			if (token == "server")
 			{
-				while (getline(inputFile, line) && !line.empty())
+				size++;
+				if (token == "server" && size > 1)
 				{
-					std::istringstream findNextLine(line);
-					findNextLine >> token;
-					addServerName(tmpServer, token, findNextLine);
-					addListen(tmpServer, token, findNextLine);
-					if (!tmpServer.validFormat)
-					{
-						std::cout << "THE ERROR---> " << token << std::endl;
-						break;
-					}
-					addRoot(tmpServer, token, findNextLine);
-					addIndex(tmpServer, token, findNextLine);
-					setLocation(tmpServer, inputFile, token, line, findNextLine);
-					if (token == "server")
-						break ;
+					config[tmpServer._serverName] = tmpServer;
+					std::cout << "Server Stored---> " << config[tmpServer._serverName]._serverName << std::endl;
+					serverStatus(tmpServer);
+					tmpServer = initializeObj();
 				}
-				config[tmpServer._serverName] = tmpServer;
-				serverStatus(tmpServer);
-				tmpServer = initializeObj();
+			}
+			if (!token.empty())
+			{
+				addServerName(tmpServer, token, find);
+				addListen(tmpServer, token, find);
+				if (!tmpServer.validFormat)
+				{
+					std::cout << "THE ERROR---> " << token << std::endl;
+					break;
+				}
+				addRoot(tmpServer, token, find);
+				addIndex(tmpServer, token, find);
+				setLocation(tmpServer, inputFile, token, line, find);
 			}
 		}
+		config[tmpServer._serverName] = tmpServer;
+		std::cout <<  "SERVER NAME---> AND LAST " << config[tmpServer._serverName]._serverName << std::endl;
+		serverStatus(tmpServer);
 	}
 	else
  		std::cout << "wrong format" << std::endl;

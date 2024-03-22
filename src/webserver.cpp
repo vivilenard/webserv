@@ -28,7 +28,7 @@ uint32_t	extractPort(struct sockaddr* address)
 void printConfig(string name, configServer server)
 {
 	cout << RED << "CONFIG: " << name << NORM << endl;
-	std::cout << "SERVERNAME:" << " " << server._serverName << "\n";
+	std::cout << "SERVERNAME:" << " " << server._serverName<< "\n";
 	std::cout << "INCLUDE:" << " " << server._include << "\n";
 	std::cout << "LISTEN:" << " " << server._listen << "\n";
 	std::cout << "ADDRESS:" << " " << server._address << "\n";
@@ -48,7 +48,6 @@ void printConfig(string name, configServer server)
 		cout << "Put: " << it->second._delete << endl;
 		cout << "redirection: " << it->second._redirect << endl;
 	}
-
 }
 
 int main(int argc, char **argv)
@@ -57,12 +56,14 @@ int main(int argc, char **argv)
 	if (!readConfig(argc, argv, config))
 		return 1;
 	configServer configfile = config.begin()->second;
-	printConfig(config.begin()->first, config.begin()->second);
 	// if (configfile._serverName == "default")
 	// {
 	// 	cout << BACK << "Webserver is running with a default config file." << NORM << endl;
 	// 	cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
 	// }
+	for (CONFIG::iterator it2 = config.begin(); it2 != config.end(); it2++) {
+			printConfig(it2->first, it2->second);
+	}
 	for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
 			try {
 				Interface::addExecuter(extractPort(it->second._socketAddress.interfaceAddress), new http(it->second));

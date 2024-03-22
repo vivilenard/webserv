@@ -8,6 +8,8 @@
 		body{
 			background-color: rgb(43, 15, 32);
 			color: rgb(115, 57, 91);
+			/* color:black; */
+			/* color: white; */
 			position:absolute;
 			width: 100%;
 			height: 100%;
@@ -16,6 +18,7 @@
 		}
 		.navbar{
 			text-align: center;
+			/* color: black; */
 			font-size: 2em;
 			margin-top: 10px;
 			/* border: 2px solid black; */
@@ -34,16 +37,18 @@
 			padding-bottom: 5em;
 		}
 		.title{
+			color: rgb(98, 23, 41);
 			font-size: 4em;
 			vertical-align: center;
 			/* line-height: 5em; */
 		}
 		a{
-			color: aliceblue;
+			color: rgb(115, 57, 91);
 			text-decoration: none;
 		}
 		a:hover{
-			color: rgb(115, 57, 91);
+			color: rgb(199, 101, 158);
+			/* outline: white; */
 		}
 		input[type=text], input[type=button]{
 			background-color: rgb(115, 57, 91);
@@ -55,8 +60,14 @@
 			  border-radius: 0.7em;
 			transition: 0.2s;
 		}
-		input[type=text]:focus, input[type=button]:hover{
+		input[type=text]:focus{
 			border: 1px solid pink;
+			/* background-color: rgb(199, 101, 158); */
+			outline: none;
+		}
+		input[type=button]:hover{
+			/* background-color: rgb(199, 101, 158); */
+			color: rgb(199, 101, 158);
 		}
 	</style>
 </head>

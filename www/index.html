@@ -6,49 +6,88 @@
 	<title>Document</title>
 	<style>
 		body{
-  			position: absolute;
-  			width: 100%;
-  			height: 100%;
+			background-color: rgb(43, 15, 32);
+			color: rgb(115, 57, 91);
+			position:absolute;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+		.navbar{
+			text-align: center;
+			font-size: 2em;
+			margin-top: 10px;
+			/* border: 2px solid black; */
+		}
+		.Container{
+			display: flex;
+			height: 100%;
+			justify-content: center;
+			align-items: center;
+		}
+		.pageContent{
+			text-align: center;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			align-items: center;
-			text-align: center;
-			background-color: rgb(43, 15, 32);
-			color: white;
+			padding-bottom: 5em;
 		}
-		.box{
-			/* border: 3px solid black; */
-			height: 250px;
-			display: flex;
-			text-align: center;
-			justify-content: center;
-			align-items: center;
+		.title{
+			font-size: 4em;
+			vertical-align: center;
+			line-height: 5em;
 		}
 		.options{
 			display: flex;
-			flex-direction: row;
-			justify-content: space-around;
-			align-items: space-around;
-			margin:10px;
-			width: 700px;
-			height: 300px;
-			font-size: 40px;
-			margin:10em;
+			justify-content: space-evenly;
+
 		}
-		h3{
-			font-size: 99px;
-			color: rgb(115, 57, 91);
+		a{
+			color: black;
+			font-size: 35px;
+			font-weight: 400;
+			text-decoration: none;
+			background-color: rgb(115, 57, 91);
+			padding: 30px 70px;
+			border-radius: 0.2em;
 		}
-	</style>
+		a:hover{
+			/* color: rgb(115, 57, 91); */
+			background-color:rgb(232, 162, 203);
+		}
+		input::file-selector-button, input[type=submit]{
+			background-color: rgb(115, 57, 91);
+			font-weight: bold;
+			font-size: 14px;
+			border: 1px solid black;
+			  /* padding: 1em 2em; */
+			margin: 4px 2px;
+			  border-radius: 0.7em;
+			transition: 0.2s;
+		}
+		input::file-selector-button:hover, input[type=submit]:hover{
+			border: 1px solid pink;
+		}
+		/* .upload{
+			/* font-size: ; */
+			</style>
 </head>
 <body>
-	<p class="box">made by <br> vlenard apaghera pharbst</p>
-	<h3 class="box">W E B S E R V E R</h3>
-	<div class="box">
-		<div class="options">
-			<a href="/files/upload.html">Upload a file</a>
-			<a href="/files/delete.html">Delete a file</a>
+	<div class="navbar">
+		<p>made by <br> vlenard apaghera pharbst</p>
+	</div>
+	<div class="Container">
+		<div class="pageContent">
+			<div class="title">
+				<h1>W E B S E R V E R</h1>
+			</div>
+			<div class="upload">
+				<div class="options">
+					<a href="/files/upload.html">Upload a file</a>
+					<a href="/files/delete.html">Delete a file</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

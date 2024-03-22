@@ -4,24 +4,90 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		body{
+			background-color: rgb(43, 15, 32);
+			color: rgb(115, 57, 91);
+			position:absolute;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+		.navbar{
+			text-align: center;
+			font-size: 2em;
+			margin-top: 10px;
+			/* border: 2px solid black; */
+		}
+		.Container{
+			display: flex;
+			height: 100%;
+			justify-content: center;
+			align-items: center;
+		}
+		.pageContent{
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-bottom: 5em;
+		}
+		.title{
+			font-size: 4em;
+			vertical-align: center;
+			/* line-height: 5em; */
+		}
+		a{
+			color: aliceblue;
+			text-decoration: none;
+		}
+		a:hover{
+			color: rgb(115, 57, 91);
+		}
+		input[type=text], input[type=button]{
+			background-color: rgb(115, 57, 91);
+			font-weight: bold;
+			font-size: 14px;
+			border: 1px solid black;
+			  /* padding: 1em 2em; */
+			margin: 4px 2px;
+			  border-radius: 0.7em;
+			transition: 0.2s;
+		}
+		input[type=text]:focus, input[type=button]:hover{
+			border: 1px solid pink;
+		}
+	</style>
 </head>
 <body>
-    <script language="JScript">
-        <!-- Hide
-        function deleteFile()
-        {
-            let input = document.getElementById("userInput").value;
-            fetch('' + input,  { method: 'DELETE' })
-        }
-        -->
-    </script>
-
-	<a href="../index.html">HOME</a>
-	<h1>Delete a file</h1>
-    <form name="Form">
-        <input type="text" id="userInput">
-        <input type="Button" value="Delete File" onClick='deleteFile()'>
-        </form>
-	</form> 
+	<script language="JScript">
+		<!-- Hide
+			function deleteFile()
+			{
+				let input = document.getElementById("userInput").value;
+				fetch('' + input,  { method: 'DELETE' })
+			}
+			-->
+			</script>
+	<div class="navbar">
+		<a href="../index.html">HOME</a>
+	</div>
+	<div class="Container">
+		<div class="pageContent">
+			<div class="title">
+				<h1>Delete a file</h1>
+			</div>
+			<div class="upload">
+				<label> Enter the path to the file
+					<form name="Form">
+						<input type="text" id="userInput">
+						<input type="Button" value="Delete File" onClick='deleteFile()'>
+						</form>
+					</form> 
+				</label>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

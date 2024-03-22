@@ -4,6 +4,63 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		body{
+			background-color: rgb(43, 15, 32);
+			color: rgb(115, 57, 91);
+			position:absolute;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+		.navbar{
+			text-align: center;
+			font-size: 2em;
+			margin-top: 10px;
+			/* border: 2px solid black; */
+		}
+		.Container{
+			display: flex;
+			height: 100%;
+			justify-content: center;
+			align-items: center;
+		}
+		.pageContent{
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-bottom: 5em;
+		}
+		.title{
+			font-size: 4em;
+			vertical-align: center;
+			/* line-height: 5em; */
+		}
+		a{
+			color: aliceblue;
+			text-decoration: none;
+		}
+		a:hover{
+			color: rgb(115, 57, 91);
+		}
+		input::file-selector-button, input[type=submit]{
+			background-color: rgb(115, 57, 91);
+			font-weight: bold;
+			font-size: 14px;
+			border: 1px solid black;
+			  /* padding: 1em 2em; */
+			margin: 4px 2px;
+			  border-radius: 0.7em;
+			transition: 0.2s;
+		}
+		input::file-selector-button:hover, input[type=submit]:hover{
+			border: 1px solid pink;
+		}
+		/* .upload{
+			/* font-size: ; */
+			</style>
 </head>
 <body>
 	<script language="JScript">
@@ -16,12 +73,24 @@
 		}
         -->
 	</script>
-	<a href="../index.html">HOME</a>
-	<h1>Upload a file</h1>
-	<form method="POST" enctype="multipart/form-data" action="/upload">
-		<input type="file" name="upload" id="filename">
-		<input type="text" id="enterFilename">
-		<input type="submit" value="Upload">
-	</form> 
+	<div class="navbar b">
+		<a href="../index.html">HOME</a>
+	</div>
+	<div class="Container">
+		<div class="pageContent b">
+			<div class="title b">
+				<h1>Upload a file</h1>
+			</div>
+			<div class="upload">
+				<form method="POST" enctype="multipart/form-data" action="/upload">
+					<label>
+						<input type="file" name="upload" id="filename">
+						<!-- <input type="text" id="enterFilename"> -->
+						<input type="submit" value="Upload">
+					</label>
+				</form> 
+			</div>
+		</div>
+	</div>
 </body>
 </html>

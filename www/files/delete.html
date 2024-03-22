@@ -42,6 +42,19 @@
 			vertical-align: center;
 			/* line-height: 5em; */
 		}
+		.form{
+			display: flex;
+			justify-content: space-evenly;
+		}
+		/* .button, .form-item{
+			color: black;
+			font-size: 35px;
+			font-weight: 400;
+			text-decoration: none;
+			background-color: rgb(115, 57, 91);
+			padding: 30px 70px;
+			border-radius: 0.2em;
+		} */
 		a{
 			color: rgb(115, 57, 91);
 			text-decoration: none;
@@ -51,14 +64,16 @@
 			/* outline: white; */
 		}
 		input[type=text], input[type=button]{
-			background-color: rgb(115, 57, 91);
-			font-weight: bold;
-			font-size: 14px;
 			border: 1px solid black;
-			  /* padding: 1em 2em; */
-			margin: 4px 2px;
-			  border-radius: 0.7em;
 			transition: 0.2s;
+			/* button on every page */
+			color: black;
+			font-size: 35px;
+			font-weight: 400;
+			text-decoration: none;
+			background-color: rgb(115, 57, 91);
+			padding: 30px 70px;
+			border-radius: 0.2em;
 		}
 		input[type=text]:focus{
 			border: 1px solid pink;
@@ -91,9 +106,13 @@
 			</div>
 			<div class="upload">
 				<label> Enter the path to the file
-					<form name="Form">
-						<input type="text" id="userInput">
-						<input type="Button" value="Delete File" onClick='deleteFile()'>
+					<form name="Form" class="form">
+						<div class="form-item">
+							<input type="text" id="userInput">
+						</div>
+						<div class="form-item">
+							<input type="Button" value="Delete File" onClick='deleteFile()'>
+						</div>
 						</form>
 					</form> 
 				</label>

@@ -36,27 +36,48 @@
 		.title{
 			font-size: 4em;
 			vertical-align: center;
-			/* line-height: 5em; */
+			line-height: 5em;
+		}
+		.form{
+			display: flex;
+			justify-content: space-between;
 		}
 		a{
 			color: aliceblue;
 			text-decoration: none;
 		}
+		.button{
+			color: black;
+			font-size: 35px;
+			font-weight: 400;
+			text-decoration: none;
+			background-color: rgb(115, 57, 91);
+			padding: 30px 70px;
+			border-radius: 0.2em;
+		}
+		.button-item{
+			padding: 30px 70px;
+		}
 		a:hover{
 			color: rgb(115, 57, 91);
 		}
 		input::file-selector-button, input[type=submit]{
-			background-color: rgb(115, 57, 91);
-			font-weight: bold;
-			font-size: 14px;
 			border: 1px solid black;
-			  /* padding: 1em 2em; */
-			margin: 4px 2px;
-			  border-radius: 0.7em;
+			/* margin: 4px 2px; */
 			transition: 0.2s;
+			/* button on every page */
+			color: black;
+			font-size: 35px;
+			font-weight: 400;
+			text-decoration: none;
+			background-color: rgb(115, 57, 91);
+			padding: 30px 70px;
+			border-radius: 0.2em;
 		}
 		input::file-selector-button:hover, input[type=submit]:hover{
-			border: 1px solid pink;
+			/* border: 1px solid pink; */
+			background-color:rgb(232, 162, 203);
+
 		}
 		/* .upload{
 			/* font-size: ; */
@@ -82,12 +103,15 @@
 				<h1>Upload a file</h1>
 			</div>
 			<div class="upload">
-				<form method="POST" enctype="multipart/form-data" action="/upload">
-					<label>
-						<input type="file" name="upload" id="filename">
-						<!-- <input type="text" id="enterFilename"> -->
-						<input type="submit" value="Upload">
-					</label>
+				<form method="POST" enctype="multipart/form-data" action="/upload" class="form">
+					<!-- <label> -->
+						<div class="button-item">
+							<input type="file" name="upload" id="filename">
+						</div>
+						<div class="button-item">
+							<input class="button" type="submit" value="Upload">
+						</div>
+					<!-- </label> -->
 				</form> 
 			</div>
 		</div>

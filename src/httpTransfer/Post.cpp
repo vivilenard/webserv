@@ -141,6 +141,16 @@ void	Response::handleQuery()
 	bakeLoginCookie(_request.getQuery());
 }
 
+const string	generateSequence()
+{
+    srand((unsigned int)time(nullptr)); 
+	int random = rand();
+	ostringstream os;
+	os << random;
+	cout << "RANDOM " << random << endl;
+	return os.str();
+}
+
 void	Response::bakeLoginCookie(Query & query)
 {
 	string session_id;
@@ -151,12 +161,12 @@ void	Response::bakeLoginCookie(Query & query)
 		if (!login_name.empty())
 		{
 			// session_id = "id=";
-			session_id.append("2342342");  //generate id number
-			if (_cookies.find(login_name) != _cookies.end())
+			session_id.append(generateSequence());  //generate id number
+			if (_newCookies.find(login_name) != _newCookies.end())
 				cout << RED << "user is already logged in. Wait 15 min until your session has expired" << endl;
 			else
 			{
-				_cookies[login_name] = session_id;
+				_newCookies[login_name] = session_id;
 				cout << MAG << "COOKIE was formed. still need to generate custom id" << NORM << endl;
 			}
 		}

@@ -77,25 +77,15 @@ bool Response::invalidRequest()
 	// dt = asctime(gmtm);  
 	// cout << "The UTC date and time is:" << dt << endl; // print UTC date and time 
 
-string generateExpiration()
-{
-	char dateStr[100];
-	//Date: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
-	//21 Oct 2015 07:28:00 GMT
-	time_t now = time(0); // get current dat/time with respect to system
-	tm* gm_tm = gmtime(&now);
-	strftime(dateStr, 100, "Current: %Y %B", gm_tm);
-	return dateStr;
-}
-
 string	Response::CookiesToHeaders()
 {
 	ostringstream os;
-	COOKIES::iterator it = _cookies.begin();
-	for (; it != _cookies.end(); it++)
+	COOKIES::iterator it = _newCookies.begin();
+	for (; it != _newCookies.end(); it++)
 	{
 		os << "Set-Cookie: " << it->first << "=" << it->second
-			<< "; Expires=" << generateExpiration() << "\r\n";
+			// << "; Expires=" << generateExpiration() << "\r\n";
+			<< "; Max-Age=" << 600 << ";" << "\r\n";
 	}
 	return os.str();
 }
@@ -207,4 +197,15 @@ int	Response::addDefaultFile(string & path)
 		return 1;
 	}
 	return 0;
+}
+
+const string generateExpiration()
+{
+	char dateStr[100];
+	//Date: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
+	//Expires=Tue, 15 Feb 2020 00:17:48 GMT;
+	time_t now = time(0); // get current dat/time with respect to system
+	tm* gm_tm = gmtime(&now);
+	strftime(dateStr, 100, "%a, %d %b %Y %T GMT", gm_tm);
+	return dateStr;
 }

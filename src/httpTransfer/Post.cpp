@@ -118,17 +118,17 @@ bool			Response::recieveQuery(const string & contentType)
 	if (contentType == "form-urlencoded")
 	{
 		_request.parseQuery(_request.getBody());
+		Query query = _request.getQuery();
+		Query::iterator it = query.begin();
+		cout << "recieved? query: " << endl;
+		for (; it != query.end(); it++)
+		{
+			cout << "query string:::::" << endl;
+			cout << it->first << " " << it->second << endl;
+		}
 		return true;
 	}
 	return false;
-	// Query query = _request.getQuery();
-	// Query::iterator it = query.begin();
-	// cout << "recieved? query: " << endl;
-	// for (; it != query.end(); it++)
-	// {
-	// 	cout << "query string:::::" << endl;
-	// 	cout << it->first << " " << it->second << endl;
-	// }
 	// if (query.empty())
 	// 	return false;
 	// return true;
@@ -136,9 +136,29 @@ bool			Response::recieveQuery(const string & contentType)
 
 void	Response::handleQuery()
 {
-	if (_request.getURI() == "/login")
+	if (_request.getURI() != "/login")
+		return ;
+	bakeLoginCookie(_request.getQuery());
+}
+
+void	Response::bakeLoginCookie(Query & query)
+{
+	string session_id;
+	cout << ORANGE << "I will create a cookie. YUMM" << endl;
+	if (query.find("42login")!= query.end())
 	{
-		cout << ORANGE << "I will create a cookie. YUMM" << endl;
-		// _cookie = 
+		string login_name = query["42login"];
+		if (!login_name.empty())
+		{
+			// session_id = "id=";
+			session_id.append("2342342");  //generate id number
+			if (_cookies.find(login_name) != _cookies.end())
+				cout << RED << "user is already logged in. Wait 15 min until your session has expired" << endl;
+			else
+			{
+				_cookies[login_name] = session_id;
+				cout << MAG << "COOKIE was formed. still need to generate custom id" << NORM << endl;
+			}
+		}
 	}
 }

@@ -78,7 +78,7 @@ class Request
 		Headers & 		getHeaders(){ return _headers; }
 		const string & 	getBody()	{ return _body; }
 		void			parseQuery(const string & path);
-		const Query &	getQuery(){ return _query;}
+		Query &			getQuery(){ return _query;}
 		void 			buildCgiEnv(void);
 		int				executeCgi(std::string &cgiScript, const string & path);
 };

@@ -69,6 +69,36 @@ bool Response::invalidRequest()
 	}
 	return false;
 }
+	// char* dt = ctime(&now); // convert it into string
+
+	// cout << "The local date and time is: " << dt << endl; // print local date and time
+	
+	// tm* gmtm = gmtime(&now); // for getting time to UTC convert to struct  
+	// dt = asctime(gmtm);  
+	// cout << "The UTC date and time is:" << dt << endl; // print UTC date and time 
+
+string generateExpiration()
+{
+	char dateStr[100];
+	//Date: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
+	//21 Oct 2015 07:28:00 GMT
+	time_t now = time(0); // get current dat/time with respect to system
+	tm* gm_tm = gmtime(&now);
+	strftime(dateStr, 100, "Current: %Y %B", gm_tm);
+	return dateStr;
+}
+
+string	Response::CookiesToHeaders()
+{
+	ostringstream os;
+	COOKIES::iterator it = _cookies.begin();
+	for (; it != _cookies.end(); it++)
+	{
+		os << "Set-Cookie: " << it->first << "=" << it->second
+			<< "; Expires=" << generateExpiration() << "\r\n";
+	}
+	return os.str();
+}
 
 void Response::formResponse(int status, const string & statusInfo)
 {
@@ -91,6 +121,7 @@ void Response::formResponse(int status, const string & statusInfo)
 	{
 		os << "Content-Type: " 		<< _fileContentType << "\r\n";
 		os << "Content-Length: " 	<< body.length() << "\r\n";
+		os << CookiesToHeaders();
 		os << "\r\n";
 		os << body;
 	}

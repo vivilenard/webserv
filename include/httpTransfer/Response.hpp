@@ -18,10 +18,12 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 
 struct configServer;
 
 #define STATUSCODE _statusCode.getStati()
+#define COOKIES map<string, string>
 
 class Response
 {
@@ -38,7 +40,7 @@ class Response
 	string			_fileContent;
 	string			_fileContentType;
 	string			_cgiScript;
-	string			_cookie;
+	COOKIES			_cookies;
 
 	bool			invalidRequest();
 	void			processGet();
@@ -64,6 +66,8 @@ class Response
 	string			currentDir();
 	bool			recieveQuery(const string & contentType);
 	void			handleQuery();
+	void			bakeLoginCookie(Query & query);
+	string			CookiesToHeaders();
 
 
 	public:

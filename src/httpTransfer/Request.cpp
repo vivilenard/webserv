@@ -20,6 +20,12 @@ Request::Request(const string & request, configServer & configfile):  _configfil
 	}
 	checkRequestSize();
 	handleMultipart();
+
+	Query::iterator it = _query.begin();
+	for (; it != _query.end(); it++)
+	{
+		cout << it->first << " " << it->second << endl;
+	}
 }
 
 void	Request::parseMainHeader()
@@ -257,9 +263,9 @@ void Request::parseQuery(const string & queryString)
 			return ;
 		_query[queryPair.substr(0, a)] = queryPair.substr(a + 1);
 	}
-	Query::iterator it;
-	for (it = _query.begin(); it != _query.end(); it++)
-		cout << it->first << " and " << it->second << endl;
+	// Query::iterator it;
+	// for (it = _query.begin(); it != _query.end(); it++)
+	// 	cout << it->first << " and " << it->second << endl;
 
 }
 

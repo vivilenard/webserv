@@ -38,6 +38,7 @@ class Response
 	string			_fileContent;
 	string			_fileContentType;
 	string			_cgiScript;
+	string			_cookie;
 
 	bool			invalidRequest();
 	void			processGet();
@@ -61,6 +62,8 @@ class Response
 	bool			isDirectory(const string & endpoint);
 	bool			listDirectory(DIR* dirp);
 	string			currentDir();
+	bool			recieveQuery(const string & contentType);
+	void			handleQuery();
 
 
 	public:

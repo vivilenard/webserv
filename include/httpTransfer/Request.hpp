@@ -34,8 +34,8 @@ class Request
 	Query			_query;
 	EnvCgi			_envCgi;
 	void			parseMainHeader();
-	void			parseHeaders();
-	int				parseBody();
+	// void			parseHeaders();
+	// int				parseBody();
 	bool			_sizeInRange;
 	// string			parseHeader(string s);
 
@@ -43,7 +43,7 @@ class Request
 	int				parseBody(string & body, const string & chunk, const int & length);
 	PAIR 			parsePair(string line);
 	void			identifyRequest();
-	bool			isMultipartChunk();
+	// bool			isMultipartChunk();
 	bool			ContainsMultipartHeader();
 	bool			handleMultipart();
 	bool			parseMultipart(const string & s);

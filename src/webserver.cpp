@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 			socketManager::start(interfaceFunction);
 		}
 		catch (std::exception &e) {
-			if (dynamic_cast<std::runtime_error*>(&e)) {
+			if (dynamic_cast<std::runtime_error*>(&e)->what() == std::string("socketManager::start:	no sockets to manage")) {
                 std::cout << "Exception: " << e.what() << std::endl;
                 std::cout << "Exiting program" << std::endl;
                 socketManager::stop();

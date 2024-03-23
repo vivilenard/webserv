@@ -6,6 +6,7 @@ bool checkRoot(std::string &root)
 	if (stat(root.c_str(), &info) != 0)
 	{
 		std::cerr << "Invalid root ---> " << root << " <---" << std::endl;
+		std::cout << "ConfigFile::checkRoot: " << strerror(errno) << std::endl;
 		return (false);
 	}
 	return (true);

@@ -138,6 +138,7 @@ int Request::executeCgi(std::string &cgiScript, const string & path)
 		{
 			kill(pid, SIGKILL);
 			close(pipe_stdout[0]);
+			std::cerr << "TIMEOUT!!" << std::endl;
 			return EXIT_FAILURE;
 		}
 		close(pipe_stdout[0]);
@@ -161,22 +162,20 @@ int Request::executeCgi(std::string &cgiScript, const string & path)
 bool	Response::isCgi(const string & path)
 {
 	size_t pos = path.find_last_of('.');
+	int returnValue = EXIT_SUCCESS;
 	if (pos == string::npos)
 		return false;
 	if (path.substr(pos) == ".py")
 	{
 		std::string tmp = currentPath();
-		std::string dir = path.substr(1) + "/cgi-bin"; // <----- if the root = "./"
-		/*std::cout << "CGI PATH---> " << path.c_str() << std::endl; // <----- if you have an absolute  */
-		std::cout << "CURRENT PATH" << tmp << std::endl;
-		std::cout << "CGI  DIR PATH---> " << dir << std::endl;
+		std::string dir = tmp + "/cgi-bin" + _request.getURI();
 		if (!checkRoot(dir))
 		{
 			std::cerr << "Wrong CGI path!" << std::endl;
 			return (false);
 		}
 		_request.buildCgiEnv();
-		_request.executeCgi(this->_cgiScript, dir);
+		returnValue = _request.executeCgi(this->_cgiScript, dir);
 		_fileContentType = "text/html";
 		if (!_cgiScript.empty())
 		{
@@ -184,7 +183,10 @@ bool	Response::isCgi(const string & path)
 			if (pos_nl > 0)
 				_cgiScript = _cgiScript.substr(pos_nl);
 		}
-		_status = 200;
+		if (returnValue == EXIT_FAILURE)
+			_status = 404;
+		else
+			_status = 200;
 		return true;
 	}
 	return false;

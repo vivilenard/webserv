@@ -8,18 +8,29 @@ const string	generateSequence()
 	os << random;
 	return os.str();
 }
-
+void printMAP(stringMAP m)
+{
+	stringMAP::iterator it = m.begin();
+	for (; it != m.end(); it++)
+		cout << it->first << " , " << it->second << endl;
+	return ;
+}
 void	Response::bakeLoginCookie(Query & query)
 {
+	cout << "in bake cookie" << endl;
 	string loginField = "42login";
 	string session_id;
 	// cout << ORANGE << "I will create a cookie. YUMM" << NORM << endl;
-	COOKIES savedCookies = getSavedCookies("Cookies.csv");  //read from file
+	_oldCookies = getSavedCookies("Cookies.csv");  //read from file
+	COOKIES savedCookies = _oldCookies;
+	cout << RED << "saved Cookies" << NORM << endl;
+	printMAP(savedCookies);
 	if (savedCookies.empty())
-		cout << "there are no saved cookies" << endl;
+		if (PRINT) {cout << "No Cookies are stored" << endl;}
 	if (query.find(loginField)!= query.end())
 	{
 		string login_name = query[loginField];
+		// cout << "login: " << login_name << endl;
 		if (!login_name.empty())
 		{
 			session_id.append(generateSequence());  //generate id number
@@ -29,8 +40,9 @@ void	Response::bakeLoginCookie(Query & query)
 		}
 	}
 	insertNewToSavedCookies(_newCookies, savedCookies);
+	cout << RED << "saved Cookies after login" << NORM << endl;
+	printMAP(savedCookies);
 	saveCookiesInFile(savedCookies, "Cookies.csv");
-	//write new cookies to map if they dont exist there
 }
 
 bool	Response::saveCookiesInFile(const COOKIES & cookies, const string & filename)
@@ -40,7 +52,7 @@ bool	Response::saveCookiesInFile(const COOKIES & cookies, const string & filenam
 	
 	COOKIES::const_iterator it = cookies.begin();
 	for (; it != cookies.end(); it++)
-		ofile << it->first << ";" << it->second << ";" << generateCookieDate() << ";" << "\n";
+		ofile << it->first << ";" << it->second << ";" << "\n"; //generateCookieDate() << ";" << "\n";
 	ofile.close();
 	return true;
 }
@@ -54,10 +66,6 @@ bool		Response::insertNewToSavedCookies(COOKIES & fresh, COOKIES & saved)
 		if (saved.find(it->first) == saved.end())  //not found in saved
 			saved[it->first] = it->second;
 	}
-	it = saved.begin();
-	cout << ORANGE << "savedCookies: " << NORM << endl;
-	for (; it != saved.end(); it++)
-		cout << it->first << " = " << it->second << endl;
 	return true;
 }
 
@@ -80,10 +88,6 @@ COOKIES		Response::getSavedCookies(const string & filename)
 		getline(is, time, ';');
 		savedCookies[name] = id;
 	}
-	COOKIES::iterator it = savedCookies.begin();
-	cout << BLUE << "savedCookies in map: " << NORM << endl;
-	for (; it != savedCookies.end(); it++)
-		cout << it->first << " = " << it->second << endl;
 	return savedCookies;
 }
 
@@ -104,9 +108,12 @@ string	Response::CookiesToHeaders()
 	COOKIES::iterator it = _newCookies.begin();
 	for (; it != _newCookies.end(); it++)
 	{
-		os << "Set-Cookie: " << it->first << "=" << it->second
-			// << "; Expires=" << generateExpiration() << "\r\n";
-			<< "; Max-Age=" << 600 << ";" << "\r\n";
+		if (_request.getCookies().find(it->first) == _request.getCookies().end())
+		{
+			os << "Set-Cookie: " << it->first << "=" << it->second
+				// << "; Expires=" << generateExpiration() << "\r\n";
+				<< "; Max-Age=" << 600 << ";" << "\r\n";
+		}
 	}
 	return os.str();
 }
@@ -123,7 +130,7 @@ const string Response::getCookieBody()
 		//user is already in client cookies
 		if (IDcheck(intraName) == true)
 		{
-			cout << RED << "user is already logged in. Wait 15 min since last login until your session has expired" << endl;
+			cout << RED << "user is already logged in." << endl;
 			return "Hello again! Seems like you logged in before ..";
 		}
 		else
@@ -138,7 +145,7 @@ const string Response::getCookieBody()
 bool Response::IDcheck(const string & name)
 {
 	COOKIES clientCookies = _request.getCookies();
-	COOKIES serverSession = getSavedCookies("Cookies.csv");
+	COOKIES serverSession = _oldCookies;
 
 	if (clientCookies.find(name) == clientCookies.end()
 		|| serverSession.find(name) == serverSession.end())
@@ -153,6 +160,6 @@ bool Response::IDcheck(const string & name)
 	cout << "session id: " << sessionID << endl;
 	if (clientID == sessionID)
 		return true;
-	cout << "cookie IDs are not matching! Your ID has expired and the Cookie needs to be recreated on the server." << endl;
+	cout << "cookie IDs are not matching!" << endl;
 	return false;
 }

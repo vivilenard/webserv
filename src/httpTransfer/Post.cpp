@@ -120,10 +120,8 @@ bool			Response::recieveQuery(const string & contentType)
 		_request.parseQuery(_request.getBody());
 		Query query = _request.getQuery();
 		Query::iterator it = query.begin();
-		// cout << "recieved? query: " << endl;
 		for (; it != query.end(); it++)
 		{
-			// cout << "query string:::::" << endl;
 			cout << it->first << " " << it->second << endl;
 		}
 		return true;
@@ -133,7 +131,6 @@ bool			Response::recieveQuery(const string & contentType)
 
 void	Response::handleQuery()
 {
-	cout << "in handle Query" << endl;
 	if (_request.getURI() != "/login")
 		return ;
 	bakeLoginCookie(_request.getQuery());

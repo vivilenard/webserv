@@ -41,6 +41,7 @@ class Response
 	string			_fileContentType;
 	string			_cgiScript;
 	COOKIES			_newCookies;
+	COOKIES			_oldCookies;
 	// COOKIES			savedCookies;
 
 	bool			invalidRequest();
@@ -77,6 +78,7 @@ class Response
 	bool			insertNewToSavedCookies(COOKIES & fresh, COOKIES & saved);
 	bool			saveCookiesInFile(const COOKIES & cookies, const string & filename);
 	bool			IDcheck(const string & name);
+	string			getFileCreationTime(char *path);
 
 	public:
 		Response(Request & request, configServer & configfile);

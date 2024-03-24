@@ -13,6 +13,7 @@
 #define Headers map<string, string>
 #define Query map<string, string>
 #define EnvCgi	map<string, string>
+#define PRINT false
 
 #define MAX_BODY_SIZE 50000
 #define PAIR pair<string, string>

@@ -17,8 +17,7 @@ void sigHandler(int signum)
 	exit(signum);
 }
 
-uint32_t	extractPort(struct sockaddr* address) 
-{
+static uint32_t	extractPort(struct sockaddr* address) {
 	if (address->sa_family == AF_INET)
 		return (ntohs(((struct sockaddr_in*)address)->sin_port));
 	else if (address->sa_family == AF_INET6)
@@ -31,10 +30,15 @@ void printConfig(std::string name, configServer server) {
 	std::cout << FPurple << "╔══════════════════════════════════════════════════════╗" << NORMAL << std::endl;
 	std::cout << FPurple << "║" << GREEN << std::setw(54) << std::left << "SERVER: " + name + " " + (server.validFormat ? "[VALID]" : "[INVALID]")  << FPurple << "║" << NORMAL << std::endl;
 	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
-	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "SERVERNAME" + server._serverName << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "SERVERNAME: " + server._serverName << FPurple << "║" << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "INCLUDE: " + server._include << FPurple << "║" << std::endl;
-	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "LISTEN: " + server._listen << FPurple << "║" << std::endl;
-	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ADDRESS: " + server._address << FPurple << "║" << std::endl;
+	for (std::vector<struct socketParameter>::iterator it = server._socketAddress.begin(); it != server._socketAddress.end(); it++) {
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ADDRESS: " + std::string(inet_ntoa(((struct sockaddr_in*)it->interfaceAddress)->sin_addr)) << FPurple << "║" << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "PORT: " + std::to_string(extractPort(it->interfaceAddress)) << FPurple << "║" << std::endl;
+		std::cout << FPurple << "║" << FYellow << "SSL: " << std::setw(49) << std::left << (it->ssl ? "true" : "false") << FPurple << "║" << std::endl;
+	}
+	// std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "PORT: " + server._portStr << FPurple << "║" << std::endl;
+	// std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ADDRESS: " + server._address << FPurple << "║" << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ROOT: " + server._root << FPurple << "║" << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "VALIDFORMAT: " + server.validFormat << FPurple << "║" << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "INDEX: " + server._index << FPurple << "║" << std::endl;
@@ -64,14 +68,28 @@ int main(int argc, char **argv)
 			printConfig(it2->first, it2->second);
 	}
 	for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
+		http* newExecuter = new http(it->second);
+		for (std::vector<struct socketParameter>::iterator it2 = it->second._socketAddress.begin(); it2 != it->second._socketAddress.end(); it2++) {
 			try {
-				Interface::addExecuter(extractPort(it->second._socketAddress.interfaceAddress), new http(it->second));
-				socketManager::addServerSocket(it->second._socketAddress);
+				if (it2->ssl) {
+					if (!it->second._certificate.empty())
+						it2->sslCertificate = it->second._certificate;
+					else
+						throw std::runtime_error("No certificate specified for ssl");
+					if (!it->second._key.empty())
+						it2->sslKey = it->second._key;
+					else
+						throw std::runtime_error("No key specified for ssl");
+				}
+				Interface::addExecuter(extractPort(it2->interfaceAddress), newExecuter);
+				socketManager::addServerSocket(*it2);
 			}
 			catch (std::exception &e) {
 				std::cout << "Exception: " << e.what() << std::endl;
-				std::cout << "Skipping server" << std::endl;
+				std::cout << "Skipping socket" << std::endl;
+				Interface::removeExecuter(extractPort(it2->interfaceAddress));
 			}
+		}
 	}
 	InterfaceFunction interfaceFunction = &Interface::interface;
 	for (int i = 0; i < 10; i++) {

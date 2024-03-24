@@ -7,7 +7,7 @@ configServer ConfigFile::initializeObj()
 
 	setUp._serverName = "";
 	setUp._include = "";
-	setUp._listen = 0;
+	setUp._port = 0;
 	setUp._address = "";
 	setUp._root = "";
 	setUp.validFormat = false;

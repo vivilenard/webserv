@@ -11,7 +11,6 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 	this->_mimeTypes = parseMime();
 	if (_mimeTypes.empty())
 	   std::cout << "no mimeTypes included. Save them in this directory: /config/mime.types" << endl;
-// printMimes(this->_mimeTypes);
 	tmpServer._mimeTypes = this->_mimeTypes;
 	if (inputFile.is_open())
 	{
@@ -26,8 +25,12 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 				size++;
 				if (token == "server" && size > 1)
 				{
-					config[tmpServer._serverName] = tmpServer;
+					// if (!checkSSLParameter(tmpServer))
+						// std::cout << "SSL parameters missing, skipping socket" << std::endl;
+					// else
+						config.insert(std::pair<std::string, configServer>(tmpServer._serverName, tmpServer));
 					tmpServer = initializeObj();
+					tmpServer._mimeTypes = this->_mimeTypes;
 				}
 			}
 			if (!token.empty())
@@ -46,7 +49,8 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 				}
 			}
 		}
-		config[tmpServer._serverName] = tmpServer;
+		// checkSSLParameter(tmpServer);
+		config.insert(std::pair<std::string, configServer>(tmpServer._serverName, tmpServer));
 	}
 	else
 	   std::cout << "wrong format" << std::endl;
@@ -76,37 +80,44 @@ void	ConfigFile::addServerName(configServer &server, std::string token, std::ist
 void	ConfigFile::addAddress(configServer &server, std::string token, std::istringstream &find)
 {
 	std::string				tmp;
-	std::string				address;
 	std::istringstream		portStr;
-	int						port;
 
 	if (token == "listen")
 	{
 		if (!find.good()) {
-			std::cerr << "input error" << std::endl;
+			std::cerr << "ConfigFile::addAddress:	critical input error" << std::endl;
 			exit(1);
 		}
 		if (find >> tmp) {
 			if (tmp[0] == '[') {
 				size_t pos = tmp.find("]");
-				address = tmp.substr(1, pos - 1);
+				server._address = tmp.substr(1, pos - 1);
 				portStr.str(tmp.substr(pos + 2));
-				portStr >> port;
+				server._portStr = tmp.substr(pos + 2);
+				portStr >> server._port;
 			}
 			else {
 				size_t pos = tmp.find(":");
-				address = tmp.substr(0, pos);
+				server._address = tmp.substr(0, pos);
 				portStr.str(tmp.substr(pos + 1));
-				portStr >> port;
+				server._portStr = tmp.substr(pos + 1);
+				portStr >> server._port;
 			}
-			server._socketAddress.interfaceAddress = convertToSockAddr(address, port);
-			server._socketAddress.protocol = TCP;
+			struct socketParameter newSocket;
+			try {
+				newSocket.interfaceAddress = convertToSockAddr(server._address, server._port);
+			}
+			catch (std::exception &e) {
+				std::cout << "Skipping this socket because of: " << std::endl;
+				std::cout << "Exception: " << e.what() << std::endl;
+				
+			}
+			newSocket.protocol = TCP;
 			if (find >> tmp && tmp == "ssl")
-				server._socketAddress.ssl = true;
+				newSocket.ssl = true;
 			else
-				server._socketAddress.ssl = false;
-			if (server.validFormat == false)
-				return ;
+				newSocket.ssl = false;
+			server._socketAddress.push_back(newSocket);
 		}
 		else
 			server.validFormat = false;
@@ -119,7 +130,7 @@ void	ConfigFile::addCertificate(configServer &server, std::string token, std::is
 	if (token == "ssl_certificate")
 	{
 		if (find >> certificate)
-			server._socketAddress.sslCertificate = certificate;
+			server._certificate = certificate;
 		else
 		{
 			server.validFormat = false;
@@ -134,7 +145,7 @@ void	ConfigFile::addKey(configServer &server, std::string token, std::istringstr
 	if (token == "ssl_certificate_key")
 	{
 		if (find >> key)
-			server._socketAddress.sslKey = key;
+			server._key = key;
 		else
 		{
 			server.validFormat = false;

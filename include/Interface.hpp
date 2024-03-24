@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/21 12:37:41 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/24 06:48:48 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "socketManager.hpp"
 # include "http.hpp"
+# include "color.hpp"
 
 # define BUFFER_SIZE 4194304
 
@@ -23,6 +24,7 @@ class Interface {
 		static void						addExecuter(uint32_t port, http *executer);
 		static void						interface(int sock, struct sockData sockData);
 		static void						clearExecuters();
+		static void						removeExecuter(uint32_t port);
 
 	private:
 		static int						readFromSocket(int sock, struct sockData data, std::string &request);

@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/24 06:48:48 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/24 10:31:21 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@
 # include "http.hpp"
 # include "color.hpp"
 
-# define BUFFER_SIZE 4194304
+# define BUFFER_SIZE 4194304 // 4MB
+// # define BUFFER_SIZE 2097154 // 2MB
 
 class Interface {
 	public:
 		static void						addExecuter(uint32_t port, http *executer);
-		static void						interface(int sock, struct sockData sockData);
+		static void						interface(int sock, struct sockData data);
 		static void						clearExecuters();
 		static void						removeExecuter(uint32_t port);
 

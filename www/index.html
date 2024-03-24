@@ -4,12 +4,52 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		body{
+  			position: absolute;
+  			width: 100%;
+  			height: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			background-color: rgb(43, 15, 32);
+			color: white;
+		}
+		.box{
+			/* border: 3px solid black; */
+			height: 250px;
+			display: flex;
+			text-align: center;
+			justify-content: center;
+			align-items: center;
+		}
+		.options{
+			display: flex;
+			flex-direction: row;
+			justify-content: space-around;
+			align-items: space-around;
+			margin:10px;
+			width: 700px;
+			height: 300px;
+			font-size: 40px;
+		}
+		h3{
+			font-size: 99px;
+			color: rgb(115, 57, 91);
+		}
+	</style>
 </head>
 <body>
-	<h3>WEBSERVER</h3>
-	<h1>made by vlenard, apaghera, pharbst</h1>
-	<a href="/files/upload.html">Upload a file</a>
-	</br>
-	<a href="/files/delete.html">Delete a file</a>
+	<p class="box">made by <br> vlenard apaghera pharbst</p>
+	<h3 class="box">W E B S E R V E R</h3>
+	<div class="box">
+		<div class="options">
+			<a href="/files/upload.html">Upload a file</a>
+			<a href="/files/delete.html">Delete a file</a>
+			<a href="../cgi-bin/index.html">CGI</a>
+		</div>
+	</div>
 </body>
 </html>

@@ -6,9 +6,8 @@ void Response::processPost()
 {
 	cout << "-----------------IN POST--------------------" << endl;
 	cout << NORM << "URI: " << _URI << endl;
-	// cout << "filename: " << _request.getFilename() << endl;
 	_status = 201;
-	if (isCgi(_URI)) // if is error we got throw an error
+	if (isCgi(_URI))
 	{
 		formResponse(201, _statusInfo);
 		return ;
@@ -20,8 +19,7 @@ void Response::processPost()
 	if (contentType == "form-urlencoded")
 		{_request.parseQuery(_request.getBody()); return; }
 	if (incorrectMimeType(_request.getHeaders()["Content-Type"]))
-		{ formResponse(400, "Incorrect Mimetype");
-		cout << ORANGE << "JOO: " << incorrectMimeType(_request.getHeaders()["Content-Type"]) << endl; return; }
+		{ formResponse(400, "Incorrect Mimetype"); }
 	else if (!createFile(_URI, _request.getBody()))
 		{ _status = 400; _statusInfo = "Please include a valid path. File could not be created"; }
 	formResponse(_status, "");
@@ -40,7 +38,6 @@ bool Response::incorrectMimeType(const string & contentType)
 		return true;
 	if (_configfile._mimeTypes[mime] != contentType && !(contentType == "text/plain" || contentType == "plain/text"))
 	{
-		cout << "doesnt match: " << endl;
 		cout << _configfile._mimeTypes[mime] << endl;
 		cout << contentType << endl;
 		return true;
@@ -50,7 +47,6 @@ bool Response::incorrectMimeType(const string & contentType)
 
 int Response::handleMultipart()
 {
-	cout << "handle Multipart" << endl;
 	formResponse(100, _statusInfo);
 	if (Request::MultipartApproved == -1)
 	{
@@ -66,10 +62,8 @@ int	Response::createFile(std::string & path, const std::string & content)
 {
 	fstream file;
 	string filepath = path;
-	//config filepath for upload
 	if (!_request.getFilename().empty())
 		filepath = _configfile._root + "/upload" + "/" + _request.getFilename();
-	// cout << GREEN << filepath << NORM << endl;
 	file.open(filepath.c_str(), ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())
 	{

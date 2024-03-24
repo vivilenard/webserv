@@ -2,4 +2,4 @@
 echo "Starting Webserv"
 cd /Webserv
 make re
-./Webserv_linux
+valgrind --leak-check=full ./Webserv_linux example.conf

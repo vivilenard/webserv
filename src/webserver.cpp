@@ -4,6 +4,8 @@
 #include "Response.hpp"
 #include "configFile.hpp"
 #include "http.hpp"
+#include <iomanip>
+#include "color.hpp"
 
 CONFIG config;
 
@@ -15,8 +17,7 @@ void sigHandler(int signum)
 	exit(signum);
 }
 
-uint32_t	extractPort(struct sockaddr* address) 
-{
+static uint32_t	extractPort(struct sockaddr* address) {
 	if (address->sa_family == AF_INET)
 		return (ntohs(((struct sockaddr_in*)address)->sin_port));
 	else if (address->sa_family == AF_INET6)
@@ -25,29 +26,48 @@ uint32_t	extractPort(struct sockaddr* address)
 		throw std::runtime_error("extractPort: unknown address family");
 }
 
-void printConfig(string name, configServer server)
-{
-	cout << RED << "CONFIG: " << name << NORM << endl;
-	std::cout << "SERVERNAME:" << " " << server._serverName<< "\n";
-	std::cout << "INCLUDE:" << " " << server._include << "\n";
-	std::cout << "LISTEN:" << " " << server._listen << "\n";
-	std::cout << "ADDRESS:" << " " << server._address << "\n";
-	std::cout << "ROOT:" << " " << server._root << "\n";
-	std::cout << "VALIDFORMAT:" << " " << server.validFormat << "\n";
-	std::cout << "INDEX:" << " " << server._index << "\n";
+void printConfig(std::string name, configServer server) {
+	std::cout << FPurple << "╔══════════════════════════════════════════════════════╗" << NORMAL << std::endl;
+	std::cout << FPurple << "║" << GREEN << std::setw(54) << std::left << "SERVER: " + name + " " + (server.validFormat ? "[VALID]" : "[INVALID]")  << FPurple << "║" << NORMAL << std::endl;
+	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "SERVERNAME: " + server._serverName << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "INCLUDE: " + server._include << FPurple << "║" << std::endl;
+    for (std::vector<struct socketParameter>::iterator it = server._socketAddress.begin(); it != server._socketAddress.end(); it++) {
+		std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
+        std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ADDRESS: " + std::string(inet_ntoa(((struct sockaddr_in*)it->interfaceAddress)->sin_addr)) << FPurple << "║" << std::endl;
+        std::stringstream portStream;
+        portStream << extractPort(it->interfaceAddress);
+        std::string portStr = portStream.str();
 
-	cout << ORANGE << "LOCATIONS" << NORM << endl;
+        std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "PORT: " + portStr << FPurple << "║" << std::endl;
+        std::cout << FPurple << "║" << FYellow << "SSL: " << std::setw(49) << std::left << (it->ssl ? "true" : "false") << FPurple << "║" << std::endl;
+        if (it->ssl && (server._certificate.empty() || server._key.empty())) {
+			std::cout << FPurple << "║" << FYellow << std::setw(61) << std::left << "Socket \033[1;31m[INVALID]" << FPurple << "║" << std::endl;
+			std::cout << FPurple << "║" << FRed << std::setw(54) << std::left << "NO CERTIFICATE OR KEY SPECIFIED" << FPurple << "║" << std::endl;
+		}
+		else {
+			std::cout << FPurple << "║" << FYellow << std::setw(61) << std::left << "Socket \033[1;32m[VALID]" << FPurple << "║" << std::endl;
+		}
+    }
+	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ROOT: " + server._root << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "VALIDFORMAT: " << server.validFormat << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "INDEX: " + server._index << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::left << "DIRECTORYLISTING: " << std::setw(36) << std::left << (server._directoryListing ? "true" : "false") << FPurple << "║" << std::endl;
+	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
+	std::cout << FPurple << "║" << FCyan << std::setw(54) << std::left << "LOCATIONS" << FPurple << "║" << NORMAL << std::endl;
+	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
 	std::map<std::string, configServer::Location>::iterator it = server._locations.begin();
-	for (; it != server._locations.end(); it++)
-	{
-		cout << "Location: " << it->first << endl;
-		cout << "Name: " << it->second._name << endl;
-		cout << "Default page: " << it->second._index << endl;
-		cout << "Post: " << it->second._post << endl;
-		cout << "Get: " << it->second._get << endl;
-		cout << "Put: " << it->second._delete << endl;
-		cout << "redirection: " << it->second._redirect << endl;
+	for (; it != server._locations.end(); it++) {
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Location: " + it->first << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Name: " + it->second._name << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Default page: " + it->second._index << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Post: " << it->second._post << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Get: " << it->second._get << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Put: " << it->second._delete << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "redirection: " + it->second._redirect << FPurple << "║" << NORMAL << std::endl;
 	}
+	std::cout << FPurple << "╚══════════════════════════════════════════════════════╝" << NORMAL << std::endl;
 }
 
 int main(int argc, char **argv)
@@ -55,24 +75,34 @@ int main(int argc, char **argv)
 	signal(SIGINT, &sigHandler);
 	if (!readConfig(argc, argv, config))
 		return 1;
-	configServer configfile = config.begin()->second;
-	// if (configfile._serverName == "default")
-	// {
-	// 	cout << BACK << "Webserver is running with a default config file." << NORM << endl;
-	// 	cout << BACK << "Run: ./Webserv ['path to configfile'] to include your own." << NORM << endl;
-	// }
 	for (CONFIG::iterator it2 = config.begin(); it2 != config.end(); it2++) {
 			printConfig(it2->first, it2->second);
 	}
 	for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
+		http* newExecuter = new http(it->second);
+		uint32_t tmpPort;
+		for (std::vector<struct socketParameter>::iterator it2 = it->second._socketAddress.begin(); it2 != it->second._socketAddress.end(); it2++) {
 			try {
-				Interface::addExecuter(extractPort(it->second._socketAddress.interfaceAddress), new http(it->second));
-				socketManager::addServerSocket(it->second._socketAddress);
+				if (it2->ssl) {
+					if (!it->second._certificate.empty())
+						it2->sslCertificate = it->second._certificate;
+					else
+						throw std::runtime_error("No certificate specified for ssl");
+					if (!it->second._key.empty())
+						it2->sslKey = it->second._key;
+					else
+						throw std::runtime_error("No key specified for ssl");
+				}
+				tmpPort = extractPort(it2->interfaceAddress);
+				Interface::addExecuter(tmpPort, newExecuter);
+				socketManager::addServerSocket(*it2);
 			}
 			catch (std::exception &e) {
-				std::cout << "Exception: " << e.what() << std::endl;
-				std::cout << "Skipping server" << std::endl;
+				PRINT_ERROR;
+				std::cout << "Skipping socket" << std::endl;
+				Interface::removeExecuter(tmpPort);
 			}
+		}
 	}
 	InterfaceFunction interfaceFunction = &Interface::interface;
 	for (int i = 0; i < 10; i++) {
@@ -80,14 +110,14 @@ int main(int argc, char **argv)
 			socketManager::start(interfaceFunction);
 		}
 		catch (std::exception &e) {
-			if (dynamic_cast<std::runtime_error*>(&e)) {
-                std::cout << "Exception: " << e.what() << std::endl;
+			if (dynamic_cast<std::runtime_error*>(&e)->what() == std::string("socketManager::start:	no sockets to manage")) {
+                PRINT_ERROR;
                 std::cout << "Exiting program" << std::endl;
                 socketManager::stop();
 				Interface::clearExecuters();
 				return 1;
             }
-			std::cout << "Exception: " << e.what() << std::endl;
+			PRINT_ERROR;
 			std::cout << "Restarting server" << std::endl;
 		}
 	}

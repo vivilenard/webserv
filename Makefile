@@ -6,23 +6,19 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/20 19:46:05 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/24 14:22:54 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # openssl req -new -newkey rsa:2048 -nodes -keyout test.key -subj "/C=DE/ST=Baden-Württemberg /L=Heilbronn /O=42/CN=42heilbronn.com" -x509 -days 365 -out test.crt && cat test.key test.crt >> test.pem
+# openssl req -new -newkey rsa:2048 -nodes -keyout test2.key -subj "/C=DE/ST=Baden-Württemberg /L=Heilbronn /O=42/CN=42heilbronn.com" -x509 -days 365 -out test2.crt && cat test2.key test2.crt >> test2.pem
 
 include color.mk
 
 ifeq ($(UNAME), Darwin)
-PRINT	= printf
 PRONAME = Webserv
 else ifeq ($(UNAME), Linux)
-PRINT	= printf
 PRONAME = Webserv_linux
-endif
-ifeq ($(OS_LIKE), Debian)
-PRINT	= echo
 endif
 
 # Submodules
@@ -49,9 +45,6 @@ LDFLAGS		:= -lssl -lcrypto -L./$(SOCKETMANAGER_DIR) -lsocketManager
 endif
 
 CC		= c++
-
-# -MMD and -MP are ussed to create dependecy files
-# CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 -pedantic $(INC_DIR)
 
 # add source files with header with the same name
 SOURCE	=	# Config.cpp \
@@ -98,50 +91,73 @@ VPATH := src include src/config src/error src/httpTransfer src/parse src/interfa
 
 all:
 	@$(MAKE) -s proname_header
-	@$(MAKE) -s std_all
+ifeq ($(UNAME), Linux)
+ifeq (($(call GET_OS,Debian)), Debian)
+	@echo "$(FYellow)Information: $(Red)The Makefiles in this project are not build to work with echo as printing function so the output wont be fromated correctly$(RESET)"
+endif
+endif
+	@$(MAKE) -j6 -s std_all -C socketManager
+	@$(MAKE) -j6 -s std_all
 
 std_all: $(SOCKETMANAGER)
-	@$(PRINT) "$(CLEARLINE)%s$(RESET)\n" "$(FPurple)Compiling $(PRONAME)"
+	@$(PRINT) "$(FPurple)%-40s\n$(RESET)" "Compiling $(PRONAME)"
 	@-include $(OBJS:.o=.d) > /dev/null 2>&1
 	@$(MAKE) -s $(PRONAME)
-	@$(PRINT) "$(SETCURUP)$(CLEARLINE)\r$(FPurple)%-33s$(FGreen)$(TICKBOX)$(RESET)\n" "Compiling $(PRONAME)"
+	@$(PRINT) "\n$(SETCURUP)$(SETCURUP)$(FPurple)%-33s$(FGreen)$(TICKBOX)$(RESET)\n$(CLEARLINE)" "Compiling $(PRONAME)"
 
 $(PRONAME): $(OBJS) $(SOCKETMANAGER)
-# @printf "\n\n$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(PRONAME)\n\n"
 	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(PRONAME)
 
 $(OBJ_DIR)%.o: %.cpp
 ifeq ($(shell test -d $(OBJ_DIR) || echo $$?), 1)
-	@$(PRINT) "$(CLEARLINE)\r$(Yellow)creting obj dir$(RESET)"
+	@$(PRINT) "$(CLEARLINE)$(CLEARLINE)\r$(Yellow)creting obj dir$(RESET)"
 	@mkdir -p $(OBJ_DIR)
 endif
-	@$(PRINT) "$(CLEARLINE)\r%-40s$(RESET)" "$(Yellow)Compiling $< ..."
+	@$(PRINT) "\r$(CLEARLINE)%-40s$(RESET)" "$(Yellow)Compiling $< ..."
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(SOCKETMANAGER):
 ifeq ($(shell test -f $(SOCKETMANAGER_DIR)/Makefile || echo $$?), 1)
-	@$(PRINT) "$(CLEARLINE)\r%-40s$(RESET)" "$(FCyan)Initializing submodule"
+	@$(PRINT) "$(CLEARLINE)$(CLEARLINE)%-40s$(RESET)" "$(FCyan)Initializing submodule"
 	@git submodule update --init > /dev/null 2>&1
 	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"
 endif
-	@$(PRINT) "$(CLEARLINE)\r%-40s\n$(RESET)" "$(FCyan)Compiling submodule"
+	@$(PRINT) "$(FCyan)%-40s\n$(RESET)" "Compiling submodule"
 	@$(MAKE) std_all -s -C $(SOCKETMANAGER_DIR)
-	@$(PRINT) "$(SETCURUP)$(SETCURUP)$(SETCURUP)%-40s$(RESET)$(FGreen)$(TICKBOX)$(RESET)\n\n\n" "$(FCyan)Compiling submodule"
+	@$(PRINT) "$(SETCURUP)$(SETCURUP)$(SETCURUP)$(FCyan)%-33s$(RESET)$(FGreen)$(TICKBOX)$(RESET)\n\n\n" "Compiling submodule"
 
 clean:
 	@$(MAKE) -s proname_header
+ifeq ($(UNAME), Linux)
+ifeq ($(call GET_OS,Debian), Debian)
+	@echo "$(FYellow)Information: $(Red)The Makefiles in this project are not build to work with echo as printing function so the output wont be fromated correctly$(RESET)"
+endif
+endif
 	@$(PRINT) "%-40s$(RESET)" "$(FRed)Cleaning $(PRONAME)"
 	@$(MAKE) -s std_clean
 	@$(PRINT) "$(FGreen)$(TICKBOX)$(RESET)\n"
 
 fclean:
 	@$(MAKE) -s proname_header
+ifeq ($(UNAME), Linux)
+ifeq ($(call GET_OS,Debian), Debian)
+	@echo "$(FYellow)Information: $(Red)The Makefiles in this project are not build to work with echo as printing function so the output wont be fromated correctly$(RESET)"
+endif
+endif
 	@$(MAKE) -s cleanator
 
 re:
 	@$(MAKE) -s proname_header
-	@$(MAKE) -s cleanator 2> /dev/null
-	@$(MAKE) -s std_all 2> /dev/null
+ifeq ($(UNAME), Linux)
+ifeq ($(call GET_OS,Debian), Debian)
+	@echo "$(FYellow)Information: $(Red)The Makefiles in this project are not build to work with echo"
+	@echo "$(Red)             as printing function so the output wont be fromated correctly$(RESET)"
+	@echo
+	@echo "$(FYellow)Warning: $(Red)Unfortunately Debian has problems with the openssl library if someone knows how to fix it let me know$(RESET)"
+endif
+endif
+	@$(MAKE) -s cleanator
+	@$(MAKE) -j6 -s std_all
 
 run: re
 	./$(PRONAME)
@@ -179,11 +195,11 @@ std_clean:
 	@rm -rf $(OBJ_DIR)
 
 cleanator:
-	@$(PRINT) "%-40s$(RESET)\n" "$(FRed)FCleaning $(PRONAME)"
+	@$(PRINT) "$(FRed)%-s$(RESET)\n" "FCleaning $(PRONAME)"
 	@rm -rf $(OBJ_DIR)
 	@rm -f $(PRONAME)
 	@$(MAKE) cleanator -s -C socketManager
-	@$(PRINT) "$(SETCURUP)$(SETCURUP)$(CLEARLINE)%-40s$(FGreen)$(TICKBOX)$(RESET)\n\n" "$(FRed)FCleaning $(PRONAME)"
+	@$(PRINT) "$(SETCURUP)$(SETCURUP)$(SETCURSTART)$(FRed)%-33s$(FGreen)$(TICKBOX)$(RESET)\n\n" "FCleaning $(PRONAME)"
 
 proname_header:
 	@$(PRINT) "$(FYellow)╔══════════════════════╗\n\

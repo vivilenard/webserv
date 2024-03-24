@@ -163,12 +163,16 @@ bool	Response::isCgi(const string & path)
 {
 	size_t pos = path.find_last_of('.');
 	int returnValue = EXIT_SUCCESS;
+	bool absolute = true;
 	if (pos == string::npos)
 		return false;
 	if (path.substr(pos) == ".py")
 	{
 		std::string tmp = currentPath();
-		std::string dir = tmp + "/cgi-bin" + _request.getURI();
+		if (_request.getURI().find("/cgi-bin") != std::string::npos)
+			absolute = false;
+
+		std::string dir = tmp + (absolute ? "/cgi-bin" : "") + _request.getURI();
 		if (!checkRoot(dir))
 		{
 			std::cerr << "Wrong CGI path!" << std::endl;

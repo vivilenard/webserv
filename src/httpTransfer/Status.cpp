@@ -2,12 +2,12 @@
 
 StatusCode::StatusCode()
 {
-    cout << "Creating STATUS CLASS" << endl;
     setStatusMap();
 }
 
 void StatusCode::setStatusMap()
 {
+    _statusMap[7]   = "This is a directory";
     _statusMap[100] = "100 Continue";
     _statusMap[200] = "200 OK";
     _statusMap[201] = "201 Created";

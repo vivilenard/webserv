@@ -1,0 +1,31 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.hand {
+    width: 100px;
+    height: auto;
+    margin: 0 10px;
+}
+
+.left-hand {
+    transform: scaleX(1); /* Flip the left hand horizontally */
+}
+
+.right-hand {
+    transform: scaleX(-1); /* Rotate the right hand */
+}
+
+.centered-text {
+    margin: 0 20px;
+}

@@ -1,27 +1,12 @@
 #include "Response.hpp"
 
-const string	generateSequence()
-{
-    srand((unsigned int)time(nullptr)); 
-	int random = rand();
-	ostringstream os;
-	os << random;
-	return os.str();
-}
-void printMAP(stringMAP m)
-{
-	stringMAP::iterator it = m.begin();
-	for (; it != m.end(); it++)
-		cout << it->first << " , " << it->second << endl;
-	return ;
-}
 void	Response::bakeLoginCookie(Query & query)
 {
 	cout << "in bake cookie" << endl;
 	string loginField = "42login";
 	string session_id;
 	// cout << ORANGE << "I will create a cookie. YUMM" << NORM << endl;
-	_oldCookies = getSavedCookies("Cookies.csv");  //read from file
+	_oldCookies = getSavedCookies("Cookies.csv");
 	COOKIES savedCookies = _oldCookies;
 	if (PRINT) { cout << RED << "saved Cookies" << NORM << endl; printMAP(savedCookies); }
 	if (savedCookies.empty())
@@ -32,7 +17,7 @@ void	Response::bakeLoginCookie(Query & query)
 		if (PRINT) {cout << "login: " << login_name << endl;}
 		if (!login_name.empty())
 		{
-			session_id.append(generateSequence());  //generate id number
+			session_id.append(generateSequence());
 			_newCookies[login_name] = session_id;
 			if (savedCookies.find(login_name) != savedCookies.end())
 				cout << RED << "YOU ALREADY LOGGED IN" << NORM << endl;
@@ -51,11 +36,8 @@ COOKIES		Response::getSavedCookies(const string & filename)
 	if (!cookieFile.is_open())
 		return savedCookies;
 	string buffer;
-	// cout << ORANGE << "saved cookies string: " << NORM << endl;
 	while(getline(cookieFile, buffer, '\n'))
 	{
-		//save it in savedCookies
-		// cout << buffer << endl;
 		istringstream is(buffer);
 		getline(is, name, ';');
 		getline(is, id, ';');
@@ -160,4 +142,13 @@ bool Response::IDcheck(const string & name)
 		return true;
 	cout << "cookie IDs are not matching!" << endl;
 	return false;
+}
+
+const string	generateSequence()
+{
+    srand((unsigned int)time(nullptr)); 
+	int random = rand();
+	ostringstream os;
+	os << random;
+	return os.str();
 }

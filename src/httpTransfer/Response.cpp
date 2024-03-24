@@ -21,8 +21,6 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 		processGet();
 	else 
 		formResponse(_status, "");
-	// if (request.getMethod() == "POST")
-	// 	cout << BLUE << _response << NORM << endl;
 }
 
 bool Response::methodAllowed()
@@ -173,21 +171,19 @@ string	Response::redirectURI(string path)
 
 const string getDir(string & uri)
 {
-	//    /files/upload.html
 	string dir = uri;
-	if (!uri.find('.')) //endpoint is already a directory
+	if (!uri.find('.'))
 		return uri;
 	if (uri.find_last_of("/") < uri.npos - 1)
 		dir = uri.substr(0, uri.find_last_of("/"));
 	return dir;
 }
 
-//if there uri was '/', then add default file (index)
 int	Response::addDefaultFile(string & path)
 {
 	if (path == _configfile._root + "/")
 	{
-		path = path.append(_configfile._index);			//change to defaultFile
+		path = path.append(_configfile._index);
 		return 1;
 	}
 	return 0;

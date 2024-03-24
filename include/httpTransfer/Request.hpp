@@ -1,5 +1,5 @@
 #ifndef REQUEST_HPP
-#define REQUEST_HPP
+# define REQUEST_HPP
 
 #include "webserv.hpp"
 #include "configFile.hpp"
@@ -8,24 +8,38 @@
 #include <fstream>
 #include <fcntl.h>
 #include <algorithm>
+#include <map>
+#include <sys/types.h>
+#include <dirent.h>
+#include <vector>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstring>
+#include <fstream>
+#include <sstream>
+#include <ctime>
 
 #define stringMAP map<string, string>
+#define COOKIES map<string, string>
 #define Headers map<string, string>
 #define Query map<string, string>
 #define EnvCgi	map<string, string>
-#define PRINT false
+#define PAIR pair<string, string>
+
 
 #define MAX_BODY_SIZE 50000
-#define PAIR pair<string, string>
+#define PRINT true
 
 class Request
 {
 	configServer	_configfile;
 	bool			_standardRequest;
-	string			_request; // to add in cgi
-	string			_method;	// to add in cgi
-	string			_URI; // to add in cgi
-	// string			_prefixPath;
+	string			_request;
+	string			_method;
+	string			_URI;
 	string			_httpVersion;
 	stringMAP		_cookies;
 	string			_contentLength;
@@ -58,6 +72,7 @@ class Request
 	void			parseContentAttributes(stringMAP & attributes, const string & s);
 
 	public:
+
 		int						findDoubleNewline(const std::string & s);
 		static int				MultipartApproved;
 		static string			MultipartName;
@@ -70,19 +85,22 @@ class Request
 		Request(const string & request, configServer & configfile);
 		friend ostream & operator<<(ostream & os, const Request & r);
 
-		const string &		getRequest(){ return _request; }
-		const string &		getMethod()	{ return _method; }
-		const string &		getURI()	{ return _URI; }
+		const string &		getRequest()	{ return _request; }
+		const string &		getMethod()		{ return _method; }
+		const string &		getURI()		{ return _URI; }
 		const string &		getFilename()	{ return _filename; }
 		const bool   &		getSizeInRange(){ return _sizeInRange; }
-		Headers & 			getHeaders(){ return _headers; }
-		const string &		getBody()	{ return _body; }
-		const stringMAP&	getCookies() { return _cookies; }
+		Headers & 			getHeaders()	{ return _headers; }
+		const string &		getBody()		{ return _body; }
+		const stringMAP&	getCookies()	{ return _cookies; }
+		Query &				getQuery()		{ return _query;}
 		void				parseQuery(const string & path);
-		Query &				getQuery(){ return _query;}
 		void 				buildCgiEnv(void);
 		int					executeCgi(std::string &cgiScript, const string & path);
 };
+
+
+void printMAP(stringMAP m);
 
 #define RED "\033[1;91m"
 #define GREEN "\033[1;92m"

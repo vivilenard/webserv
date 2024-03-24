@@ -4,8 +4,8 @@
 
 void Response::processPost()
 {
-	cout << "-----------------IN POST--------------------" << endl;
-	cout << NORM << "URI: " << _URI << endl;
+	if (PRINT) {cout << "-----------------IN POST--------------------" << endl;}
+	if (PRINT) {cout << NORM << "URI: " << _URI << endl;}
 	_status = 201;
 	string contentType = findKeyByValue(_configfile._mimeTypes, _request.getHeaders()["Content-Type"]);
 	if (isCgi(_URI))

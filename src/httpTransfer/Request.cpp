@@ -344,3 +344,11 @@ ostream & operator<<(ostream & os, const Request & r)
 	cout << "////////////////////////////////" << endl;
 	return os;
 }
+
+void printMAP(stringMAP m)
+{
+	stringMAP::iterator it = m.begin();
+	for (; it != m.end(); it++)
+		cout << it->first << " , " << it->second << endl;
+	return ;
+}

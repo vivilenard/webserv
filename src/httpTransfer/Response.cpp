@@ -113,6 +113,12 @@ const string FileToString(const string & filepath)
 	return str;
 }
 
+const string Response::generateDefaultHtml(const string & text)
+{
+	string outputString = FileToString("error/default1of2.html") + text;
+	outputString.append(FileToString("error/default2of2.html"));
+	return outputString;
+}
 
 const string Response::createErrorBody(const int & status, const string & statusInfo)
 {
@@ -129,12 +135,15 @@ const string Response::createErrorBody(const int & status, const string & status
 	{
 		string cookieBody = getCookieBody();
 		if (!cookieBody.empty())
-			return (body_os << cookieBody, body_os.str());
+		{
+			body_os << "<h3> " << cookieBody << "</h3>";
+			return (generateDefaultHtml(body_os.str()));
+		}
 	}
-	else if (!statusInfo.empty())
-		body_os << "<h3> " << statusInfo << "</h3>";
 	body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
-	return body_os.str();
+	if (!statusInfo.empty())
+		body_os << "<h3> " << statusInfo << "</h3>";
+	return generateDefaultHtml(body_os.str());
 }
 
 

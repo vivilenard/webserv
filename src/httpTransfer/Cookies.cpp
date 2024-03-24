@@ -23,14 +23,13 @@ void	Response::bakeLoginCookie(Query & query)
 	// cout << ORANGE << "I will create a cookie. YUMM" << NORM << endl;
 	_oldCookies = getSavedCookies("Cookies.csv");  //read from file
 	COOKIES savedCookies = _oldCookies;
-	cout << RED << "saved Cookies" << NORM << endl;
-	printMAP(savedCookies);
+	if (PRINT) { cout << RED << "saved Cookies" << NORM << endl; printMAP(savedCookies); }
 	if (savedCookies.empty())
 		if (PRINT) {cout << "No Cookies are stored" << endl;}
 	if (query.find(loginField)!= query.end())
 	{
 		string login_name = query[loginField];
-		// cout << "login: " << login_name << endl;
+		if (PRINT) {cout << "login: " << login_name << endl;}
 		if (!login_name.empty())
 		{
 			session_id.append(generateSequence());  //generate id number
@@ -40,33 +39,8 @@ void	Response::bakeLoginCookie(Query & query)
 		}
 	}
 	insertNewToSavedCookies(_newCookies, savedCookies);
-	cout << RED << "saved Cookies after login" << NORM << endl;
-	printMAP(savedCookies);
+	if (PRINT) { cout << RED << "saved Cookies after login" << NORM << endl; printMAP(savedCookies); }
 	saveCookiesInFile(savedCookies, "Cookies.csv");
-}
-
-bool	Response::saveCookiesInFile(const COOKIES & cookies, const string & filename)
-{
-	std::ofstream ofile;
-	ofile.open(filename);
-	
-	COOKIES::const_iterator it = cookies.begin();
-	for (; it != cookies.end(); it++)
-		ofile << it->first << ";" << it->second << ";" << "\n"; //generateCookieDate() << ";" << "\n";
-	ofile.close();
-	return true;
-}
-
-bool		Response::insertNewToSavedCookies(COOKIES & fresh, COOKIES & saved)
-{
-	//inserts only if it doesnt exist yet
-	COOKIES::iterator it = fresh.begin();
-	for (; it != fresh.end(); it++)
-	{
-		if (saved.find(it->first) == saved.end())  //not found in saved
-			saved[it->first] = it->second;
-	}
-	return true;
 }
 
 COOKIES		Response::getSavedCookies(const string & filename)
@@ -89,6 +63,30 @@ COOKIES		Response::getSavedCookies(const string & filename)
 		savedCookies[name] = id;
 	}
 	return savedCookies;
+}
+
+bool		Response::insertNewToSavedCookies(COOKIES & fresh, COOKIES & saved)
+{
+	//inserts only if it doesnt exist yet
+	COOKIES::iterator it = fresh.begin();
+	for (; it != fresh.end(); it++)
+	{
+		if (saved.find(it->first) == saved.end())  //not found in saved
+			saved[it->first] = it->second;
+	}
+	return true;
+}
+
+bool	Response::saveCookiesInFile(const COOKIES & cookies, const string & filename)
+{
+	std::ofstream ofile;
+	ofile.open(filename);
+	
+	COOKIES::const_iterator it = cookies.begin();
+	for (; it != cookies.end(); it++)
+		ofile << it->first << ";" << it->second << ";" << "\n"; //generateCookieDate() << ";" << "\n";
+	ofile.close();
+	return true;
 }
 
 const string generateCookieDate()

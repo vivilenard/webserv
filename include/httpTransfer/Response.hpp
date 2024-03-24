@@ -57,6 +57,7 @@ class Response
 	int				createFile(std::string & path, const std::string & cont);
 	std::string		findKeyByValue(std::map<string, string>m, string value);
 	void			formResponse(int status, const string & statusInfo);
+	const string	generateDefaultHtml(const string & text);
 	const string	createErrorBody(const int & status, const string & statusInfo);
 	bool			isCgi(const string & path);
 	//Multipart

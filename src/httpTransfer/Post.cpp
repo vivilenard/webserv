@@ -4,20 +4,20 @@
 
 void Response::processPost()
 {
-	cout << "-----------------IN POST--------------------" << endl;
-	cout << NORM << "URI: " << _URI << endl;
+	if (PRINT) {cout << "-----------------IN POST--------------------" << endl;}
+	if (PRINT) {cout << NORM << "URI: " << _URI << endl;}
 	_status = 201;
+	string contentType = findKeyByValue(_configfile._mimeTypes, _request.getHeaders()["Content-Type"]);
 	if (isCgi(_URI))
+		{ formResponse(201, _statusInfo); return ; }
+	if (isMultipart())
+		{ formResponse(100, _statusInfo); return; }
+	if (recieveQuery(contentType)) 
 	{
-		formResponse(201, _statusInfo);
+		handleQuery();
+		formResponse(201, "recieved Data");
 		return ;
 	}
-	if (isMultipart()){
-		formResponse(100, _statusInfo);
-		return; }
-	string contentType = findKeyByValue(_configfile._mimeTypes, _request.getHeaders()["Content-Type"]);
-	if (contentType == "form-urlencoded")
-		{_request.parseQuery(_request.getBody()); return; }
 	if (incorrectMimeType(_request.getHeaders()["Content-Type"]))
 		{ formResponse(400, "Incorrect Mimetype"); }
 	else if (!createFile(_URI, _request.getBody()))
@@ -111,4 +111,27 @@ std::string	Response::findKeyByValue(std::map<string, string>m, string value)
 		}
 	}
 	return fileType;
+}
+
+bool			Response::recieveQuery(const string & contentType)
+{
+	if (contentType == "form-urlencoded")
+	{
+		_request.parseQuery(_request.getBody());
+		Query query = _request.getQuery();
+		Query::iterator it = query.begin();
+		for (; it != query.end(); it++)
+		{
+			cout << it->first << " " << it->second << endl;
+		}
+		return true;
+	}
+	return false;
+}
+
+void	Response::handleQuery()
+{
+	if (_request.getURI() != "/login")
+		return ;
+	bakeLoginCookie(_request.getQuery());
 }

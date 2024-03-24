@@ -4,24 +4,121 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		body{
+			background-color: rgb(43, 15, 32);
+			background-color: rgb(26, 0, 6);
+			color: rgb(115, 57, 91);
+			/* color:black; */
+			/* color: white; */
+			position:absolute;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+		.navbar{
+			text-align: center;
+			/* color: black; */
+			font-size: 2em;
+			margin-top: 10px;
+			/* border: 2px solid black; */
+		}
+		.Container{
+			display: flex;
+			height: 100%;
+			justify-content: center;
+			align-items: center;
+		}
+		.pageContent{
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-bottom: 5em;
+		}
+		.title{
+			color: rgb(98, 23, 41);
+			font-size: 4em;
+			vertical-align: center;
+			/* line-height: 5em; */
+		}
+		.form{
+			display: flex;
+			justify-content: space-evenly;
+		}
+		label{
+			font-size: 1.5em;
+		}
+		a{
+			color: rgb(115, 57, 91);
+			text-decoration: none;
+		}
+		a:hover{
+			color: rgb(199, 101, 158);
+			/* outline: white; */
+		}
+		input[type=text], input[type=button]{
+			border: 1px solid black;
+			transition: 0.2s;
+			/* button on every page */
+			color: black;
+			font-size: 35px;
+			font-weight: bold;
+			text-decoration: none;
+			background-color: rgb(115, 57, 91);
+			background-color: rgb(101, 30, 47);
+			padding: 30px 70px;
+			border-radius: 0.2em;
+		}
+		input[type=text]:focus, input[type=button]:active{
+			border: 1px solid rgb(120, 85, 85);
+			/* background-color: rgb(199, 101, 158); */
+			outline: none;
+			transition: 0.1s;
+		}
+		input[type=button]:active{
+			background-color: rgb(205, 92, 92);
+		}
+		input[type=button]:hover {
+			border: 3px solid rgb(205, 92, 92);
+			cursor: pointer;
+			/* background-color: rgb(199, 101, 158); */
+		}
+	</style>
 </head>
 <body>
-    <script language="JScript">
-        <!-- Hide
-        function deleteFile()
-        {
-            let input = document.getElementById("userInput").value;
-            fetch('' + input,  { method: 'DELETE' })
-        }
-        -->
-    </script>
-
-	<a href="../index.html">HOME</a>
-	<h1>Delete a file</h1>
-    <form name="Form">
-        <input type="text" id="userInput">
-        <input type="Button" value="Delete File" onClick='deleteFile()'>
-        </form>
-	</form> 
+	<script language="JScript">
+		<!-- Hide
+			function deleteFile()
+			{
+				let input = document.getElementById("userInput").value;
+				fetch('' + input,  { method: 'DELETE' })
+			}
+			-->
+			</script>
+	<div class="navbar">
+		<a href="../index.html">HOME</a>
+	</div>
+	<div class="Container">
+		<div class="pageContent">
+			<div class="title">
+				<h1>Delete a file</h1>
+			</div>
+			<div class="upload">
+				<label> Enter the path to the file
+					<form name="Form" class="form">
+						<div class="form-item">
+							<input type="text" id="userInput">
+						</div>
+						<div class="form-item">
+							<input type="Button" value="Delete File" onClick='deleteFile()'>
+						</div>
+						</form>
+					</form> 
+				</label>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

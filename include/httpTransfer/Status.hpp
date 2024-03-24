@@ -10,11 +10,11 @@ using namespace std;
 class StatusCode
 {
 	statusMAP		_statusMap;
-	void		setStatusMap();
+	void			setStatusMap();
 
-    public:
-        StatusCode();
-        statusMAP & getStati(){ return _statusMap; };
+	public:
+		StatusCode();
+		statusMAP & getStati(){ return _statusMap; };
 
 };
 

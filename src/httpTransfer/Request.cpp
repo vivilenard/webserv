@@ -20,6 +20,12 @@ Request::Request(const string & request, configServer & configfile):  _configfil
 	}
 	checkRequestSize();
 	handleMultipart();
+
+	Query::iterator it = _query.begin();
+	for (; it != _query.end(); it++)
+	{
+		cout << it->first << " " << it->second << endl;
+	}
 }
 
 void	Request::parseMainHeader()
@@ -52,6 +58,25 @@ void Request::identifyRequest()
 	_standardRequest = false;
 }
 
+void	Request::parseCookies(string cookieDough)
+{
+	if (cookieDough.empty())
+		return ;
+	// cout << "PARSE COOKIES" << endl;
+	// cout << GREEN << cookieDough << NORM << endl;
+	string buffer;
+	istringstream is(cookieDough);
+	while (getline(is, buffer, ';'))
+		parseContentAttributes(_cookies, buffer);
+	// cout << "parsed COOKIES:" << endl;
+	// stringMAP::iterator it = _cookies.begin();
+	// for (; it != _cookies.end() ; it++)
+	// {
+	// 	cout << GREEN << it->first << " = " << it->second << NORM << endl;
+	// }
+	// cout << "printed" << endl;
+}
+
 void	Request::parseHeaders(Headers & headers, const string & chunk)
 {
 	PAIR p;
@@ -66,6 +91,7 @@ void	Request::parseHeaders(Headers & headers, const string & chunk)
 		if (!p.first.empty())
 			headers[p.first] = p.second;
 	}
+	parseCookies(headers["Cookie"]);
 	if (ContainsMultipartHeader())
 	{
 		setBoundary();
@@ -202,7 +228,7 @@ void Request::setFilename()
 		setName("name", attributes);
 }
 
-void	Request::parseContentAttributes(Headers & attributes, const string & s)
+void	Request::parseContentAttributes(stringMAP & attributes, const string & s)
 {
 	PAIR p;
 	if (s.find('='))
@@ -257,9 +283,9 @@ void Request::parseQuery(const string & queryString)
 			return ;
 		_query[queryPair.substr(0, a)] = queryPair.substr(a + 1);
 	}
-	Query::iterator it;
-	for (it = _query.begin(); it != _query.end(); it++)
-		cout << it->first << " and " << it->second << endl;
+	// Query::iterator it;
+	// for (it = _query.begin(); it != _query.end(); it++)
+	// 	cout << it->first << " and " << it->second << endl;
 
 }
 
@@ -317,4 +343,12 @@ ostream & operator<<(ostream & os, const Request & r)
 		cout << "NO CONTENT" << endl;
 	cout << "////////////////////////////////" << endl;
 	return os;
+}
+
+void printMAP(stringMAP m)
+{
+	stringMAP::iterator it = m.begin();
+	for (; it != m.end(); it++)
+		cout << it->first << " , " << it->second << endl;
+	return ;
 }

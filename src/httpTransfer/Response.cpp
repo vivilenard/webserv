@@ -21,8 +21,6 @@ Response::Response(Request & request, configServer & configfile): _configfile(co
 		processGet();
 	else 
 		formResponse(_status, "");
-	// if (request.getMethod() == "POST")
-	// 	cout << BLUE << _response << NORM << endl;
 }
 
 bool Response::methodAllowed()
@@ -91,6 +89,7 @@ void Response::formResponse(int status, const string & statusInfo)
 	{
 		os << "Content-Type: " 		<< _fileContentType << "\r\n";
 		os << "Content-Length: " 	<< body.length() << "\r\n";
+		os << CookiesToHeaders();
 		os << "\r\n";
 		os << body;
 	}
@@ -112,23 +111,37 @@ const string FileToString(const string & filepath)
 	return str;
 }
 
+const string Response::generateDefaultHtml(const string & text)
+{
+	string outputString = FileToString("error/default1of2.html") + text;
+	outputString.append(FileToString("error/default2of2.html"));
+	return outputString;
+}
+
 const string Response::createErrorBody(const int & status, const string & statusInfo)
 {
 	_fileContentType = "text/html";
+	ostringstream body_os;
+
 	if (status == 7)
 		return (FileToString("error/directory.html"));
 	else if (status == 404)
 		return (FileToString("error/404.html"));
 	else if (status == 405)
 		return (FileToString("error/405.html"));
-	else
+	else if (_request.getURI() == "/login" && status == 201)
 	{
-		ostringstream body_os;
-		body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
-		if (!statusInfo.empty())
-			body_os << "<h3> " << statusInfo << "</h3>";
-		return body_os.str();
+		string cookieBody = getCookieBody();
+		if (!cookieBody.empty())
+		{
+			body_os << "<h3> " << cookieBody << "</h3>";
+			return (generateDefaultHtml(body_os.str()));
+		}
 	}
+	body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
+	if (!statusInfo.empty())
+		body_os << "<h3> " << statusInfo << "</h3>";
+	return generateDefaultHtml(body_os.str());
 }
 
 
@@ -158,21 +171,19 @@ string	Response::redirectURI(string path)
 
 const string getDir(string & uri)
 {
-	//    /files/upload.html
 	string dir = uri;
-	if (!uri.find('.')) //endpoint is already a directory
+	if (!uri.find('.'))
 		return uri;
 	if (uri.find_last_of("/") < uri.npos - 1)
 		dir = uri.substr(0, uri.find_last_of("/"));
 	return dir;
 }
 
-//if there uri was '/', then add default file (index)
 int	Response::addDefaultFile(string & path)
 {
 	if (path == _configfile._root + "/")
 	{
-		path = path.append(_configfile._index);			//change to defaultFile
+		path = path.append(_configfile._index);
 		return 1;
 	}
 	return 0;

@@ -28,7 +28,7 @@ static uint32_t	extractPort(struct sockaddr* address) {
 
 void printConfig(std::string name, configServer server) {
 	std::cout << FPurple << "╔══════════════════════════════════════════════════════╗" << NORMAL << std::endl;
-	std::cout << FPurple << "║" << GREEN << std::setw(54) << std::left << "SERVER: " + name + " " + (server.validFormat ? "[VALID]" : "[INVALID]")  << FPurple << "║" << NORMAL << std::endl;
+	std::cout << FPurple << "║" << FBlue << std::setw(54) << std::left << "SERVER: " + name + " \033[1;32m" + (server.validFormat ? "[VALID]" : "[INVALID]")  << FPurple << "║" << NORMAL << std::endl;
 	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "SERVERNAME: " + server._serverName << FPurple << "║" << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "INCLUDE: " + server._include << FPurple << "║" << std::endl;
@@ -51,7 +51,7 @@ void printConfig(std::string name, configServer server) {
     }
 	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "ROOT: " + server._root << FPurple << "║" << std::endl;
-	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "VALIDFORMAT: " << server.validFormat << FPurple << "║" << std::endl;
+	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "VALIDFORMAT: " << ((server.validFormat) ? "true" : "false") << FPurple << "║" << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "INDEX: " + server._index << FPurple << "║" << std::endl;
 	std::cout << FPurple << "║" << FYellow << std::left << "DIRECTORYLISTING: " << std::setw(36) << std::left << (server._directoryListing ? "true" : "false") << FPurple << "║" << std::endl;
 	std::cout << FPurple << "╠══════════════════════════════════════════════════════╣" << NORMAL << std::endl;
@@ -62,9 +62,9 @@ void printConfig(std::string name, configServer server) {
 		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Location: " + it->first << FPurple << "║" << NORMAL << std::endl;
 		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Name: " + it->second._name << FPurple << "║" << NORMAL << std::endl;
 		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Default page: " + it->second._index << FPurple << "║" << NORMAL << std::endl;
-		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Post: " << it->second._post << FPurple << "║" << NORMAL << std::endl;
-		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Get: " << it->second._get << FPurple << "║" << NORMAL << std::endl;
-		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Put: " << it->second._delete << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Post: " << ((it->second._post) ? "true" : "false") << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Get: " << ((it->second._get) ? "true" : "false") << FPurple << "║" << NORMAL << std::endl;
+		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "Put: " << ((it->second._delete) ? "true" : "false") << FPurple << "║" << NORMAL << std::endl;
 		std::cout << FPurple << "║" << FYellow << std::setw(54) << std::left << "redirection: " + it->second._redirect << FPurple << "║" << NORMAL << std::endl;
 	}
 	std::cout << FPurple << "╚══════════════════════════════════════════════════════╝" << NORMAL << std::endl;
@@ -82,6 +82,8 @@ int main(int argc, char **argv)
 		http* newExecuter = new http(it->second);
 		uint32_t tmpPort;
 		for (std::vector<struct socketParameter>::iterator it2 = it->second._socketAddress.begin(); it2 != it->second._socketAddress.end(); it2++) {
+			bool	validSocket =false;
+			tmpPort = extractPort(it2->interfaceAddress);
 			try {
 				if (it2->ssl) {
 					if (!it->second._certificate.empty())
@@ -93,14 +95,15 @@ int main(int argc, char **argv)
 					else
 						throw std::runtime_error("No key specified for ssl");
 				}
-				tmpPort = extractPort(it2->interfaceAddress);
 				Interface::addExecuter(tmpPort, newExecuter);
 				socketManager::addServerSocket(*it2);
+				validSocket = true;
 			}
 			catch (std::exception &e) {
 				PRINT_ERROR;
 				std::cout << "Skipping socket" << std::endl;
-				Interface::removeExecuter(tmpPort);
+				if (!validSocket)
+					Interface::removeExecuter(tmpPort);
 			}
 		}
 	}

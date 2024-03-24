@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/24 10:31:21 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/24 18:08:28 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class Interface {
 
 		static std::map<uint32_t, http*>				_executerMap;
 		static std::map<int, std::string>				_outputBuffer;
+		static std::vector<http*>						_deletedExecuters;
 };
 
 #endif

@@ -78,6 +78,7 @@ public:
 												  std::string rule);
 	bool								setLocation(configServer &server, std::ifstream &inputFile,
 													std::string token, std::string &line, std::istringstream &find);
+	void								addDirectoryListing(configServer &server, std::string token, std::istringstream &find);
 	MAP 								parseMime();
 	void								createKeypairs(MAP & map, std::string s1, std::string s2);
 	sockaddr* 							convertToSockAddr(const std::string& ipAddress, int port);

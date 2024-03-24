@@ -75,9 +75,9 @@ int main(int argc, char **argv)
 	signal(SIGINT, &sigHandler);
 	if (!readConfig(argc, argv, config))
 		return 1;
-	for (CONFIG::iterator it2 = config.begin(); it2 != config.end(); it2++) {
-			printConfig(it2->first, it2->second);
-	}
+	/* for (CONFIG::iterator print = config.begin(); print != config.end(); print++) {
+			printConfig(print->first, print->second);
+	} */
 	for (CONFIG::iterator it = config.begin(); it != config.end(); it++) {
 		http* newExecuter = new http(it->second);
 		uint32_t tmpPort;

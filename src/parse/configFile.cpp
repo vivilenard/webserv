@@ -150,6 +150,34 @@ void	ConfigFile::addKey(configServer &server, std::string token, std::istringstr
 	}
 }
 
+void	ConfigFile::addDirectoryListing(configServer &server, std::string token, std::istringstream &find)
+{
+	std::string isBool;
+	if (token == "directoryListing")
+	{
+		std::cout << "exist" << std::endl;
+		if (find >> isBool)
+		{
+			cout << "boool: " << isBool << endl;
+			if (isBool == "true")
+			{
+				std::cout << "is true" << std::endl;
+				server._directoryListing = true;
+			}
+			if (isBool == "false")
+			{
+				std::cout << "is false" << std::endl;
+				server._directoryListing = false;
+			}
+		}
+		else
+		{
+			std::cerr << "No token after the keyword!" << std::endl; 
+			server.validFormat = false;
+		}
+	}
+}
+
 
 void	ConfigFile::addIndex(configServer &server, std::string token, std::istringstream &find)
 {

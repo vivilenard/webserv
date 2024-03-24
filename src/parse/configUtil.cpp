@@ -12,6 +12,7 @@ configServer ConfigFile::initializeObj()
 	setUp._root = "";
 	setUp.validFormat = false;
 	setUp._index = "";
+	setUp._directoryListing = false;
 	return (setUp);
 }
 

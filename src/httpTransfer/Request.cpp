@@ -11,6 +11,7 @@ string	Request::MultipartURI = "";
 
 Request::Request(const string & request, configServer & configfile):  _configfile(configfile), _request(request), _filename(""), _sizeInRange(true)
 {
+	cout << "constructttttt" << endl;
 	identifyRequest();
 	if (_standardRequest)
 	{

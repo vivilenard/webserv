@@ -120,55 +120,21 @@ bool			Response::recieveQuery(const string & contentType)
 		_request.parseQuery(_request.getBody());
 		Query query = _request.getQuery();
 		Query::iterator it = query.begin();
-		cout << "recieved? query: " << endl;
+		// cout << "recieved? query: " << endl;
 		for (; it != query.end(); it++)
 		{
-			cout << "query string:::::" << endl;
+			// cout << "query string:::::" << endl;
 			cout << it->first << " " << it->second << endl;
 		}
 		return true;
 	}
 	return false;
-	// if (query.empty())
-	// 	return false;
-	// return true;
 }
 
 void	Response::handleQuery()
 {
+	cout << "in handle Query" << endl;
 	if (_request.getURI() != "/login")
 		return ;
 	bakeLoginCookie(_request.getQuery());
-}
-
-const string	generateSequence()
-{
-    srand((unsigned int)time(nullptr)); 
-	int random = rand();
-	ostringstream os;
-	os << random;
-	cout << "RANDOM " << random << endl;
-	return os.str();
-}
-
-void	Response::bakeLoginCookie(Query & query)
-{
-	string session_id;
-	cout << ORANGE << "I will create a cookie. YUMM" << endl;
-	if (query.find("42login")!= query.end())
-	{
-		string login_name = query["42login"];
-		if (!login_name.empty())
-		{
-			// session_id = "id=";
-			session_id.append(generateSequence());  //generate id number
-			if (_newCookies.find(login_name) != _newCookies.end())
-				cout << RED << "user is already logged in. Wait 15 min until your session has expired" << endl;
-			else
-			{
-				_newCookies[login_name] = session_id;
-				cout << MAG << "COOKIE was formed. still need to generate custom id" << NORM << endl;
-			}
-		}
-	}
 }

@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <algorithm>
 
+#define stringMAP map<string, string>
 #define Headers map<string, string>
 #define Query map<string, string>
 #define EnvCgi	map<string, string>
@@ -25,6 +26,7 @@ class Request
 	string			_URI; // to add in cgi
 	// string			_prefixPath;
 	string			_httpVersion;
+	stringMAP		_cookies;
 	string			_contentLength;
 	string			_contentType;
 	string			_date;
@@ -33,17 +35,14 @@ class Request
 	Headers			_headers;
 	Query			_query;
 	EnvCgi			_envCgi;
-	void			parseMainHeader();
-	// void			parseHeaders();
-	// int				parseBody();
 	bool			_sizeInRange;
-	// string			parseHeader(string s);
 
+	void			parseMainHeader();
 	void			parseHeaders(Headers & headers, const string & chunk);
 	int				parseBody(string & body, const string & chunk, const int & length);
 	PAIR 			parsePair(string line);
+	void			parseCookies(string cookieDough);
 	void			identifyRequest();
-	// bool			isMultipartChunk();
 	bool			ContainsMultipartHeader();
 	bool			handleMultipart();
 	bool			parseMultipart(const string & s);
@@ -55,7 +54,7 @@ class Request
 	void			setName(const string & attr, Headers & attributes);
 	void			packTogether();
 	bool			checkRequestSize();
-	void			parseContentAttributes(Headers & attributes, const string & s);
+	void			parseContentAttributes(stringMAP & attributes, const string & s);
 
 	public:
 		int						findDoubleNewline(const std::string & s);
@@ -70,17 +69,18 @@ class Request
 		Request(const string & request, configServer & configfile);
 		friend ostream & operator<<(ostream & os, const Request & r);
 
-		const string & 	getRequest(){ return _request; }
-		const string & 	getMethod()	{ return _method; }
-		const string & 	getURI()	{ return _URI; }
-		const string & 	getFilename()	{ return _filename; }
-		const bool   &	getSizeInRange(){ return _sizeInRange; }
-		Headers & 		getHeaders(){ return _headers; }
-		const string & 	getBody()	{ return _body; }
-		void			parseQuery(const string & path);
-		Query &			getQuery(){ return _query;}
-		void 			buildCgiEnv(void);
-		int				executeCgi(std::string &cgiScript, const string & path);
+		const string &		getRequest(){ return _request; }
+		const string &		getMethod()	{ return _method; }
+		const string &		getURI()	{ return _URI; }
+		const string &		getFilename()	{ return _filename; }
+		const bool   &		getSizeInRange(){ return _sizeInRange; }
+		Headers & 			getHeaders(){ return _headers; }
+		const string &		getBody()	{ return _body; }
+		const stringMAP&	getCookies() { return _cookies; }
+		void				parseQuery(const string & path);
+		Query &				getQuery(){ return _query;}
+		void 				buildCgiEnv(void);
+		int					executeCgi(std::string &cgiScript, const string & path);
 };
 
 #define RED "\033[1;91m"

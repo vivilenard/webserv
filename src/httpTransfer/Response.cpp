@@ -69,26 +69,6 @@ bool Response::invalidRequest()
 	}
 	return false;
 }
-	// char* dt = ctime(&now); // convert it into string
-
-	// cout << "The local date and time is: " << dt << endl; // print local date and time
-	
-	// tm* gmtm = gmtime(&now); // for getting time to UTC convert to struct  
-	// dt = asctime(gmtm);  
-	// cout << "The UTC date and time is:" << dt << endl; // print UTC date and time 
-
-string	Response::CookiesToHeaders()
-{
-	ostringstream os;
-	COOKIES::iterator it = _newCookies.begin();
-	for (; it != _newCookies.end(); it++)
-	{
-		os << "Set-Cookie: " << it->first << "=" << it->second
-			// << "; Expires=" << generateExpiration() << "\r\n";
-			<< "; Max-Age=" << 600 << ";" << "\r\n";
-	}
-	return os.str();
-}
 
 void Response::formResponse(int status, const string & statusInfo)
 {
@@ -133,23 +113,28 @@ const string FileToString(const string & filepath)
 	return str;
 }
 
+
 const string Response::createErrorBody(const int & status, const string & statusInfo)
 {
 	_fileContentType = "text/html";
+	ostringstream body_os;
+
 	if (status == 7)
 		return (FileToString("error/directory.html"));
 	else if (status == 404)
 		return (FileToString("error/404.html"));
 	else if (status == 405)
 		return (FileToString("error/405.html"));
-	else
+	else if (_request.getURI() == "/login" && status == 201)
 	{
-		ostringstream body_os;
-		body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
-		if (!statusInfo.empty())
-			body_os << "<h3> " << statusInfo << "</h3>";
-		return body_os.str();
+		string cookieBody = getCookieBody();
+		if (!cookieBody.empty())
+			return (body_os << cookieBody, body_os.str());
 	}
+	else if (!statusInfo.empty())
+		body_os << "<h3> " << statusInfo << "</h3>";
+	body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
+	return body_os.str();
 }
 
 
@@ -197,15 +182,4 @@ int	Response::addDefaultFile(string & path)
 		return 1;
 	}
 	return 0;
-}
-
-const string generateExpiration()
-{
-	char dateStr[100];
-	//Date: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
-	//Expires=Tue, 15 Feb 2020 00:17:48 GMT;
-	time_t now = time(0); // get current dat/time with respect to system
-	tm* gm_tm = gmtime(&now);
-	strftime(dateStr, 100, "%a, %d %b %Y %T GMT", gm_tm);
-	return dateStr;
 }

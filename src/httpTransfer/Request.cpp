@@ -58,6 +58,25 @@ void Request::identifyRequest()
 	_standardRequest = false;
 }
 
+void	Request::parseCookies(string cookieDough)
+{
+	if (cookieDough.empty())
+		return ;
+	// cout << "PARSE COOKIES" << endl;
+	// cout << GREEN << cookieDough << NORM << endl;
+	string buffer;
+	istringstream is(cookieDough);
+	while (getline(is, buffer, ';'))
+		parseContentAttributes(_cookies, buffer);
+	// cout << "parsed COOKIES:" << endl;
+	// stringMAP::iterator it = _cookies.begin();
+	// for (; it != _cookies.end() ; it++)
+	// {
+	// 	cout << GREEN << it->first << " = " << it->second << NORM << endl;
+	// }
+	// cout << "printed" << endl;
+}
+
 void	Request::parseHeaders(Headers & headers, const string & chunk)
 {
 	PAIR p;
@@ -72,6 +91,7 @@ void	Request::parseHeaders(Headers & headers, const string & chunk)
 		if (!p.first.empty())
 			headers[p.first] = p.second;
 	}
+	parseCookies(headers["Cookie"]);
 	if (ContainsMultipartHeader())
 	{
 		setBoundary();
@@ -208,7 +228,7 @@ void Request::setFilename()
 		setName("name", attributes);
 }
 
-void	Request::parseContentAttributes(Headers & attributes, const string & s)
+void	Request::parseContentAttributes(stringMAP & attributes, const string & s)
 {
 	PAIR p;
 	if (s.find('='))

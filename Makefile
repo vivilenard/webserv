@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
+#    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/20 19:46:05 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/24 13:01:27 by vlenard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,6 +74,7 @@ SRCS	=	webserver.cpp \
 			Delete.cpp \
 			Get.cpp \
 			Post.cpp \
+			Cookies.cpp \
 			Cgi.cpp \
 			read.cpp \
 			configFile.cpp \

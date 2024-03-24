@@ -40,7 +40,8 @@ class Response
 	string			_fileContent;
 	string			_fileContentType;
 	string			_cgiScript;
-	COOKIES			_cookies;
+	COOKIES			_newCookies;
+	// COOKIES			savedCookies;
 
 	bool			invalidRequest();
 	void			processGet();
@@ -56,27 +57,35 @@ class Response
 	std::string		findKeyByValue(std::map<string, string>m, string value);
 	void			formResponse(int status, const string & statusInfo);
 	const string	createErrorBody(const int & status, const string & statusInfo);
-	int				isMultipart();
 	bool			isCgi(const string & path);
+	//Multipart
+	int				isMultipart();
 	int				handleMultipart();
 	bool			incorrectMimeType(const string & contentType);
 	bool			noFilename();
+	//DirectoryListing
 	bool			isDirectory(const string & endpoint);
 	bool			listDirectory(DIR* dirp);
 	string			currentDir();
+	//Cookies
 	bool			recieveQuery(const string & contentType);
 	void			handleQuery();
 	void			bakeLoginCookie(Query & query);
 	string			CookiesToHeaders();
-
+	const string	getCookieBody();
+	COOKIES			getSavedCookies(const string & filename);
+	bool			insertNewToSavedCookies(COOKIES & fresh, COOKIES & saved);
+	bool			saveCookiesInFile(const COOKIES & cookies, const string & filename);
+	bool			IDcheck(const string & name);
 
 	public:
 		Response(Request & request, configServer & configfile);
-		const	string getResponse() const { return _response ; };
-		bool	beginsWithDot(const string & s);
-		string	getFileCreationTime(char *path);
+		const string	getResponse() const { return _response ; };
+		bool			beginsWithDot(const string & s);
+		// string	getFileCreationTime(char *path);
 };
 
 int executeCgi(std::string &cgiScript);
 const string getDir(string & uri);
+const string generateCookieDate();
 #endif

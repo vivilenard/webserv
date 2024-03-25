@@ -8,6 +8,25 @@ std::string stringConvert(char *input)
 		return ("");
 }
 
+bool serverValid(configServer server)
+{
+	if (server._root.empty())
+	{
+		server.validFormat = false;
+		return (false);
+	}
+	return true;
+}
+
+bool checkValid(std::map<std::string, configServer> & config)
+{
+	for (CONFIG::iterator it2 = config.begin(); it2 != config.end(); it2++) {
+		if (!serverValid(it2->second))
+			return (false);	
+	}
+	return true;
+}
+
 bool readConfig(int argc, char **argv, std::map<std::string, configServer> & config)
 {
 	// cout << "read config" << endl;
@@ -19,8 +38,11 @@ bool readConfig(int argc, char **argv, std::map<std::string, configServer> & con
 			return (false);
 		std::cout << file << std::endl;
 		test.readFile(file, config);
-		if (config.empty())
+		if (config.empty() || !checkValid(config))
+		{
+			cout << "Invalid config file." << endl;
 			return false;
+		}
 		// std::map<std::string, configServer> out;
 		return true;
 	}
@@ -31,6 +53,11 @@ bool readConfig(int argc, char **argv, std::map<std::string, configServer> & con
 		test.readFile(file, config);
 		if (config.empty())
 			return (cout << "No default config file found. Please create one in: config/default.conf" << endl, false);
+		if (!checkValid(config))
+		{
+			cout << "Invalid config file." << endl;
+			return false;
+		}
 		return true;
 	}
 	return false;

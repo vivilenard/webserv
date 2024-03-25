@@ -11,7 +11,7 @@ CONFIG config;
 
 void sigHandler(int signum)
 {
-	std::cout << "shutting down..." << std::endl;
+	std::cout << FRed << "shutting down..." << NORMAL << std::endl;
 	socketManager::stop();
 	Interface::clearExecuters();
 	exit(signum);
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
 			}
 			catch (std::exception &e) {
 				PRINT_ERROR;
-				std::cout << "Skipping socket" << std::endl;
+				std::cout << Red << "main:	" << NORMAL << "Skipping socket" << std::endl;
 				if (!validSocket && it2 == it->second._socketAddress.end())
 					Interface::removeExecuter(tmpPort);
 			}

@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/25 11:53:05 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/25 12:05:30 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
 LDFLAGS		:= -L$(SOCKETMANAGER_DIR) -lsocketManager
 else ifeq ($(UNAME), Linux)
 SUDO		:= sudo
-CFLAGS		:= -fsanitize -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
+CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g $(INC_DIR)
 LDFLAGS		:= -lssl -lcrypto -L./$(SOCKETMANAGER_DIR) -lsocketManager
 endif
 

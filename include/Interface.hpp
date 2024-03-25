@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 17:34:45 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/24 18:08:28 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/25 09:57:23 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 # include "http.hpp"
 # include "color.hpp"
 
-# define BUFFER_SIZE 4194304 // 4MB
+// # define BUFFER_SIZE 4194304 // 4MB
 // # define BUFFER_SIZE 2097154 // 2MB
+# define BUFFER_SIZE 1048576 // 1MB
 
 class Interface {
 	public:

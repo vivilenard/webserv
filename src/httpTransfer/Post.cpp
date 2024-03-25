@@ -118,12 +118,12 @@ bool			Response::recieveQuery(const string & contentType)
 	if (contentType == "form-urlencoded")
 	{
 		_request.parseQuery(_request.getBody());
-		Query query = _request.getQuery();
-		Query::iterator it = query.begin();
-		for (; it != query.end(); it++)
-		{
-			cout << it->first << " " << it->second << endl;
-		}
+		// Query query = _request.getQuery();
+		// Query::iterator it = query.begin();
+		// for (; it != query.end(); it++)
+		// {
+		// 	cout << it->first << " " << it->second << endl;
+		// }
 		return true;
 	}
 	return false;

@@ -6,7 +6,7 @@
 /*   By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 19:22:20 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/25 11:57:24 by vlenard          ###   ########.fr       */
+/*   Updated: 2024/03/25 13:34:18 by vlenard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ http::~http() {}
 http::http() {}
 
 std::string	http::executer(const std::string &request) {
-		cout << MAG << "-------request----->>" << NORM << endl;
+		// cout << MAG << "-------request----->>" << NORM << endl;
 		Request		httpRequest(request, _config);
 		if (!httpRequest.boundary.empty() || httpRequest.getRequest().empty())
 			return "";
 		Response	httpResponse(httpRequest, _config);
 		std::string response = httpResponse.getResponse();
-		cout << MAG << "<<-----response-------" << NORM << endl;
+		// cout << MAG << "<<-----response-------" << NORM << endl;
 		return response;
 }

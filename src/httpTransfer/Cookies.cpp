@@ -2,10 +2,9 @@
 
 void	Response::bakeLoginCookie(Query & query)
 {
-	cout << "in bake cookie" << endl;
+	if (PRINT){cout << "in bake cookie" << endl;}
 	string loginField = "42login";
 	string session_id;
-	// cout << ORANGE << "I will create a cookie. YUMM" << NORM << endl;
 	_oldCookies = getSavedCookies("Cookies.csv");
 	COOKIES savedCookies = _oldCookies;
 	if (PRINT) { cout << RED << "saved Cookies" << NORM << endl; printMAP(savedCookies); }
@@ -19,8 +18,8 @@ void	Response::bakeLoginCookie(Query & query)
 		{
 			session_id.append(generateSequence());
 			_newCookies[login_name] = session_id;
-			if (savedCookies.find(login_name) != savedCookies.end())
-				cout << RED << "YOU ALREADY LOGGED IN" << NORM << endl;
+			// if (savedCookies.find(login_name) != savedCookies.end())
+			// 	cout << RED << "YOU ALREADY LOGGED IN" << NORM << endl;
 		}
 	}
 	insertNewToSavedCookies(_newCookies, savedCookies);
@@ -100,22 +99,18 @@ string	Response::CookiesToHeaders()
 
 const string Response::getCookieBody()
 {
-	COOKIES::iterator it = _newCookies.begin();
-	for (; it != _newCookies.end(); it++)
-		cout << GREEN << it->first << " = " << it->second << NORM << endl;
-
 	string intraName = _newCookies.begin()->first;
 	if (_request.getCookies().find(intraName) != _request.getCookies().end())
 	{
 		//user is already in client cookies
 		if (IDcheck(intraName) == true)
 		{
-			cout << RED << "user is already logged in." << endl;
+			if (PRINT){cout << RED << "user is already logged in." << endl;}
 			return "Hello again! Seems like you logged in before ..";
 		}
 		else
 		{
-			cout << RED << "Cookie ID check failed" << NORM << endl;
+			if (PRINT){cout << RED << "Cookie ID check failed" << NORM << endl;}
 			return "Your Cookie IDs are not matching";
 		}
 	}
@@ -135,12 +130,9 @@ bool Response::IDcheck(const string & name)
 	}
 	string clientID = clientCookies[name];
 	string sessionID = serverSession[name];
-	cout << "cookie name: " << name << endl;
-	cout << "client id: " << clientID << endl;
-	cout << "session id: " << sessionID << endl;
 	if (clientID == sessionID)
 		return true;
-	cout << "cookie IDs are not matching!" << endl;
+	if (PRINT) {cout << "cookie IDs are not matching!" << endl;}
 	return false;
 }
 

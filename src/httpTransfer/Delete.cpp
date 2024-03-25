@@ -4,7 +4,7 @@
 
 void Response::processDelete()
 {
-	cout << "DELETE REQUEST" << endl;
+	if (PRINT) {cout << "DELETE REQUEST" << endl;}
 	if (std::remove(_URI.c_str()) == 0)
 	{
 		_status = 204;
@@ -15,7 +15,7 @@ void Response::processDelete()
 	{
 		_status = 404;
 		_statusInfo = "File Not Found";
-		cout << RED << "Did not find: " << _URI << NORM << endl;
+		cout << RED << "DELETE: Did not find file: " << _URI << NORM << endl;
 	}
 	formResponse(_status, "");
 }

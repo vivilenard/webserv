@@ -58,7 +58,7 @@
 			color: rgb(199, 101, 158);
 			/* outline: white; */
 		}
-		input[type=text], input[type=button]{
+		input[type=text], input[type=submit]{
 			border: 1px solid black;
 			transition: 0.2s;
 			/* button on every page */
@@ -71,15 +71,15 @@
 			padding: 30px 70px;
 			border-radius: 0.2em;
 		}
-		input[type=text]:focus, input[type=button]:active{
+		input[type=text]:focus, input[type=submit]:active{
 			border: 1px solid rgb(120, 85, 85);
 			outline: none;
 			transition: 0.1s;
 		}
-		input[type=button]:active{
+		input[type=submit]:active{
 			background-color: rgb(205, 92, 92);
 		}
-		input[type=button]:hover {
+		input[type=submit]:hover {
 			border: 3px solid rgb(205, 92, 92);
 			cursor: pointer;
 		}
@@ -91,7 +91,9 @@
 			function deleteFile()
 			{
 				let input = document.getElementById("userInput").value;
-				fetch('' + input,  { method: 'DELETE' })
+				fetch('' + input,  { method: 'DELETE' });
+				document.getElementById('userInput').value="";
+				// alert('Delete request sent!');
 			}
 			-->
 			</script>
@@ -110,7 +112,7 @@
 							<input type="text" id="userInput">
 						</div>
 						<div class="form-item">
-							<input type="Button" value="Delete File" onClick='deleteFile()' required>
+							<input type="Submit" value="Delete File" onClick='deleteFile()' required>
 						</div>
 						</form>
 					</form> 

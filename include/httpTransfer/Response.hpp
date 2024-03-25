@@ -34,6 +34,7 @@ class Response
 	bool 				methodAllowed();
 	bool				readFile(const string & path);
 	string				addRootPath(const string & path);
+	string				addPaths(string p1, string p2);
 	string				redirectURI(string path);
 	int					addDefaultFile(string & path);
 	string				getContentType(const string & path);

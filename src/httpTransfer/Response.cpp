@@ -7,8 +7,10 @@ StatusCode Response::_statusCode = StatusCode();
 Response::Response(Request & request, configServer & configfile): _configfile(configfile),
 	_request(request), _status(501), _redir(0), _statusInfo(""), _httpVersion("HTTP/1.1")
 {
+	if (PRINT) { cout << "---------Response---------" << endl; }
 	_URI = redirectURI(_request.getURI());
 	_URI = addRootPath(_URI);
+	if (PRINT) {cout << "Response: " << BLUE << _URI << NORM << endl;}
 	if (invalidRequest())
 		return ;
 	if (request.getMethod() == "GET" && methodAllowed())
@@ -146,10 +148,18 @@ const string Response::createErrorBody(const int & status, const string & status
 
 
 //-------------------Utils-------------------
+string	Response::addPaths(string p1, string p2)
+{
+	if (p1[p1.size() - 1] == '/' && p2[0] == '/')
+	{
+		p1 = p1.substr(0, p1.size() - 1);
+	}
+	return (p1 + p2);
+}
 
 string	Response::addRootPath(const string & path)
 {
-	return (_configfile._root + path);
+	return (addPaths(_configfile._root, path));
 }
 
 string	Response::redirectURI(string path)
@@ -157,11 +167,8 @@ string	Response::redirectURI(string path)
 	if (_redir > 0)
 		return path;
 	LOCATION locations = _configfile._locations;
-	cout << path << endl;
-
 	if (locations.find(path) != locations.end() && !locations[path]._redirect.empty())
 	{
-		cout << "its a redirection!" << endl;
 		path = locations[path]._redirect;
 		_redir = 308;
 		cout << path << endl;

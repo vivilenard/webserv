@@ -8,9 +8,9 @@
 		body{
 			background-color: rgb(43, 15, 32);
 			background-color: rgb(1, 30, 37);
-			background-color: rgba(1, 20, 25, 0.977);
+			background-color: rgba(11, 23, 19, 0.977);
 			color: rgb(115, 57, 91);
-			color: rgb(26, 79, 93);
+			color: rgb(30, 63, 55);
 			/* color: rgb(79, 167, 191); */
 			position:absolute;
 			width: 100%;
@@ -44,7 +44,7 @@
 		}
 		.form{
 			display: flex;
-			justify-content: space-between;
+			justify-content: space-evenly;
 		}
 		a{
 			color: rgb(26, 79, 93);
@@ -53,17 +53,33 @@
 			text-decoration: none;
 		}
 		.button{
-			color: black;
+			/* color: white; */
 			font-size: 35px;
 			font-weight: 400;
 			text-decoration: none;
 			background-color: rgb(115, 57, 91);
-			background-color: rgb(26, 79, 93);
+			background-color: rgb(30, 63, 55);
 			padding: 30px 70px;
 			border-radius: 0.2em;
+			border-style:solid;
+			border: 1px solid black;
 		}
-		.button-item{
+		.button:active{
+			background-color:rgb(35, 75, 65);
+			/* border: 2px solid rgb(115, 57, 91);; */
+			
+		}
+		.button:hover{
+			/* color: rgb(43, 15, 32); */
+			border: 2px solid rgb(143, 193, 180);
+			cursor: pointer;
+		}
+		.login-field{
 			padding: 30px 70px;
+			border-radius: 0.5em;
+			border-style:solid;
+			border: 1px solid black;
+			/* color: white; */
 		}
 		a:hover{
 			color: rgb(115, 57, 91);
@@ -104,8 +120,8 @@
 			</div>
 			<div class="upload">
 				<form method="POST" action="/login" class="form">
-					<input tyoe="test" placeholder="Enter 42 Intraname" name="42login" required> 
-					<button class="button" type="submit"></button>
+					<input class="login-field" type="text" placeholder="Enter 42 Intraname" name="42login" required>
+					<div><button class="button" type="submit" value="Enter">Submit</button></div>
 				</form>
 			</div>
 		</div>

@@ -5,7 +5,7 @@
 void Response::processPost()
 {
 	if (PRINT) {cout << "-----------------IN POST--------------------" << endl;}
-	if (PRINT) {cout << NORM << "URI: " << _URI << endl;}
+	if (PRINT) {cout << NORM << "URI IN POST: " << _URI << endl;}
 	_status = 201;
 	string contentType = findKeyByValue(_configfile._mimeTypes, _request.getHeaders()["Content-Type"]);
 	if (isCgi(_URI))
@@ -63,7 +63,7 @@ int	Response::createFile(std::string & path, const std::string & content)
 	fstream file;
 	string filepath = path;
 	if (!_request.getFilename().empty())
-		filepath = _configfile._root + "/upload" + "/" + _request.getFilename();
+		filepath = "www/upload/" + _request.getFilename();
 	file.open(filepath.c_str(), ios::trunc | ios::binary | ios::out);
 	if (!file.is_open())
 	{

@@ -11,7 +11,7 @@ string	Request::MultipartURI = "";
 
 Request::Request(const string & request, configServer & configfile):  _configfile(configfile), _request(request), _filename(""), _sizeInRange(true)
 {
-	cout << "constructttttt" << endl;
+	if (PRINT) { cout << "--------------Request-----------" << endl; }
 	identifyRequest();
 	if (_standardRequest)
 	{
@@ -63,19 +63,11 @@ void	Request::parseCookies(string cookieDough)
 {
 	if (cookieDough.empty())
 		return ;
-	// cout << "PARSE COOKIES" << endl;
-	// cout << GREEN << cookieDough << NORM << endl;
 	string buffer;
 	istringstream is(cookieDough);
 	while (getline(is, buffer, ';'))
 		parseContentAttributes(_cookies, buffer);
-	// cout << "parsed COOKIES:" << endl;
-	// stringMAP::iterator it = _cookies.begin();
-	// for (; it != _cookies.end() ; it++)
-	// {
-	// 	cout << GREEN << it->first << " = " << it->second << NORM << endl;
-	// }
-	// cout << "printed" << endl;
+
 }
 
 void	Request::parseHeaders(Headers & headers, const string & chunk)
@@ -159,7 +151,7 @@ bool	Request::handleMultipart()
 
 bool	Request::parseMultipart(const string & chunk)
 {
-	cout << RED << "parse Multipart" << NORM << endl;
+	// cout << RED << "parse Multipart" << NORM << endl;
 	istringstream s(chunk);
 	string body;
 	string line;
@@ -284,10 +276,6 @@ void Request::parseQuery(const string & queryString)
 			return ;
 		_query[queryPair.substr(0, a)] = queryPair.substr(a + 1);
 	}
-	// Query::iterator it;
-	// for (it = _query.begin(); it != _query.end(); it++)
-	// 	cout << it->first << " and " << it->second << endl;
-
 }
 
 PAIR Request::parsePair(string line)

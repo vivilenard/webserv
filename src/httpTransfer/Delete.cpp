@@ -15,6 +15,7 @@ void Response::processDelete()
 	{
 		_status = 404;
 		_statusInfo = "File Not Found";
+		cout << RED << "Did not find: " << _URI << NORM << endl;
 	}
 	formResponse(_status, "");
 }

@@ -93,7 +93,7 @@ string Response::currentDir()
 	string curDir = "/";
 	if (_request.getURI() == "/")
 		return curDir;
-	curDir = _request.getURI() + "/";
+	curDir = addPaths(_request.getURI(),  "/");
 	return curDir;
 }
 

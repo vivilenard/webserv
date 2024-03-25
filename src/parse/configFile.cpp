@@ -156,18 +156,14 @@ void	ConfigFile::addDirectoryListing(configServer &server, std::string token, st
 	std::string isBool;
 	if (token == "directoryListing")
 	{
-		std::cout << "exist" << std::endl;
 		if (find >> isBool)
 		{
-			cout << "boool: " << isBool << endl;
 			if (isBool == "true")
 			{
-				std::cout << "is true" << std::endl;
 				server._directoryListing = true;
 			}
 			if (isBool == "false")
 			{
-				std::cout << "is false" << std::endl;
 				server._directoryListing = false;
 			}
 		}

@@ -39,6 +39,7 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 				addRoot(tmpServer, token, find);
 				addIndex(tmpServer, token, find);
 				setLocation(tmpServer, inputFile, token, line, find);
+				addDirectoryListing(tmpServer, token, find);
 				if (!tmpServer.validFormat)
 				{
 					std::cout << "THE ERROR---> " << token << std::endl;

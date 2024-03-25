@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:01:41 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/24 18:20:17 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/25 10:35:56 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,24 +73,26 @@ void	Interface::interface(int sock, struct sockData data) {
 }
 
 void	Interface::clearExecuters() {
-	for (unsigned int i = 0; i < _executerMap.size(); i++) {
-		if (std::find(_deletedExecuters.begin(), _deletedExecuters.end(), _executerMap[i]) == _deletedExecuters.end()) {
-			_deletedExecuters.push_back(_executerMap[i]);
-			delete _executerMap[i];
+	for (std::map<uint32_t, http*>::iterator it = _executerMap.begin(); it != _executerMap.end(); it++) {
+		if (std::find(_deletedExecuters.begin(), _deletedExecuters.end(), it->second) == _deletedExecuters.end()) {
+			_deletedExecuters.push_back(it->second);
+			delete it->second;
 		}
-		_executerMap.erase(_executerMap.begin());
 	}
 	_executerMap.clear();
+	_deletedExecuters.clear();
 }
 
 void	Interface::removeExecuter(uint32_t port) {
-	if (_executerMap.find(port) == _executerMap.end())
-		return ;
-	if (std::find(_deletedExecuters.begin(), _deletedExecuters.end(), _executerMap[port]) == _deletedExecuters.end()) {
-		_deletedExecuters.push_back(_executerMap[port]);
-		delete _executerMap[port];
+	http* toDelete = _executerMap[port];
+	for (std::map<uint32_t, http*>::iterator it; it != _executerMap.end(); it++) {
+		if (it->second == toDelete) {
+			uint32_t	key = it->first;
+			it--;
+			_executerMap.erase(key);
+		}
 	}
-	_executerMap.erase(port);
+	delete toDelete;
 }
 
 void	Interface::addExecuter(uint32_t port, http *executer) {

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vlenard <vlenard@student.42.fr>            +#+  +:+       +#+         #
+#    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/24 18:55:58 by vlenard          ###   ########.fr        #
+#    Updated: 2024/03/25 12:05:30 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,13 +34,11 @@ INC_DIR		:= 	-I./include/ \
 
 ifeq ($(UNAME), Darwin)
 SUDO		:= 
-SSLCFLAGS	:= -I$(shell brew --prefix)/opt/openssl@3/include/
-SSLLDFLAGS	:= -L$(shell brew --prefix)/opt/openssl@3/lib/ -lssl -lcrypto
-CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(SSLCFLAGS) $(INC_DIR)
-LDFLAGS		:= $(SSLLDFLAGS) -L$(SOCKETMANAGER_DIR) -lsocketManager
+CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
+LDFLAGS		:= -L$(SOCKETMANAGER_DIR) -lsocketManager
 else ifeq ($(UNAME), Linux)
 SUDO		:= sudo
-CFLAGS		:= -fsanitize -Wall -Wextra -Werror -MMD -MP -g -std=c++98 $(INC_DIR)
+CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -g $(INC_DIR)
 LDFLAGS		:= -lssl -lcrypto -L./$(SOCKETMANAGER_DIR) -lsocketManager
 endif
 
@@ -107,7 +105,11 @@ std_all: $(SOCKETMANAGER)
 	@$(PRINT) "\n$(SETCURUP)$(SETCURUP)$(FPurple)%-33s$(FGreen)$(TICKBOX)$(RESET)\n$(CLEARLINE)" "Compiling $(PRONAME)"
 
 $(PRONAME): $(OBJS) $(SOCKETMANAGER)
+ifeq ($(UNAME), Darwin)
+	$(CC) $(CFLAGS) -I$(shell brew --prefix)/opt/openssl@3/include/ $(OBJS) $(LDFLAGS) -L$(shell brew --prefix)/opt/openssl@3/lib/ -lssl -lcrypto -o $(PRONAME)
+else ifeq ($(UNAME), Linux)
 	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(PRONAME)
+endif
 
 $(OBJ_DIR)%.o: %.cpp
 ifeq ($(shell test -d $(OBJ_DIR) || echo $$?), 1)
@@ -115,7 +117,11 @@ ifeq ($(shell test -d $(OBJ_DIR) || echo $$?), 1)
 	@mkdir -p $(OBJ_DIR)
 endif
 	@$(PRINT) "\r$(CLEARLINE)%-40s$(RESET)" "$(Yellow)Compiling $< ..."
+ifeq ($(UNAME), Darwin)
+	@$(CC) $(CFLAGS) -I$(shell brew --prefix)/opt/openssl@3/include/ -c $< -o $@
+else ifeq ($(UNAME), Linux)
 	@$(CC) $(CFLAGS) -c $< -o $@
+endif
 
 $(SOCKETMANAGER):
 ifeq ($(shell test -f $(SOCKETMANAGER_DIR)/Makefile || echo $$?), 1)
@@ -125,7 +131,14 @@ ifeq ($(shell test -f $(SOCKETMANAGER_DIR)/Makefile || echo $$?), 1)
 endif
 	@$(PRINT) "$(FCyan)%-40s\n$(RESET)" "Compiling submodule"
 	@$(MAKE) std_all -s -C $(SOCKETMANAGER_DIR)
+ifeq ($(UNAME), Darwin)
+	@$(PRINT) "$(SETCURUP)"
+endif
 	@$(PRINT) "$(SETCURUP)$(SETCURUP)$(SETCURUP)$(FCyan)%-33s$(RESET)$(FGreen)$(TICKBOX)$(RESET)\n\n\n" "Compiling submodule"
+ifeq ($(UNAME), Darwin)
+	@$(PRINT) "\n"
+endif
+
 
 clean:
 	@$(MAKE) -s proname_header

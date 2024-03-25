@@ -1,7 +1,6 @@
 HOSTNAME RESOLVING:
     curl --resolve example.com:80:127.0.0.1 http://example.com/
-    curl --resolve test.com:80:127.0.0.1 http://test.com/
-
+	curl --resolve mywebserv.com:8000:127.0.0.1 http://mywebserv.com:8000
 
 REQUESTS
     curl http://localhost:8000
@@ -15,6 +14,7 @@ SIEGE
 
 To do:
 	- test HEAD
+	- redirection when directory: to default index file
 
 
 errors:

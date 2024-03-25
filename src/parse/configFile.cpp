@@ -42,7 +42,7 @@ void ConfigFile::readFile(std::string &fileName, std::map<std::string, configSer
 				addDirectoryListing(tmpServer, token, find);
 				if (!tmpServer.validFormat)
 				{
-					std::cout << "THE ERROR---> " << token << std::endl;
+					std::cout << "ERROR---> " << token << std::endl;
 					break;
 				}
 			}
@@ -58,6 +58,7 @@ void	ConfigFile::addServerName(configServer &server, std::string token, std::ist
 {
 	std::string serverName;
 
+	server.validFormat = true;
 	if (token == "server_name")
 	{
 		if (find >> serverName)
@@ -71,7 +72,6 @@ void	ConfigFile::addServerName(configServer &server, std::string token, std::ist
 			server.validFormat = false;
 		}
 	}
-	server.validFormat = true;
 }
 
 void	ConfigFile::addAddress(configServer &server, std::string token, std::istringstream &find)

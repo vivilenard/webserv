@@ -126,11 +126,11 @@ const string Response::createErrorBody(const int & status, const string & status
 	ostringstream body_os;
 
 	if (status == 7)
-		return (FileToString("error/directory.html"));
-	else if (status == 404)
+		return (FileToString("error/defaultDirectory.html"));
+	else if (status == 404) //&& _request.getURI() == "/dog")
 		return (FileToString("error/404.html"));
-	else if (status == 405)
-		return (FileToString("error/405.html"));
+	else if (status == 400 && statusInfo.empty())
+		return (FileToString("error/400.html"));
 	else if (_request.getURI() == "/login" && status == 201)
 	{
 		string cookieBody = getCookieBody();
@@ -141,7 +141,9 @@ const string Response::createErrorBody(const int & status, const string & status
 		}
 	}
 	body_os << "<h3> " << STATUSCODE[status] << " </h3>\n";
-	if (!statusInfo.empty())
+	if (status == 404)
+		body_os << "<h3> Wrong path: " << _request.getURI() << "</h3>";
+	else if (!statusInfo.empty())
 		body_os << "<h3> " << statusInfo << "</h3>";
 	return generateDefaultHtml(body_os.str());
 }

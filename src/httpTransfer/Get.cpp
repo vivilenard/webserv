@@ -38,7 +38,7 @@ bool	Response::readFile(const string & path)
 	file.open(filepath);
 	if (!file)
 	{
-		cout << "File does not open, probably no access rights" << endl;
+		cout << "Client requests unaccessible path: " << filepath << endl;
 		return false;
 	}
 	os << file.rdbuf();

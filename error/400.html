@@ -6,24 +6,33 @@
     <title>Document</title>
     <style>
         body{
+			overflow: hidden;
+  			position: absolute;
+  			width: 100%;
+  			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
             background-image: url(https://images.unsplash.com/photo-1453227588063-bb302b62f50b?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2FkJTIwYW5pbWFsfGVufDB8fDB8fHww);
-        }
+			background-size: cover;
+		}
         .container{
             flex: auto;
             flex-flow: column;
         }
         .box{
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
+			text-align: center;
+			color: white;
         }
+		h1{
+			font-size: 30px;
+		}
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="box">This Method is not allowed</h1>
-        <!-- <img src="https://img.buzzfeed.com/buzzfeed-static/static/2019-03/12/16/asset/buzzfeed-prod-web-03/sub-buzz-28209-1552422629-1.jpg" alt="slow sloth"> -->
-        <h1 class="box" style="font-size: 40px;">404</h1>
+        <h1 class="box" style="font-size: 100px;">400</h1>
+        <h1 class="box">Bad Request</h1>
     </div>
 </body>
 </html>

@@ -19,11 +19,11 @@ body, html {
 }
 
 .left-hand {
-    transform: scaleX(1); /* Flip the left hand horizontally */
+    transform: scaleX(1);
 }
 
 .right-hand {
-    transform: scaleX(-1); /* Rotate the right hand */
+    transform: scaleX(-1);
 }
 
 .centered-text {

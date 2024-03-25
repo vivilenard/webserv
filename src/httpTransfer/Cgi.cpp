@@ -76,6 +76,31 @@ void closePipes(int *pipeIn, int *pipeOut)
 	close(pipeOut[1]);
 }
 
+int	sendStatus(std::string msg)
+{
+	std::cerr << msg << std::endl;
+	return (EXIT_FAILURE);
+}
+
+int checkTime(timeval startTime, timeval currentTime, int timeOut)
+{
+	if (currentTime.tv_sec - startTime.tv_sec > timeOut)
+		return (true);
+	else
+		return (false);
+}
+
+int handleExitStatus(int status)
+{
+	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+	{
+		sendStatus( "error in python script");
+		std::cerr << "STATUS " <<  WEXITSTATUS(status) << std::endl;
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
+}
+
 int Request::executeCgi(std::string &cgiScript, const string & path)
 {
 	int pipe_stdin[2];
@@ -85,10 +110,8 @@ int Request::executeCgi(std::string &cgiScript, const string & path)
 	pipe(pipe_stdout);
 	pid_t pid = fork();
 	if (pid == -1)
-	{
-		std::cerr << "Error forking process\n";
-		return EXIT_FAILURE;
-	} else if (pid == 0)
+		return (sendStatus("Error forking process"));
+	else if (pid == 0)
 	{
 		dup2(pipe_stdin[0], STDIN_FILENO);
 		dup2(pipe_stdout[1], STDOUT_FILENO);
@@ -99,10 +122,7 @@ int Request::executeCgi(std::string &cgiScript, const string & path)
 				env.push_back(const_cast<char *>(it->second.c_str()));
 		env.push_back(NULL);
 		if (execve(command[0], (char* const*)command, const_cast<char *const *>(env.data())) < 0)
-		{
-			std::cerr << "Error executing CGI script\n";
-			return EXIT_FAILURE;
-		}
+			return (sendStatus("Error executing CGI script"));
 	}
 	else
 	{
@@ -121,39 +141,24 @@ int Request::executeCgi(std::string &cgiScript, const string & path)
 		{
 			cgiScript.append(buffer, bytes_read);
 			gettimeofday(&currentTime, NULL);
-			if (currentTime.tv_sec - startTime.tv_sec > timeOut)
-			{
-				overTime = true;
-				break ;
-			}
+			overTime = checkTime(startTime, currentTime, timeOut);
+			if (overTime)
+				break;
 		}
 		if (bytes_read == -1)
-		{
-			std::cerr << "Error reading from pipe\n";
-			return_value = EXIT_FAILURE;
-		}
-		else if (bytes_read == 0)
-			std::cout << "End of file reached (child process closed its stdout)\n"; // Debugging output
+			return_value = sendStatus("Error reading from pipe");
 		if (overTime)
 		{
 			kill(pid, SIGKILL);
 			close(pipe_stdout[0]);
-			std::cerr << "TIMEOUT!!" << std::endl;
-			return EXIT_FAILURE;
+			return_value = sendStatus("TIMEOUT!!");
 		}
 		close(pipe_stdout[0]);
 		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-		{
-			if(WEXITSTATUS(status) != 0)
-				std::cerr << "error in python script " <<  WEXITSTATUS(status) << std::endl;
-			return_value = EXIT_FAILURE;
-		}
+		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+			return_value = handleExitStatus(status);
 		else
-		{
-			std::cerr << "Python script exit abnormally" << std::endl;
-			return_value = EXIT_FAILURE;
-		}
+			return_value = sendStatus("Python script exit abnormally");
 		return (return_value);
 	}
 	return (EXIT_SUCCESS);
@@ -171,11 +176,11 @@ bool	Response::isCgi(const string & path)
 		std::string tmp = currentPath();
 		if (_request.getURI().find("/cgi-bin") != std::string::npos)
 			absolute = false;
-
 		std::string dir = tmp + (absolute ? "/cgi-bin" : "") + _request.getURI();
 		if (!checkRoot(dir))
 		{
 			std::cerr << "Wrong CGI path!" << std::endl;
+			_status = 404;
 			return (false);
 		}
 		_request.buildCgiEnv();

@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
-# Print the HTTP header
 print("Content-type: text/plain\n\n")
 
-# Infinite loop
 while True:
-    print("Executing C++ executor...")
+    print("   T H I S  I S  A N  I N F I N I T E  W H I L E  L O O P  ")

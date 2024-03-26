@@ -2,7 +2,6 @@
 
 import os
 
-# Parse POST data
 post_data  = os.getenv('POST_DATA', '')
 post_value = post_data.split('=')[-1]
 
@@ -11,14 +10,14 @@ if not post_data:
     print("")
     print("<html>")
     print("<head>")
-    print("<title>Python CGI Script</title>")
+    print("<title>CGI Script</title>")
     print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/cgi-bin/css/post.css\">")
     print("</head>")
     print("<body>")
     print("<div class=\"container\">")
     print("<img src=\"/cgi-bin/img/indicating.jpg\" alt=\"hand\" class=\"hand left-hand\">")
     print("<div class=\"centered-text\">")
-    print("<h1>Python CGI Script Output</h1>")
+    print("<h1>CGI Script Output</h1>")
     print("<p>POST data:</p>")
     print("<h2>Your content is empty</h2>")
     print("</div>")
@@ -31,14 +30,14 @@ else:
     print("")
     print("<html>")
     print("<head>")
-    print("<title>Python CGI Script</title>")
+    print("<title>CGI Script</title>")
     print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/cgi-bin/css/post.css\">")
     print("</head>")
     print("<body>")
     print("<div class=\"container\">")
     print("<img src=\"/cgi-bin/img/indicating.jpg\" alt=\"hand\" class=\"hand left-hand\">")
     print("<div class=\"centered-text\">")
-    print("<h1>Python CGI Script Output</h1>")
+    print("<h1>CGI Script Output</h1>")
     print("<p>POST data:</p>")
     print("<pre>{}</pre>".format(post_value))
     print("</div>")

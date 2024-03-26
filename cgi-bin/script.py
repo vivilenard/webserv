@@ -2,13 +2,10 @@
 
 import os
 
-# Print HTTP headers
 print("Content-Type: text/html\n")
 
-# Extract query string from environment variables
 query_string = os.environ.get("QUERY_STRING", "")
 
-# Parse query parameters
 params = {}
 if query_string:
     pairs = query_string.split("&")
@@ -16,17 +13,18 @@ if query_string:
         key, value = pair.split("=")
         params[key] = value
 
-# Display the query parameters
 print("<html>")
 print("<head>")
-print("<title>GET Method Example</title>")
+print("<title>GET Method</title>")
 print("</head>")
 print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/cgi-bin/css/style.css\">")
 print("<body>")
-print("<h1>GET Method Example</h1>")
-print("<p>First Name: {}</p>".format(params.get("get_param", "")))
-print("<p>Last Name: {}</p>".format(params.get("last_name", "")))
-print("<p>This is an example of a CGI script serving an image:</p>")
-print("<img src=\"/cgi-bin/img/hamster.jpg\" alt=\"Your Image\">")
+print("<div class=\"container\">")
+print("<h1>GET Method</h1>")
+print("<p>Your Text: {}</p>".format(params.get("get_param", "")))
+print("<div class=\"hamster\">")
+print("<img src=\"/cgi-bin/img/hamster.jpg\" alt=\"hamster\">")
+print("</div>")
+print("</div>")
 print("</body>")
 print("</html>")

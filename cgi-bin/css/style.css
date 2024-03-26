@@ -1,14 +1,19 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+body, hmtl {
+    height: 100%;
     margin: 0;
+
 }
 
-.content {
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    height: 100%;
+}
+
+.hamaster{
     margin-top: 20px;
 }
+

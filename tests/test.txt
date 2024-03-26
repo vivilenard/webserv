@@ -4,19 +4,10 @@ HOSTNAME RESOLVING:
 
 REQUESTS
     curl http://localhost:8000
-    curl -X POST -H "Content-Type: text/plain" --data "Hello" localhost:8000/PATH_TO_FILE !!!!
+    curl -X POST -H "Content-Type: text/plain" --data "Hello" localhost:8000/PATH_TO_FILE
     curl -X DELETE 'http://localhost:8000/PATH_TO_FILE'
     curl -v -X UNKNOWN http://localhost:8000
 
 SIEGE
     siege -b -c10 -r1 http://localhost:8000/empty
     siege -b -c10 -r1 http://localhost:8000/test.py
-
-To do:
-	- test HEAD
-	- redirection when directory: to default index file
-
-
-errors:
-wrong root --> termination
-timeout!

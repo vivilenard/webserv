@@ -72,9 +72,10 @@ class Response
 		bool				beginsWithDot(const string & s);
 };
 
+const string FileToString(const string & filepath);
 int executeCgi(std::string &cgiScript);
 const string getDir(string & uri);
 const string generateCookieDate();
-const string	generateSequence();
+const string generateSequence();
 
 # endif

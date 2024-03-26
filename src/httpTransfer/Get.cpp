@@ -21,8 +21,8 @@ void	Response::processGet()
 
 bool	Response::beginsWithDot(const string & s)
 {
-	// if (s == "..") //exception
-	// 	return false;
+	if (s == "..") //exception
+		return false;
 	if (s[0] == '.')
 		return true;
 	return false;
@@ -62,7 +62,11 @@ bool	Response::listDirectory(DIR* dirp)
 {
 	ostringstream os;
 	struct dirent * dp;
+	os << FileToString("error/directoryListing.html");
+	os << "<div class='Content'>";
 	os << "<h1> Index of " << currentDir() << "</h1><br>" << endl;
+	os << "<div class='Links'>";
+	os << "<div>";
 	while ((dp = readdir(dirp)) != NULL) {
 		if (beginsWithDot(dp->d_name)) continue ;
 		string newPath = currentDir().append(dp->d_name);
@@ -70,6 +74,10 @@ bool	Response::listDirectory(DIR* dirp)
 			<< "</a>" << endl;
 		os << "<br>" << endl;
 	}
+	os << "</div>";
+	os << "</div>";
+	os << "</div";
+	os << "</body>";
 	_fileContent = os.str();
 	return true;
 }

@@ -9,6 +9,8 @@
 
 CONFIG config;
 
+static void							deleteSockAddr(struct sockaddr *addr);
+
 void sigHandler(int signum)
 {
 	std::cout << FRed << "shutting down..." << NORMAL << std::endl;
@@ -124,7 +126,8 @@ int main(int argc, char **argv)
 			}
 			catch (std::exception &e) {
 				PRINT_ERROR;
-				std::cout << Red << "main:	" << NORMAL << "Skipping socket" << std::endl;
+				std::cout << Red << "main:	" << Yellow << "Skipping socket" << std::endl;
+				deleteSockAddr(it2->interfaceAddress);
 				if (!validSocket && it2 == it->second._socketAddress.end())
 					Interface::removeExecuter(tmpPort);
 			}
@@ -148,4 +151,11 @@ int main(int argc, char **argv)
 		}
 	}
 	return 2;
+}
+
+static void							deleteSockAddr(struct sockaddr *addr) {
+	if (addr->sa_family == AF_INET)
+		delete (struct sockaddr_in*)addr;
+	else if (addr->sa_family == AF_INET6)
+		delete (struct sockaddr_in6*)addr;
 }

@@ -258,7 +258,8 @@ int Request::parseBody(string & body, const string & chunk, const int & length)
 	int pos_body = findDoubleNewline(chunk);
 	if (pos_body < 0)
 		cerr << "No Body in Post request!" << endl;
-	body = chunk.substr(pos_body, length);
+	else
+		body = chunk.substr(pos_body, length);
 	return 1;
 }
 

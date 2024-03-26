@@ -6,7 +6,7 @@
 #    By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/17 12:55:54 by pharbst           #+#    #+#              #
-#    Updated: 2024/03/25 12:05:30 by pharbst          ###   ########.fr        #
+#    Updated: 2024/03/26 12:00:12 by pharbst          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -95,7 +95,11 @@ ifeq (($(call GET_OS,Debian)), Debian)
 	@echo "$(FYellow)Information: $(Red)The Makefiles in this project are not build to work with echo as printing function so the output wont be fromated correctly$(RESET)"
 endif
 endif
+ifeq ($(shell test -f $(SOCKETMANAGER_DIR)/Makefile || echo $$?), 1)
+	@$(MAKE) $(SOCKETMANAGER)
+else
 	@$(MAKE) -j6 -s std_all -C socketManager
+endif
 	@$(MAKE) -j6 -s std_all
 
 std_all: $(SOCKETMANAGER)

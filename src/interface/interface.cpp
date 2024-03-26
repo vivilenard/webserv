@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:01:41 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/25 10:35:56 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/26 15:06:05 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,16 @@ void	Interface::interface(int sock, struct sockData data) {
 		std::string	response = _outputBuffer[sock];
 		// std::cout << "here is the important stuff" << std::endl;
 		// std::cout << Yellow << "socket=" << sock << std::endl << "response=" << response << NORMAL << std::endl;
-		if (writeToSocket(sock, data, response)) {
+		int status = writeToSocket(sock, data, response);
+		if (status == -1) {
 			socketManager::removeSocket(sock);
 			_outputBuffer.erase(sock);
 			return ;
 		}
+		else if (status == 0)
+			return ;
 		_outputBuffer.erase(sock);
+		socketManager::removeSocket(sock);
 	}
 }
 

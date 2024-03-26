@@ -6,7 +6,7 @@
 /*   By: pharbst <pharbst@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:02:48 by pharbst           #+#    #+#             */
-/*   Updated: 2024/03/24 10:52:28 by pharbst          ###   ########.fr       */
+/*   Updated: 2024/03/26 15:09:30 by pharbst          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,25 @@ int	Interface::readFromSocket(int sock, struct sockData data, std::string &reque
 	return 1;
 }
 
-bool	Interface::writeToSocket(int sock, struct sockData data, std::string &response) {
+int	Interface::writeToSocket(int sock, struct sockData data, std::string &response) {
 	int i;
 	if (response.empty()) {
 		// std::cout << FRed << "response is empty" << NORMAL << std::endl;
-		return (false);
+		return 0;
 	}
 	if (data.info.ssl)
 		i = SSL_write((SSL*)data.info.sslData.Context, response.c_str(), response.length());
 	else
 		i = send(sock, response.c_str(), response.length(), 0);
 	// std::cout << FYellow << "write returned: " << i << NORMAL << std::endl;
-	if (i <= 0) {
+	if (i < 0) {
 		// std::cout << FRed << "write failed" << NORMAL << std::endl;
-		return (true);
+		return i;
 	}
+	else if (i == 0)
+		return 0;
 	// std::cout << FGreen << "response sent" << NORMAL << std::endl;
-	return (false);
+	return 1;
 }
 
 bool	Interface::passRequest(std::string &request, std::string &response, uint32_t port) {

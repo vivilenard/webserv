@@ -1,11 +1,14 @@
 ## Webserv
 
+<img width="889" alt="WebservScreenshot" src="https://github.com/vivilenard/webserv/assets/78664024/9a65afb9-cd2b-4e9c-8897-9478a7eb0954">
+
+
 This webserver can handle GET, POST and DELETE requests.
 It is inspired by nginx.
 
 ## Build
 
-This webserver runs on MacOS and ArchLinux.
+It runs on MacOS and ArchLinux.
 ```bash
 git clone git@github.com:vivilenard/webserv.git
 ```
